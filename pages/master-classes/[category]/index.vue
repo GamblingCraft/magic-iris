@@ -10,12 +10,36 @@ const categorySlug = computed(() => String(route.params.category))
 const currentCategory = computed(() => getMasterClassCategoryBySlug(categorySlug.value))
 const workshops = computed(() => getWorkshopsByCategorySlug(categorySlug.value))
 
+const breadcrumbs = computed(() => [
+  { label: 'Главная', href: '/' },
+  { label: 'Мастер-классы', href: '/master-classes' },
+  { label: currentCategory.value?.title || 'Подборка' }
+])
+
 if (!currentCategory.value) {
   throw createError({
     statusCode: 404,
     statusMessage: 'Категория не найдена'
   })
 }
+
+const workshopCards = computed(() =>
+  workshops.value.map((workshop) => ({
+    id: workshop.id,
+    href: createMasterClassHref(categorySlug.value, workshop.slug),
+    image: workshop.image,
+    imageAlt: workshop.title,
+    kicker: workshop.audienceLabel,
+    title: workshop.title,
+    description: workshop.summary,
+    metaPrimary: workshop.priceFrom,
+    metaLabel: 'Стоимость',
+    metaSecondary: 'Открыть формат',
+    buttonLabel: 'Открыть формат',
+    priceValue: workshop.priceFrom,
+    productMicrodata: true
+  }))
+)
 
 useSeoMeta({
   title: () => currentCategory.value?.title ?? 'Категория мастер-классов',
@@ -24,58 +48,40 @@ useSeoMeta({
 </script>
 
 <template>
-  <section class="section page-hero">
-    <div class="container detail-layout">
-      <div class="detail-hero">
-        <div class="detail-hero__media" :style="{ backgroundImage: `url(${currentCategory?.image})` }" />
+  <div class="catalog-shell">
+    <section class="section catalog-shell__section catalog-shell__section--hero">
+      <div class="container">
+        <CatalogBreadcrumbs :items="breadcrumbs" />
 
-        <div class="detail-hero__body">
-          <p class="eyebrow">Подборка мастер-классов</p>
-          <h1 class="page-title">{{ currentCategory?.title }}</h1>
-          <p class="detail-page__lead">{{ currentCategory?.lead }}</p>
-          <p class="detail-page__copy">{{ currentCategory?.description }}</p>
-
-          <div class="detail-tags">
-            <span>{{ currentCategory?.count }} форматов</span>
-            <span>Выездной формат под ваше событие</span>
-          </div>
-        </div>
+        <CatalogHeroPanel
+          eyebrow="Подборка мастер-классов"
+          :title="currentCategory?.title || ''"
+          :lead="currentCategory?.lead || ''"
+          :description="currentCategory?.description || ''"
+          :image="currentCategory?.image || ''"
+          :facts="[
+            { label: 'Форматов', value: `${currentCategory?.count || 0}` },
+            { label: 'Проведение', value: 'на вашей площадке' },
+            { label: 'Подготовка', value: 'материалы и мастера' }
+          ]"
+          :tags="['выездной формат', 'для гостей', 'под тайминг события']"
+          :actions="[
+            { label: 'Оставить заявку', href: '/#contacts' },
+            { label: 'Все подборки', href: '/master-classes', kind: 'ghost' }
+          ]"
+        />
       </div>
+    </section>
 
-      <div class="detail-block">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Каталог категории</p>
-            <h2>Форматы в подборке</h2>
-          </div>
-        </div>
-
-        <div class="workshop-card-grid">
-          <NuxtLink
-            v-for="workshop in workshops"
-            :key="workshop.id"
-            :to="createMasterClassHref(categorySlug, workshop.slug)"
-            class="workshop-card"
-          >
-            <div class="workshop-card__media" :style="{ backgroundImage: `url(${workshop.image})` }" />
-
-            <div class="workshop-card__body">
-              <p class="catalog-page-card__kicker">{{ workshop.audienceLabel }}</p>
-              <h3>{{ workshop.title }}</h3>
-              <p>{{ workshop.summary }}</p>
-              <div class="catalog-page-card__meta">
-                <span>{{ workshop.priceFrom }}</span>
-                <strong>Подробнее</strong>
-              </div>
-            </div>
-          </NuxtLink>
-        </div>
+    <section class="section catalog-shell__section">
+      <div class="container">
+        <CatalogCardsSection
+          eyebrow="Каталог категории"
+          title="Форматы внутри подборки"
+          description="Здесь оставили понятные превью: фото, короткое описание, стартовую стоимость и кнопку перехода в карточку."
+          :items="workshopCards"
+        />
       </div>
-
-      <div class="detail-actions">
-        <NuxtLink to="/master-classes" class="button button--ghost">Ко всем подборкам</NuxtLink>
-        <NuxtLink to="/#contacts" class="button button--accent">Оставить заявку</NuxtLink>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>

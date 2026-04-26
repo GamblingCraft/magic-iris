@@ -4,6 +4,12 @@ import { getShowBySlug } from '~/data/catalog'
 const route = useRoute()
 const currentProgram = computed(() => getShowBySlug(String(route.params.slug)))
 
+const breadcrumbs = computed(() => [
+  { label: 'Главная', href: '/' },
+  { label: 'Шоу', href: '/shows' },
+  { label: currentProgram.value?.title || 'Карточка шоу' }
+])
+
 if (!currentProgram.value) {
   throw createError({
     statusCode: 404,
@@ -18,81 +24,95 @@ useSeoMeta({
 </script>
 
 <template>
-  <section class="section page-hero">
-    <div class="container detail-layout">
-      <div class="detail-hero">
-        <div class="detail-hero__media" :style="{ backgroundImage: `url(${currentProgram?.heroImage})` }" />
+  <div class="catalog-shell catalog-shell--detail">
+    <section class="section catalog-shell__section catalog-shell__section--hero">
+      <div class="container">
+        <CatalogBreadcrumbs :items="breadcrumbs" />
 
-        <div class="detail-hero__body">
-          <p class="eyebrow">{{ currentProgram?.kicker }}</p>
-          <h1 class="page-title">{{ currentProgram?.title }}</h1>
-          <p class="detail-page__lead">{{ currentProgram?.lead }}</p>
-          <p class="detail-page__copy">{{ currentProgram?.description }}</p>
-
-          <div class="detail-facts">
-            <div v-for="fact in currentProgram?.facts" :key="fact.label" class="detail-fact">
-              <span>{{ fact.label }}</span>
-              <strong>{{ fact.value }}</strong>
-            </div>
-          </div>
-        </div>
+        <CatalogHeroPanel
+          :eyebrow="currentProgram?.kicker || 'Шоу'"
+          :title="currentProgram?.title || ''"
+          :lead="currentProgram?.lead || ''"
+          :description="currentProgram?.description || ''"
+          :image="currentProgram?.heroImage || currentProgram?.image || ''"
+          :product="currentProgram ? {
+            sku: currentProgram.id,
+            category: currentProgram.kicker,
+            description: currentProgram.description,
+            price: currentProgram.pricing[0]?.value,
+            url: route.fullPath
+          } : undefined"
+          :tags="currentProgram?.suitableFor || []"
+          :facts="currentProgram?.facts || []"
+          :actions="[
+            { label: 'Оставить заявку', href: '/#contacts' },
+            { label: 'Все шоу', href: '/shows', kind: 'ghost' }
+          ]"
+        />
       </div>
+    </section>
 
-      <div class="detail-section-grid">
-        <div class="detail-section-card">
-          <p class="eyebrow">Что входит</p>
-          <ul class="detail-list">
-            <li v-for="feature in currentProgram?.features" :key="feature">{{ feature }}</li>
-          </ul>
-        </div>
-
-        <div class="detail-section-card">
-          <p class="eyebrow">Подходит для</p>
-          <div class="detail-tags">
-            <span v-for="item in currentProgram?.suitableFor" :key="item">{{ item }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="detail-block">
-        <div class="section-heading">
+    <section class="section catalog-shell__section">
+      <div class="container">
+        <div class="catalog-section-head">
           <div>
-            <p class="eyebrow">Стоимость</p>
-            <h2>Стоимость и форматы проведения</h2>
+            <p class="eyebrow">О программе</p>
+            <h2>Как формат работает на событии</h2>
           </div>
         </div>
 
-        <div class="price-grid">
-          <article v-for="price in currentProgram?.pricing" :key="price.label" class="price-card">
-            <p>{{ price.label }}</p>
-            <h3>{{ price.value }}</h3>
-            <span>{{ price.note || 'Точная стоимость уточняется после обсуждения площадки и задачи.' }}</span>
+        <div class="catalog-detail-grid">
+          <article class="catalog-panel">
+            <p class="eyebrow">Что входит</p>
+            <ul class="catalog-list">
+              <li v-for="feature in currentProgram?.features" :key="feature">{{ feature }}</li>
+            </ul>
+          </article>
+
+          <article class="catalog-panel">
+            <p class="eyebrow">Подходит для</p>
+            <div class="catalog-chip-cloud">
+              <span v-for="item in currentProgram?.suitableFor" :key="item">{{ item }}</span>
+            </div>
           </article>
         </div>
       </div>
+    </section>
 
-      <div class="detail-block">
-        <div class="section-heading">
+    <section class="section catalog-shell__section catalog-shell__section--tight">
+      <div class="container">
+        <div class="catalog-section-head">
           <div>
-            <p class="eyebrow">Фото</p>
-            <h2>Как формат выглядит на событии</h2>
+            <p class="eyebrow">Стоимость</p>
+            <h2>Форматы проведения и стоимость</h2>
           </div>
         </div>
 
-        <div class="detail-gallery">
-          <div
-            v-for="image in currentProgram?.gallery"
-            :key="image.id"
-            class="detail-gallery__item"
-            :style="{ backgroundImage: `url(${image.src})` }"
-          />
+        <div class="catalog-pricing-grid">
+          <article v-for="price in currentProgram?.pricing" :key="price.label" class="catalog-price-card">
+            <p>{{ price.label }}</p>
+            <h3>{{ price.value }}</h3>
+            <span>{{ price.note || 'Точную стоимость уточним после обсуждения площадки, тайминга и задач события.' }}</span>
+          </article>
         </div>
       </div>
+    </section>
 
-      <div class="detail-actions">
-        <NuxtLink to="/shows" class="button button--ghost">Ко всем шоу</NuxtLink>
-        <NuxtLink to="/#contacts" class="button button--accent">Оставить заявку</NuxtLink>
+    <section class="section catalog-shell__section catalog-shell__section--tight">
+      <div class="container">
+        <div class="catalog-section-head">
+          <div>
+            <p class="eyebrow">Фото</p>
+            <h2>Как формат выглядит в живом событии</h2>
+          </div>
+        </div>
+
+        <div class="catalog-gallery-grid">
+          <figure v-for="image in currentProgram?.gallery" :key="image.id" class="catalog-gallery-card">
+            <img :src="image.src" :alt="image.alt" loading="lazy">
+          </figure>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>

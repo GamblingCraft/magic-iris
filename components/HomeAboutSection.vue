@@ -51,12 +51,18 @@ onMounted(async () => {
 
   gsap.registerPlugin(ScrollTrigger)
 
+  const getViewportWidth = () => document.documentElement.clientWidth
+  const getViewportHeight = () => window.innerHeight
+  const getCollapsedWidth = () => Math.min(getViewportWidth() - 120, 1120)
+  const getCollapsedHeight = () => Math.min(getViewportHeight() * 0.68, 720)
+
   animationContext = gsap.context(() => {
     mediaMatcher = gsap.matchMedia()
 
     const introTargets = Array.from(introRef.value?.querySelectorAll<HTMLElement>(':scope > *') || [])
     const stageTargets = Array.from(stageContentRef.value?.querySelectorAll<HTMLElement>(':scope > *') || [])
     const bodyTargets = Array.from(bodyRef.value?.querySelectorAll<HTMLElement>(':scope > *') || [])
+    const aboutStageHold = { progress: 0 }
 
     const revealConfig = {
       autoAlpha: 0,
@@ -120,11 +126,12 @@ onMounted(async () => {
 
     mediaMatcher.add('(min-width: 901px)', () => {
       gsap.set(cardRef.value, {
-        y: 64,
-        scale: 0.88,
-        borderRadius: 44,
+        y: 42,
+        width: () => getCollapsedWidth(),
+        height: () => getCollapsedHeight(),
+        borderRadius: 34,
         transformOrigin: 'center center',
-        willChange: 'transform, border-radius'
+        willChange: 'width, height, transform, border-radius'
       })
 
       gsap.set(imageRef.value, {
@@ -149,37 +156,44 @@ onMounted(async () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: stageRef.value,
-          start: 'top 82%',
-          end: 'bottom 24%',
-          scrub: 0.78
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.78,
+          invalidateOnRefresh: true
         }
       })
         .to(cardRef.value, {
           y: 0,
-          scale: 1,
-          borderRadius: 34,
+          width: () => getViewportWidth(),
+          height: () => getViewportHeight(),
+          borderRadius: 28,
           ease: 'none',
-          duration: 1
+          duration: 0.62
         }, 0)
         .to(imageRef.value, {
           scale: 1.14,
           yPercent: 2,
           ease: 'none',
-          duration: 1
+          duration: 0.62
         }, 0)
         .to(overlayRef.value, {
           opacity: 1,
           ease: 'none',
-          duration: 0.86
+          duration: 0.62
         }, 0.06)
         .to(stageTargets, {
           autoAlpha: 1,
           y: 0,
           filter: 'blur(0px)',
-          duration: 0.44,
+          duration: 0.24,
           stagger: 0.08,
           ease: 'power2.out'
-        }, 0.2)
+        }, 0.68)
+        .to(aboutStageHold, {
+          progress: 1,
+          duration: 0.42,
+          ease: 'none'
+        })
 
       const getKeywordTravel = () => Math.min(window.innerWidth * 0.24, 320)
 

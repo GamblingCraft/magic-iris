@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import {
-  createMasterClassCategoryHref,
   getMasterClassCategoryBySlug,
+  getWorkshopsByCategorySlug,
   getWorkshopBySlugs
 } from '~/data/catalog'
+import { formatDisplayPrice } from '~/utils/format-price'
 
 const route = useRoute()
 const categorySlug = computed(() => String(route.params.category))
@@ -11,6 +12,32 @@ const workshopSlug = computed(() => String(route.params.slug))
 
 const currentCategory = computed(() => getMasterClassCategoryBySlug(categorySlug.value))
 const currentWorkshop = computed(() => getWorkshopBySlugs(categorySlug.value, workshopSlug.value))
+const relatedWorkshops = computed(() =>
+  getWorkshopsByCategorySlug(categorySlug.value)
+    .filter((item) => item.slug !== workshopSlug.value)
+    .slice(0, 6)
+    .map((item) => ({
+      id: item.id,
+      href: `/master-classes/${item.primaryCategorySlug}/${item.slug}`,
+      image: item.image,
+      imageAlt: item.gallery[0]?.alt || item.title,
+      kicker: currentCategory.value?.title || item.audienceLabel,
+      title: item.title,
+      description: item.summary,
+      metaLabel: 'Стоимость',
+      metaPrimary: item.priceFrom,
+      metaSecondary: item.audienceLabel,
+      buttonLabel: 'Открыть',
+      productMicrodata: true
+    }))
+)
+
+const breadcrumbs = computed(() => [
+  { label: 'Главная', href: '/' },
+  { label: 'Мастер-классы', href: '/master-classes' },
+  { label: currentCategory.value?.title || 'Подборка', href: `/master-classes/${categorySlug.value}` },
+  { label: currentWorkshop.value?.title || 'Карточка мастер-класса' }
+])
 
 if (!currentCategory.value || !currentWorkshop.value) {
   throw createError({
@@ -26,91 +53,124 @@ useSeoMeta({
 </script>
 
 <template>
-  <section class="section page-hero">
-    <div class="container detail-layout">
-      <div class="detail-hero">
-        <div class="detail-hero__media" :style="{ backgroundImage: `url(${currentWorkshop?.image})` }" />
+  <div class="catalog-shell catalog-shell--detail">
+    <section class="section catalog-shell__section catalog-shell__section--hero">
+      <div class="container">
+        <CatalogBreadcrumbs :items="breadcrumbs" />
 
-        <div class="detail-hero__body">
-          <p class="eyebrow">{{ currentCategory?.title }}</p>
-          <h1 class="page-title">{{ currentWorkshop?.title }}</h1>
-          <p class="detail-page__lead">{{ currentWorkshop?.summary }}</p>
-          <p class="detail-page__copy">{{ currentWorkshop?.description }}</p>
+        <CatalogHeroPanel
+          :eyebrow="currentCategory?.title || 'Мастер-класс'"
+          :title="currentWorkshop?.title || ''"
+          :lead="currentWorkshop?.summary || ''"
+          :image="currentWorkshop?.image || ''"
+          :product="currentWorkshop ? {
+            sku: currentWorkshop.id,
+            category: currentCategory?.title || 'Мастер-класс',
+            description: currentWorkshop.summary,
+            price: currentWorkshop.priceFrom,
+            url: route.fullPath
+          } : undefined"
+          :tags="[currentWorkshop?.audienceLabel || '', currentCategory?.title || ''].filter(Boolean)"
+          :facts="[
+            { label: 'Длительность', value: currentWorkshop?.duration || '' },
+            { label: 'Участники', value: currentWorkshop?.participants || '' },
+            { label: 'Стоимость', value: formatDisplayPrice(currentWorkshop?.priceFrom || '') }
+          ]"
+          :actions="[
+            { label: 'Оставить заявку', href: '/#contacts' },
+            { label: 'Назад к подборке', href: `/master-classes/${categorySlug}`, kind: 'ghost' }
+          ]"
+        />
+      </div>
+    </section>
 
-          <div class="detail-facts">
-            <div class="detail-fact">
-              <span>Длительность</span>
-              <strong>{{ currentWorkshop?.duration }}</strong>
-            </div>
-            <div class="detail-fact">
-              <span>Участники</span>
-              <strong>{{ currentWorkshop?.participants }}</strong>
-            </div>
-            <div class="detail-fact">
-              <span>Стоимость</span>
-              <strong>{{ currentWorkshop?.priceFrom }}</strong>
-            </div>
+    <section v-if="currentWorkshop?.description" class="section catalog-shell__section catalog-shell__section--tight">
+      <div class="container">
+        <div class="catalog-section-head">
+          <div>
+            <p class="eyebrow">Описание</p>
+            <h2>Что важно знать об этом мастер-классе</h2>
           </div>
         </div>
-      </div>
 
-      <div class="detail-section-grid">
-        <div class="detail-section-card">
-          <p class="eyebrow">Форматы проведения</p>
-          <ul class="detail-list">
-            <li v-for="item in currentWorkshop?.formats" :key="item">{{ item }}</li>
-          </ul>
+        <article class="catalog-panel catalog-panel--rich-copy">
+          <p>{{ currentWorkshop.description }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section catalog-shell__section">
+      <div class="container">
+        <div class="catalog-section-head">
+          <div>
+            <p class="eyebrow">Организация</p>
+            <h2>Как проходит мастер-класс</h2>
+          </div>
         </div>
 
-        <div class="detail-section-card">
-          <p class="eyebrow">Что входит</p>
-          <ul class="detail-list">
-            <li v-for="item in currentWorkshop?.includes" :key="item">{{ item }}</li>
-          </ul>
+        <div class="catalog-detail-grid">
+          <article class="catalog-panel">
+            <p class="eyebrow">Форматы проведения</p>
+            <ul class="catalog-list">
+              <li v-for="item in currentWorkshop?.formats" :key="item">{{ item }}</li>
+            </ul>
+          </article>
+
+          <article class="catalog-panel">
+            <p class="eyebrow">Что входит</p>
+            <ul class="catalog-list">
+              <li v-for="item in currentWorkshop?.includes" :key="item">{{ item }}</li>
+            </ul>
+          </article>
         </div>
       </div>
+    </section>
 
-      <div class="detail-block">
-        <div class="section-heading">
+    <section class="section catalog-shell__section catalog-shell__section--tight">
+      <div class="container">
+        <div class="catalog-section-head">
           <div>
             <p class="eyebrow">Стоимость</p>
-            <h2>Стоимость и организация</h2>
+            <h2>Варианты проведения и бюджет</h2>
           </div>
         </div>
 
-        <div class="price-grid">
-          <article v-for="price in currentWorkshop?.pricing" :key="price.label" class="price-card">
+        <div class="catalog-pricing-grid">
+          <article v-for="price in currentWorkshop?.pricing" :key="price.label" class="catalog-price-card">
             <p>{{ price.label }}</p>
-            <h3>{{ price.value }}</h3>
+            <h3>{{ formatDisplayPrice(price.value) }}</h3>
             <span>{{ price.note || currentWorkshop?.priceNote }}</span>
           </article>
         </div>
       </div>
+    </section>
 
-      <div class="detail-block">
-        <div class="section-heading">
+    <section class="section catalog-shell__section catalog-shell__section--tight">
+      <div class="container">
+        <div class="catalog-section-head">
           <div>
             <p class="eyebrow">Фото</p>
-            <h2>Как выглядит мастер-класс</h2>
+            <h2>Как выглядит мастер-класс на площадке</h2>
           </div>
         </div>
 
-        <div class="detail-gallery">
-          <div
-            v-for="image in currentWorkshop?.gallery"
-            :key="image.id"
-            class="detail-gallery__item"
-            :style="{ backgroundImage: `url(${image.src})` }"
-          />
+        <div class="catalog-gallery-grid">
+          <figure v-for="image in currentWorkshop?.gallery" :key="image.id" class="catalog-gallery-card">
+            <img :src="image.src" :alt="image.alt" loading="lazy">
+          </figure>
         </div>
       </div>
+    </section>
 
-      <div class="detail-actions">
-        <NuxtLink :to="createMasterClassCategoryHref(categorySlug)" class="button button--ghost">
-          Ко всем форматам категории
-        </NuxtLink>
-        <NuxtLink to="/#contacts" class="button button--accent">Оставить заявку</NuxtLink>
+    <section v-if="relatedWorkshops.length" class="section catalog-shell__section catalog-shell__section--tight">
+      <div class="container">
+        <CatalogCarouselSection
+          eyebrow="Вам может понравиться"
+          title="Другие мастер-классы из этой подборки"
+          description="Похожие форматы из этой категории, которые можно быстро добавить в программу события."
+          :items="relatedWorkshops"
+        />
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>

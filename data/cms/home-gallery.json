@@ -1,0 +1,47 @@
+{
+  "eyebrow": "Галерея",
+  "title": "Фото событий и сценических моментов",
+  "description": "Несколько живых кадров со свадеб, камерных праздников, корпоративов и сценических номеров, чтобы почувствовать атмосферу наших выступлений и творческих форматов.",
+  "items": [
+    {
+      "id": "gallery-1",
+      "src": "/images/gallery/1777176362315-dd0td5-present.png",
+      "alt": "Песочное шоу Magic Iris на мероприятии"
+    },
+    {
+      "id": "gallery-2",
+      "src": "https://static.tildacdn.com/tild6631-3266-4763-b339-303766626534/IMG_7551_-__.JPG",
+      "alt": "Сценическая работа студии Magic Iris"
+    },
+    {
+      "id": "gallery-3",
+      "src": "https://static.tildacdn.com/tild6632-6536-4365-a430-393637316664/IMG_0458_-__.JPG",
+      "alt": "Выступление Magic Iris на празднике"
+    },
+    {
+      "id": "gallery-4",
+      "src": "https://static.tildacdn.com/tild6634-6234-4738-a261-376237363965/IMG_1970_-__.JPG",
+      "alt": "Оформление и шоу на площадке"
+    },
+    {
+      "id": "gallery-5",
+      "src": "https://static.tildacdn.com/tild3139-3835-4565-b536-376562343336/IMG_1971_-__.JPG",
+      "alt": "Гости мероприятия и атмосфера шоу"
+    },
+    {
+      "id": "gallery-6",
+      "src": "https://static.tildacdn.com/tild3166-6262-4631-a563-663636663262/__-__.JPG",
+      "alt": "Творческая студия Magic Iris в работе"
+    },
+    {
+      "id": "gallery-7",
+      "src": "https://static.tildacdn.com/tild3266-6435-4563-b332-613761316430/IMG_1973_-__.JPG",
+      "alt": "Событие с шоу-программой Magic Iris"
+    },
+    {
+      "id": "gallery-8",
+      "src": "https://static.tildacdn.com/tild3062-3533-4661-b666-303737376131/IMG_4692_-___1.jpg",
+      "alt": "Шоу-программа для свадьбы и праздника"
+    }
+  ]
+}

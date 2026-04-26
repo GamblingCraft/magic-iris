@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { AboutGalleryItem } from '~/data/home-about'
-import { aboutGalleryItems } from '~/data/home-about'
+import type { HomeGalleryItem } from '~/data/home-gallery'
+import { homeGallery } from '~/data/home-gallery'
 
-type GalleryColumnItem = AboutGalleryItem & {
+type GalleryColumnItem = HomeGalleryItem & {
   variant: 'portrait' | 'landscape' | 'wide' | 'square'
 }
 
 const sectionRef = ref<HTMLElement | null>(null)
-const activeImage = ref<AboutGalleryItem | null>(null)
+const activeImage = ref<HomeGalleryItem | null>(null)
 
 const columnVariantPatterns: Array<Array<GalleryColumnItem['variant']>> = [
   ['portrait', 'landscape', 'square', 'landscape', 'portrait'],
@@ -29,7 +29,7 @@ const galleryColumns = computed(() => {
     items: [] as GalleryColumnItem[]
   }))
 
-  aboutGalleryItems.forEach((item) => {
+  homeGallery.items.forEach((item) => {
     const targetColumn = columns.reduce((shortest, column) => {
       return column.height < shortest.height ? column : shortest
     }, columns[0])
@@ -48,7 +48,7 @@ const galleryColumns = computed(() => {
   return columns.map((column) => column.items)
 })
 
-const openImage = (item: AboutGalleryItem) => {
+const openImage = (item: HomeGalleryItem) => {
   activeImage.value = item
 }
 
@@ -91,14 +91,11 @@ onBeforeUnmount(() => {
 <template>
   <section ref="sectionRef" class="section gallery-section">
     <div class="container">
-      <p class="eyebrow">Галерея</p>
+      <p class="eyebrow">{{ homeGallery.eyebrow }}</p>
 
       <div class="gallery-mosaic__head">
-        <h2>Фото событий и сценических моментов</h2>
-        <p>
-          Несколько живых кадров со свадеб, камерных праздников, корпоративов и сценических номеров, чтобы почувствовать
-          атмосферу наших выступлений и творческих форматов.
-        </p>
+        <h2>{{ homeGallery.title }}</h2>
+        <p>{{ homeGallery.description }}</p>
       </div>
 
       <div class="gallery-mosaic">
@@ -109,7 +106,7 @@ onBeforeUnmount(() => {
         >
           <button
             v-for="(item, itemIndex) in column"
-            :key="`${columnIndex}-${itemIndex}-${item.src}`"
+            :key="`${columnIndex}-${itemIndex}-${item.id}`"
             type="button"
             class="gallery-mosaic__item"
             :class="`gallery-mosaic__item--${item.variant}`"

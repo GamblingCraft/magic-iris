@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   srcDir: '.',
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  css: ['~/assets/css/main.css', '~/assets/css/ref-overrides.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/ref-overrides.css', '~/assets/css/admin.css'],
   app: {
     head: {
       htmlAttrs: {
