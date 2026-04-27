@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path'
 import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
 import type { HomeGalleryContent } from '~/data/home-gallery'
 import type { HomeHeroSlide } from '~/data/home-slider'
+import type { SiteSeoSettings } from '~/data/site-seo'
 
 type CatalogContentPayload = {
   shows: ShowProgram[]
@@ -15,6 +16,7 @@ const cmsDir = join(process.cwd(), 'data', 'cms')
 const homeSliderPath = join(cmsDir, 'home-slider.json')
 const catalogContentPath = join(cmsDir, 'catalog-content.json')
 const homeGalleryPath = join(cmsDir, 'home-gallery.json')
+const siteSeoPath = join(cmsDir, 'site-seo.json')
 
 const readJsonFile = async <T>(target: string): Promise<T> => {
   const content = await readFile(target, 'utf8')
@@ -41,11 +43,17 @@ export const getHomeGalleryContent = () => readJsonFile<HomeGalleryContent>(home
 export const saveHomeGalleryContent = (content: HomeGalleryContent) =>
   writeJsonFile(homeGalleryPath, content)
 
+export const getSiteSeoContent = () => readJsonFile<SiteSeoSettings>(siteSeoPath)
+
+export const saveSiteSeoContent = (content: SiteSeoSettings) =>
+  writeJsonFile(siteSeoPath, content)
+
 export const getAdminSummary = async () => {
-  const [homeSlider, catalog, gallery] = await Promise.all([
+  const [homeSlider, catalog, gallery, seo] = await Promise.all([
     getHomeSliderContent(),
     getCatalogContent(),
-    getHomeGalleryContent()
+    getHomeGalleryContent(),
+    getSiteSeoContent()
   ])
 
   return {
@@ -54,6 +62,8 @@ export const getAdminSummary = async () => {
     categories: catalog.masterClassCategories.length,
     workshops: catalog.workshops.length,
     galleryItems: gallery.items.length,
+    seoSections: 7,
+    siteUrl: seo.siteUrl,
     updatedAt: new Date().toISOString()
   }
 }

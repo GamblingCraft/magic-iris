@@ -1,13 +1,7 @@
 <script setup lang="ts">
-useSeoMeta({
-  title: 'Творческая студия',
-  description:
-    'Песочное шоу, световое шоу, шоу-портреты и выездные мастер-классы в Иркутске для свадеб, корпоративов и городских событий.',
-  ogTitle: 'Magic Iris · Творческая студия',
-  ogDescription:
-    'Шоу и мастер-классы, которые выглядят как событие, а ощущаются как сильное воспоминание.',
-  ogType: 'website'
-})
+import { getHomeSeo } from '~/data/site-seo'
+
+usePageSeo(getHomeSeo())
 </script>
 
 <template>

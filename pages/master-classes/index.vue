@@ -5,6 +5,7 @@ import {
   masterClassCategories,
   workshopItems
 } from '~/data/catalog'
+import { getMasterClassesIndexSeo } from '~/data/site-seo'
 
 const selectedTag = ref('all')
 
@@ -14,7 +15,7 @@ const breadcrumbs = [
 ]
 
 const filterTags = computed(() => [
-  { slug: 'all', title: 'Все форматы' },
+  { slug: 'all', title: 'Все мастер-классы' },
   ...masterClassCategories.map((category) => ({
     slug: category.slug,
     title: category.title
@@ -30,10 +31,10 @@ const categoryCards = computed(() =>
     kicker: 'Подборка',
     title: category.title,
     description: category.description,
-    metaPrimary: `${category.count} форматов`,
-    metaLabel: 'В каталоге',
-    metaSecondary: 'Открыть подборку',
-    buttonLabel: 'Открыть подборку'
+    metaPrimary: `${category.count}`,
+    metaLabel: 'Мастер-классов',
+    buttonLabel: 'Открыть',
+    productMicrodata: false
   }))
 )
 
@@ -47,8 +48,7 @@ const toWorkshopCard = (workshop: (typeof workshopItems)[number]) => ({
   description: workshop.summary,
   metaPrimary: workshop.priceFrom,
   metaLabel: 'Стоимость',
-  metaSecondary: 'Открыть формат',
-  buttonLabel: 'Открыть формат',
+  buttonLabel: 'Открыть',
   priceValue: workshop.priceFrom,
   productMicrodata: true
 })
@@ -105,7 +105,7 @@ const activeCategory = computed(() =>
 
 const activeTagTitle = computed(() => {
   if (selectedTag.value === 'all') {
-    return 'Все форматы'
+    return 'Все мастер-классы'
   }
 
   return activeCategory.value?.title ?? 'Подборка'
@@ -113,10 +113,14 @@ const activeTagTitle = computed(() => {
 
 const activeTagDescription = computed(() => {
   if (selectedTag.value === 'all') {
-    return 'Первые форматы из общего каталога. Выберите тег, чтобы быстро сузить подборку под аудиторию или сезон.'
+    return 'Если вы только начинаете выбор, здесь удобно посмотреть разные форматы и почувствовать, какой ритм, материал и подача ближе именно вашему событию.'
   }
 
-  return activeCategory.value?.description ?? 'Подборка форматов по выбранному тегу.'
+  return (
+    activeCategory.value?.lead ||
+    activeCategory.value?.description ||
+    'Подборка мастер-классов для выбранного направления.'
+  )
 })
 
 const activeTagHref = computed(() =>
@@ -129,10 +133,7 @@ const featuredWorkshopCards = computed(() =>
   workshopItems.slice(0, 8).map(toWorkshopCard)
 )
 
-useSeoMeta({
-  title: 'Мастер-классы',
-  description: 'Каталог выездных мастер-классов Magic Iris по категориям, форматам и отдельным страницам.'
-})
+usePageSeo(getMasterClassesIndexSeo())
 </script>
 
 <template>
@@ -144,15 +145,9 @@ useSeoMeta({
         <CatalogHeroPanel
           eyebrow="Мастер-классы"
           title="Выездные творческие форматы для праздников, школ, корпоративов и городских площадок"
-          lead="Собрали полный каталог мастер-классов с отдельными страницами, правильными slug и структурой, готовой под будущую админку."
-          description="Можно начать с подборок по аудитории и сезону, а затем открыть отдельный мастер-класс, посмотреть его описание, варианты проведения, стоимость и реальные фото."
+          lead="В каталоге собраны выездные творческие форматы для детей и взрослых: от камерных мастер-классов до потоковых зон для больших событий."
+          description="Начните с подборки по аудитории или сезону, а затем откройте интересующий формат: внутри есть фото, описание, варианты проведения и ориентир по стоимости."
           :image="masterClassCategories[0]?.image || workshopItems[0]?.image"
-          :facts="[
-            { label: 'Подборки', value: `${masterClassCategories.length}` },
-            { label: 'Форматы', value: `${workshopItems.length}` },
-            { label: 'Организация', value: 'под ключ' }
-          ]"
-          :tags="['для женщин', 'для мужчин', 'в школу', 'новогодние', 'летние']"
           :actions="[
             { label: 'Оставить заявку', href: '/#contacts' },
             { label: 'Посмотреть шоу', href: '/shows', kind: 'ghost' }
@@ -166,7 +161,7 @@ useSeoMeta({
         <CatalogCardsSection
           eyebrow="Подборки"
           title="Начните с направления и аудитории"
-          description="На главной странице каталога карточки тоже стали легче: фото, короткое описание, понятный параметр и кнопка открытия."
+          description="Выберите подборку, которая ближе вашему формату события: камерные идеи для взрослых, школьные группы, сезонные мастер-классы или форматы для открытых площадок."
           :items="categoryCards"
         />
       </div>
@@ -177,11 +172,11 @@ useSeoMeta({
         <div class="catalog-filter-panel">
           <div class="catalog-cards-section__head">
             <div>
-              <p class="eyebrow">Фильтрация по тегам</p>
-              <h2>Быстрый подбор мастер-классов</h2>
+              <p class="eyebrow">Подберите формат</p>
+              <h2>Мастер-классы под вашу аудиторию и настроение события</h2>
             </div>
 
-            <p>Выберите тег, и мы покажем первые форматы по нужной аудитории или сезону. Для полного списка можно перейти в соответствующую подборку.</p>
+            <p>Выберите направление, чтобы сразу увидеть форматы для женской аудитории, школьных групп, сезонных праздников или летних площадок.</p>
           </div>
 
           <div class="catalog-filter-panel__chips">
@@ -202,7 +197,7 @@ useSeoMeta({
     <section class="section catalog-shell__section catalog-shell__section--tight">
       <div class="container">
         <CatalogCarouselSection
-          eyebrow="Подборка по тегу"
+          eyebrow="Сейчас в фокусе"
           :title="activeTagTitle"
           :description="activeTagDescription"
           :items="filteredWorkshopCards"
@@ -214,8 +209,8 @@ useSeoMeta({
       <div class="container">
         <CatalogCarouselSection
           eyebrow="Популярные"
-          title="Форматы, которые чаще всего выбирают для событий"
-          description="Универсальные мастер-классы с понятной организацией, красивым результатом и хорошей вовлечённостью гостей."
+          title="Форматы, которые особенно хорошо работают на событиях"
+          description="Это мастер-классы, которые легко встраиваются в тайминг, красиво смотрятся на площадке и вовлекают гостей с первых минут."
           :items="popularWorkshopCards"
         />
       </div>
@@ -225,8 +220,8 @@ useSeoMeta({
       <div class="container">
         <CatalogCarouselSection
           eyebrow="Рекомендуем"
-          title="Мастер-классы, с которых удобно начать знакомство с каталогом"
-          description="Более эстетичные и гибкие форматы для камерных событий, творческих зон и красивой подачи на площадке."
+          title="Идеи, с которых приятно начать выбор"
+          description="Спокойные, эстетичные и универсальные форматы для камерных праздников, творческих зон и событий, где важна красивая подача."
           :items="recommendedWorkshopCards"
         />
       </div>
@@ -235,9 +230,9 @@ useSeoMeta({
     <section class="section catalog-shell__section catalog-shell__section--tight">
       <div class="container">
         <CatalogCardsSection
-          eyebrow="С чего начать"
-          title="Ещё несколько форматов для быстрого выбора"
-          description="Компактная сетка с реальными карточками мастер-классов: фото, описание, стоимость и кнопка перехода."
+          eyebrow="Все мастер-классы"
+          title="Ещё несколько идей для вдохновения"
+          description="Посмотрите разные форматы и сохраните те, что откликаются по атмосфере, визуалу и результату для гостей."
           :items="featuredWorkshopCards"
         />
       </div>

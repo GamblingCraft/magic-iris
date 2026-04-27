@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { createShowHref, shows } from '~/data/catalog'
+import { getShowsIndexSeo } from '~/data/site-seo'
 
 const showCards = computed(() =>
   shows.map((program) => ({
@@ -13,7 +14,7 @@ const showCards = computed(() =>
     metaPrimary: program.pricing[0]?.value ?? 'По запросу',
     metaLabel: 'Стоимость',
     metaSecondary: 'Открыть шоу',
-    buttonLabel: 'Открыть шоу',
+    buttonLabel: 'Открыть',
     priceValue: program.pricing[0]?.value,
     productMicrodata: true
   }))
@@ -24,10 +25,7 @@ const breadcrumbs = [
   { label: 'Шоу' }
 ]
 
-useSeoMeta({
-  title: 'Шоу',
-  description: 'Каталог песочного шоу, светового шоу, шоу-портретов и визуальных форматов Magic Iris.'
-})
+usePageSeo(getShowsIndexSeo())
 </script>
 
 <template>
@@ -40,7 +38,7 @@ useSeoMeta({
           eyebrow="Шоу"
           title="Сценические форматы для событий, где важны эмоция, свет и сильный первый кадр"
           lead="Подберём программу под свадьбу, день рождения, корпоратив или городское событие и соберём подачу так, чтобы она смотрелась цельно и дорого."
-          description="В каталоге собраны все шоу-форматы Magic Iris: песочное шоу, световой номер, шоу-портреты и крутящийся портрет. У каждого формата есть отдельная страница со стоимостью, фото и структурой подачи."
+          description="Песочная анимация, световые номера, шоу-портреты и крутящийся портрет для событий, где хочется удивить гостей и оставить сильное впечатление."
           :image="shows[1]?.heroImage || shows[0]?.heroImage"
           :facts="[
             { label: 'Форматы', value: `${shows.length}` },
@@ -61,7 +59,7 @@ useSeoMeta({
         <CatalogCardsSection
           eyebrow="Каталог шоу"
           title="Выберите программу под формат вашего события"
-          description="Собрали карточки в более понятный формат: фото, краткое описание, стартовая стоимость и быстрый переход на детальную страницу шоу."
+          description="Каждая программа показана просто и понятно: фото, короткое описание, ориентир по стоимости и переход на страницу с деталями."
           :columns="2"
           :items="showCards"
         />

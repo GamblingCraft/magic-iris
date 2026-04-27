@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getShowBySlug } from '~/data/catalog'
+import { getShowSeo } from '~/data/site-seo'
 
 const route = useRoute()
 const currentProgram = computed(() => getShowBySlug(String(route.params.slug)))
@@ -17,10 +18,7 @@ if (!currentProgram.value) {
   })
 }
 
-useSeoMeta({
-  title: () => currentProgram.value?.title ?? 'Шоу',
-  description: () => currentProgram.value?.description ?? 'Описание шоу-программы Magic Iris.'
-})
+usePageSeo(computed(() => getShowSeo(currentProgram.value!)))
 </script>
 
 <template>
@@ -107,11 +105,7 @@ useSeoMeta({
           </div>
         </div>
 
-        <div class="catalog-gallery-grid">
-          <figure v-for="image in currentProgram?.gallery" :key="image.id" class="catalog-gallery-card">
-            <img :src="image.src" :alt="image.alt" loading="lazy">
-          </figure>
-        </div>
+        <CatalogGallerySection :items="currentProgram?.gallery || []" />
       </div>
     </section>
   </div>

@@ -316,6 +316,27 @@
   ],
   "workshops": [
     {
+      "id": "workshop-qyk3b8f676",
+      "slug": "new-master-class-mog0f676",
+      "title": "Новый мастер-класс",
+      "primaryCategorySlug": "test",
+      "categorySlugs": [
+        "test"
+      ],
+      "audienceLabel": "Новая категория",
+      "summary": "",
+      "description": "",
+      "priceFrom": "",
+      "priceNote": "",
+      "image": "",
+      "gallery": [],
+      "duration": "",
+      "participants": "",
+      "formats": [],
+      "includes": [],
+      "pricing": []
+    },
+    {
       "id": "workshop-8x1by4j9vg",
       "slug": "new-master-class-mofaj9vh",
       "title": "Новый мастер-класс",
@@ -402,7 +423,8 @@
         "dlya-zhenshchin",
         "dlya-muzhchin",
         "v-shkolu",
-        "letnie"
+        "letnie",
+        "novogodnie"
       ],
       "audienceLabel": "Для женщин · Для мужчин · В школу · Летние",
       "summary": "Акварель — выездной мастер-класс с красивым результатом и понятной механикой для гостей события.",

@@ -22,7 +22,7 @@ const createSlide = async () => {
 
   try {
     const nextSlide = createEmptySlide()
-    nextSlide.title = 'Новый слайд Hero'
+    nextSlide.title = 'Новый экран Hero'
     nextSlide.eyebrow = 'Новый блок'
 
     await $fetch('/api/admin/home-slider', {
@@ -60,21 +60,27 @@ const removeSlide = async (id: string) => {
     <div class="admin-card">
       <div class="admin-card__head">
         <div>
-          <h3 class="admin-card__title">Фото для Hero</h3>
-          <p class="admin-card__descr">Здесь хранятся изображения и тексты hero-блока на главной странице.</p>
+          <h3 class="admin-card__title">Hero секция</h3>
+          <p class="admin-card__descr">
+            Здесь хранятся изображения и тексты первого экрана на главной странице.
+          </p>
         </div>
       </div>
 
       <div class="admin-actions">
         <button type="button" class="admin-button admin-button--sand" :disabled="isCreating" @click="createSlide">
-          {{ isCreating ? 'Создание...' : 'Добавить слайд' }}
+          {{ isCreating ? 'Создание...' : 'Добавить экран' }}
         </button>
       </div>
     </div>
 
     <div class="admin-rows">
       <article v-for="slide in slides" :key="slide.id" class="admin-row">
-        <img class="admin-row__thumb" :src="slide.image || 'https://placehold.co/800x520?text=Hero'" :alt="slide.title || 'Hero slide'">
+        <img
+          class="admin-row__thumb"
+          :src="slide.image || 'https://placehold.co/800x520?text=Hero'"
+          :alt="slide.title || 'Hero image'"
+        >
 
         <div class="admin-row__meta">
           <h3>{{ slide.title || 'Без названия' }}</h3>

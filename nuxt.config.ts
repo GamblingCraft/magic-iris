@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   srcDir: '.',
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  modules: ['@nuxt/icon'],
   css: ['~/assets/css/main.css', '~/assets/css/ref-overrides.css', '~/assets/css/admin.css'],
   app: {
     head: {

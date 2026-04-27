@@ -4,6 +4,7 @@ import {
   getWorkshopsByCategorySlug,
   getWorkshopBySlugs
 } from '~/data/catalog'
+import { getWorkshopSeo } from '~/data/site-seo'
 import { formatDisplayPrice } from '~/utils/format-price'
 
 const route = useRoute()
@@ -46,10 +47,7 @@ if (!currentCategory.value || !currentWorkshop.value) {
   })
 }
 
-useSeoMeta({
-  title: () => currentWorkshop.value?.title ?? 'Мастер-класс',
-  description: () => currentWorkshop.value?.summary ?? 'Описание мастер-класса Magic Iris.'
-})
+usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory.value)))
 </script>
 
 <template>
@@ -154,11 +152,7 @@ useSeoMeta({
           </div>
         </div>
 
-        <div class="catalog-gallery-grid">
-          <figure v-for="image in currentWorkshop?.gallery" :key="image.id" class="catalog-gallery-card">
-            <img :src="image.src" :alt="image.alt" loading="lazy">
-          </figure>
-        </div>
+        <CatalogGallerySection :items="currentWorkshop?.gallery || []" />
       </div>
     </section>
 

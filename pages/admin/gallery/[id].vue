@@ -89,7 +89,7 @@ const removeItem = async () => {
 
 <template>
   <section v-if="selectedItem" class="admin-grid">
-    <div class="admin-card">
+    <div class="admin-card admin-card--editor">
       <div class="admin-card__head">
         <div>
           <h3 class="admin-card__title">Редактор фото HomeGallerySection</h3>

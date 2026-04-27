@@ -65,7 +65,8 @@ onBeforeUnmount(() => {
 
 <template>
   <header class="site-header s-header" :class="{ 'site-header--overlay': isHome }">
-    <div v-if="promoVisible" class="promo-banner">
+    <Transition name="promo-pop">
+      <div v-if="promoVisible" class="promo-banner">
       <div class="container promo-banner__inner">
         <p class="promo-banner__text">
           <span>соберём ваш лучший</span>
@@ -75,7 +76,8 @@ onBeforeUnmount(() => {
           ×
         </button>
       </div>
-    </div>
+      </div>
+    </Transition>
 
     <div class="header-top">
       <div class="container">

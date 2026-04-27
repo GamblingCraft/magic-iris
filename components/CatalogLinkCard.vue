@@ -40,14 +40,18 @@ const metaLabel = computed(() =>
 
 const buttonLabel = computed(() => props.item.buttonLabel || 'Открыть')
 
-const displayPrice = computed(() =>
-  formatDisplayPrice(props.item.metaPrimary || 'По запросу')
+const isCollectionCard = computed(() => !props.item.productMicrodata)
+
+const displayMetaPrimary = computed(() =>
+  props.item.productMicrodata
+    ? formatDisplayPrice(props.item.metaPrimary || 'По запросу')
+    : props.item.metaPrimary || ''
 )
 </script>
 
 <template>
   <article
-    class="catalog-link-card"
+    :class="['catalog-link-card', { 'catalog-link-card--collection': isCollectionCard }]"
     :itemscope="item.productMicrodata ? true : undefined"
     :itemtype="item.productMicrodata ? 'https://schema.org/Product' : undefined"
   >
@@ -111,7 +115,7 @@ const displayPrice = computed(() =>
       <div class="catalog-link-card__footer">
         <div class="catalog-link-card__price-block">
           <span class="catalog-link-card__label">{{ metaLabel }}</span>
-          <strong class="catalog-link-card__price">{{ displayPrice }}</strong>
+          <strong class="catalog-link-card__price">{{ displayMetaPrimary }}</strong>
         </div>
 
         <NuxtLink :to="item.href" class="catalog-link-card__button">

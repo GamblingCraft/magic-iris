@@ -1,0 +1,34 @@
+{
+  "siteName": "Magic Iris",
+  "city": "Иркутске",
+  "siteUrl": "https://magiciris.ru",
+  "defaultDescription": "Шоу и выездные мастер-классы в Иркутске для свадеб, дней рождения, корпоративов, выпускных и городских событий с красивой подачей и понятной организацией.",
+  "home": {
+    "title": "Шоу и мастер-классы в Иркутске | Magic Iris",
+    "description": "Песочное шоу, световое шоу, шоу-портреты и выездные мастер-классы в Иркутске для свадеб, дней рождения, корпоративов, выпускных и камерных праздников."
+  },
+  "showsIndex": {
+    "title": "Шоу-программы в Иркутске | Magic Iris",
+    "description": "Каталог шоу-программ Magic Iris: песочное шоу, световое шоу, шоу-портреты и визуальные номера для свадеб, дней рождения, корпоративов и городских событий."
+  },
+  "show": {
+    "titleTemplate": "{title} в Иркутске | {brand}",
+    "descriptionTemplate": "{lead} Формат адаптируем под площадку, гостей и тайминг события."
+  },
+  "masterClassesIndex": {
+    "title": "Выездные мастер-классы в Иркутске | Magic Iris",
+    "description": "Каталог выездных мастер-классов Magic Iris в Иркутске: творческие форматы для женщин, мужчин, школ, корпоративов, сезонных и городских событий."
+  },
+  "masterClassCategory": {
+    "titleTemplate": "Мастер-классы {category} в Иркутске | {brand}",
+    "descriptionTemplate": "{description} Поможем подобрать формат под аудиторию, площадку и тайминг события."
+  },
+  "workshop": {
+    "titleTemplate": "{title} — мастер-класс в Иркутске | {brand}",
+    "descriptionTemplate": "{summary} Подходит для событий разного масштаба и легко адаптируется под формат площадки."
+  },
+  "yandexVerification": "",
+  "googleVerification": "",
+  "yandexMetrikaCounter": "",
+  "robotsContent": "User-agent: *\nAllow: /\n\nSitemap: {sitemapUrl}\nHost: {siteUrl}"
+}

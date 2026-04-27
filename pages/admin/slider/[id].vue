@@ -85,11 +85,14 @@ const removeSlide = async () => {
 
 <template>
   <section v-if="selectedSlide" class="admin-grid">
-    <div class="admin-card">
+    <div class="admin-card admin-card--editor">
       <div class="admin-card__head">
         <div>
-          <h3 class="admin-card__title">Фото и тексты Hero</h3>
-          <p class="admin-card__descr">Меняйте изображение, заголовок, подзаголовок, описание и кнопку текущего hero-слайда.</p>
+          <h3 class="admin-card__title">Hero секция</h3>
+          <p class="admin-card__descr">
+            Меняйте изображение, заголовок, акцентную строку, описание и кнопку текущего экрана
+            Hero.
+          </p>
         </div>
       </div>
 
@@ -150,7 +153,7 @@ const removeSlide = async () => {
           v-model="selectedSlide.image"
           label="Изображение"
           folder="slider"
-          preview-alt="Слайд главной"
+          preview-alt="Hero секция"
         />
 
         <label class="admin-field">
@@ -167,6 +170,6 @@ const removeSlide = async () => {
   </section>
 
   <div v-else class="admin-empty">
-    <p>Слайд не найден.</p>
+    <p>Экран Hero не найден.</p>
   </div>
 </template>

@@ -5,9 +5,9 @@
     "title": "Шоу и мастер-классы, созданные специально для вашего события",
     "script": "в Иркутске",
     "summary": "Оставьте заявку и мы подберём песочное шоу, световой номер, шоу-портрет или выездной мастер-класс под формат вашего праздника.",
-    "buttonLabel": "заказать шоу",
-    "buttonHref": "https://wa.me/79501225413",
-    "image": "images/hero.webp",
+    "buttonLabel": "ЗАКАЗАТЬ ШОУ",
+    "buttonHref": "https://t.me/iris_magic",
+    "image": "/images/slider/1777216120815-ier409-hero.webp",
     "imageAlt": "Magic Iris event show",
     "active": true
   }

@@ -86,21 +86,33 @@ export const toShowDraft = (item: ShowProgram): ShowDraft => ({
   suitableForText: linesToText(item.suitableFor)
 })
 
-export const fromShowDraft = (item: ShowDraft): ShowProgram => ({
-  id: item.id,
-  slug: item.slug,
-  title: item.title,
-  kicker: item.kicker,
-  description: item.description,
-  lead: item.lead,
-  image: item.image,
-  heroImage: item.heroImage,
-  gallery: textToLines(item.galleryText).map(parseImageLine).filter(Boolean) as CatalogImage[],
-  facts: textToLines(item.factsText).map(parseFactLine).filter(Boolean) as CatalogFact[],
-  pricing: textToLines(item.pricingText).map(parsePriceLine).filter(Boolean) as PricePoint[],
-  features: textToLines(item.featuresText),
-  suitableFor: textToLines(item.suitableForText)
-})
+export const fromShowDraft = (item: ShowDraft): ShowProgram => {
+  const galleryFromText = textToLines(item.galleryText).map(parseImageLine).filter(Boolean) as CatalogImage[]
+  const gallery =
+    item.gallery
+      .map((image) => ({
+        id: image.id || createId('image'),
+        src: image.src?.trim() || '',
+        alt: image.alt?.trim() || ''
+      }))
+      .filter((image) => image.src) || []
+
+  return {
+    id: item.id,
+    slug: item.slug,
+    title: item.title,
+    kicker: item.kicker,
+    description: item.description,
+    lead: item.lead,
+    image: item.image,
+    heroImage: item.heroImage,
+    gallery: gallery.length ? gallery : galleryFromText,
+    facts: textToLines(item.factsText).map(parseFactLine).filter(Boolean) as CatalogFact[],
+    pricing: textToLines(item.pricingText).map(parsePriceLine).filter(Boolean) as PricePoint[],
+    features: textToLines(item.featuresText),
+    suitableFor: textToLines(item.suitableForText)
+  }
+}
 
 export const toWorkshopDraft = (item: WorkshopItem): WorkshopDraft => ({
   ...structuredClone(item),
@@ -110,25 +122,37 @@ export const toWorkshopDraft = (item: WorkshopItem): WorkshopDraft => ({
   includesText: linesToText(item.includes)
 })
 
-export const fromWorkshopDraft = (item: WorkshopDraft): WorkshopItem => ({
-  id: item.id,
-  slug: item.slug,
-  title: item.title,
-  primaryCategorySlug: item.primaryCategorySlug,
-  categorySlugs: Array.from(new Set(item.categorySlugs.filter(Boolean))),
-  audienceLabel: item.audienceLabel,
-  summary: item.summary,
-  description: item.description,
-  priceFrom: item.priceFrom,
-  priceNote: item.priceNote,
-  image: item.image,
-  gallery: textToLines(item.galleryText).map(parseImageLine).filter(Boolean) as CatalogImage[],
-  duration: item.duration,
-  participants: item.participants,
-  formats: textToLines(item.formatsText),
-  includes: textToLines(item.includesText),
-  pricing: textToLines(item.pricingText).map(parsePriceLine).filter(Boolean) as PricePoint[]
-})
+export const fromWorkshopDraft = (item: WorkshopDraft): WorkshopItem => {
+  const galleryFromText = textToLines(item.galleryText).map(parseImageLine).filter(Boolean) as CatalogImage[]
+  const gallery =
+    item.gallery
+      .map((image) => ({
+        id: image.id || createId('image'),
+        src: image.src?.trim() || '',
+        alt: image.alt?.trim() || ''
+      }))
+      .filter((image) => image.src) || []
+
+  return {
+    id: item.id,
+    slug: item.slug,
+    title: item.title,
+    primaryCategorySlug: item.primaryCategorySlug,
+    categorySlugs: Array.from(new Set(item.categorySlugs.filter(Boolean))),
+    audienceLabel: item.audienceLabel,
+    summary: item.summary,
+    description: item.description,
+    priceFrom: item.priceFrom,
+    priceNote: item.priceNote,
+    image: item.image,
+    gallery: gallery.length ? gallery : galleryFromText,
+    duration: item.duration,
+    participants: item.participants,
+    formats: textToLines(item.formatsText),
+    includes: textToLines(item.includesText),
+    pricing: textToLines(item.pricingText).map(parsePriceLine).filter(Boolean) as PricePoint[]
+  }
+}
 
 export const createEmptySlide = (): HomeHeroSlide => ({
   id: createId('slide'),
@@ -186,4 +210,14 @@ export const createEmptyWorkshopDraft = (categories: MasterClassCategory[]): Wor
   pricingText: '',
   formatsText: '',
   includesText: ''
+})
+
+export const createEmptyMasterClassCategory = (): MasterClassCategory => ({
+  id: createId('category'),
+  slug: '',
+  title: '',
+  count: 0,
+  description: '',
+  lead: '',
+  image: ''
 })

@@ -48,6 +48,18 @@ const selectedWorkshop = computed(() =>
   workshopDrafts.value.find((item) => item.id === workshopId.value) || null
 )
 
+const primaryCategoryAdminHref = computed(() => {
+  if (!selectedWorkshop.value) {
+    return '/admin/master-classes'
+  }
+
+  const category = categories.value.find(
+    (item) => item.slug === selectedWorkshop.value?.primaryCategorySlug
+  )
+
+  return category ? `/admin/master-classes/category/${category.id}` : '/admin/master-classes'
+})
+
 const toggleCategory = (slug: string, checked: boolean) => {
   if (!selectedWorkshop.value) {
     return
@@ -104,28 +116,37 @@ const removeWorkshop = async () => {
     method: 'PUT',
     body: {
       ...catalog.value,
-      workshops: workshopDrafts.value.filter((item) => item.id !== selectedWorkshop.value?.id).map((item) => fromWorkshopDraft(item))
+      workshops: workshopDrafts.value
+        .filter((item) => item.id !== selectedWorkshop.value?.id)
+        .map((item) => fromWorkshopDraft(item))
     }
   })
 
-  await router.push('/admin/master-classes')
+  await router.push(primaryCategoryAdminHref.value)
 }
 </script>
 
 <template>
   <section v-if="selectedWorkshop" class="admin-grid">
-    <div class="admin-card">
+    <div class="admin-card admin-card--editor">
       <div class="admin-card__head">
         <div>
           <h3 class="admin-card__title">Редактор мастер-класса</h3>
-          <p class="admin-card__descr">Карточка, категории, описание, цены и медиа.</p>
+          <p class="admin-card__descr">Карточка, категории, описание, цены и внутренняя галерея.</p>
         </div>
       </div>
 
       <div class="admin-actions">
-        <NuxtLink to="/admin/master-classes" class="admin-button">К списку</NuxtLink>
-        <button type="button" class="admin-button admin-button--danger" @click="removeWorkshop">Удалить</button>
-        <button type="button" class="admin-button admin-button--accent" :disabled="isSaving" @click="saveWorkshop">
+        <NuxtLink :to="primaryCategoryAdminHref" class="admin-button">К категории</NuxtLink>
+        <button type="button" class="admin-button admin-button--danger" @click="removeWorkshop">
+          Удалить
+        </button>
+        <button
+          type="button"
+          class="admin-button admin-button--accent"
+          :disabled="isSaving"
+          @click="saveWorkshop"
+        >
           {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
         </button>
       </div>
@@ -185,7 +206,7 @@ const removeWorkshop = async () => {
       </fieldset>
 
       <label class="admin-field">
-        <span class="admin-label">Summary</span>
+        <span class="admin-label">Краткое описание</span>
         <textarea v-model="selectedWorkshop.summary" class="admin-textarea" />
       </label>
 
@@ -197,7 +218,7 @@ const removeWorkshop = async () => {
       <div class="admin-editor__grid">
         <AdminImageUploadField
           v-model="selectedWorkshop.image"
-          label="Image"
+          label="Основное изображение"
           folder="master-classes"
           preview-alt="Превью мастер-класса"
         />
@@ -241,11 +262,12 @@ const removeWorkshop = async () => {
           <span class="admin-inline-note">Одна строка: `Лейбл|Цена|Примечание`</span>
         </label>
 
-        <label class="admin-fieldset">
-          <span class="admin-fieldset__legend">Галерея</span>
-          <textarea v-model="selectedWorkshop.galleryText" class="admin-textarea" />
-          <span class="admin-inline-note">Одна строка: `id|src|alt`</span>
-        </label>
+        <AdminGalleryEditorField
+          v-model="selectedWorkshop.gallery"
+          label="Галерея"
+          folder="master-classes"
+          note="Загрузите фото для внутренней галереи карточки мастер-класса, настройте порядок и подписи."
+        />
       </div>
     </div>
   </section>

@@ -74,7 +74,9 @@ const removeShow = async () => {
     method: 'PUT',
     body: {
       ...catalog.value,
-      shows: showDrafts.value.filter((item) => item.id !== selectedShow.value?.id).map((item) => fromShowDraft(item))
+      shows: showDrafts.value
+        .filter((item) => item.id !== selectedShow.value?.id)
+        .map((item) => fromShowDraft(item))
     }
   })
 
@@ -84,18 +86,25 @@ const removeShow = async () => {
 
 <template>
   <section v-if="selectedShow" class="admin-grid">
-    <div class="admin-card">
+    <div class="admin-card admin-card--editor">
       <div class="admin-card__head">
         <div>
           <h3 class="admin-card__title">Редактор шоу</h3>
-          <p class="admin-card__descr">Основные поля карточки и детальной страницы.</p>
+          <p class="admin-card__descr">Основные поля карточки, hero-блок, факты, цены и внутренняя галерея.</p>
         </div>
       </div>
 
       <div class="admin-actions">
         <NuxtLink to="/admin/shows" class="admin-button">К списку</NuxtLink>
-        <button type="button" class="admin-button admin-button--danger" @click="removeShow">Удалить</button>
-        <button type="button" class="admin-button admin-button--accent" :disabled="isSaving" @click="saveShow">
+        <button type="button" class="admin-button admin-button--danger" @click="removeShow">
+          Удалить
+        </button>
+        <button
+          type="button"
+          class="admin-button admin-button--accent"
+          :disabled="isSaving"
+          @click="saveShow"
+        >
           {{ isSaving ? 'Сохранение...' : 'Сохранить' }}
         </button>
       </div>
@@ -137,14 +146,14 @@ const removeShow = async () => {
       <div class="admin-editor__grid">
         <AdminImageUploadField
           v-model="selectedShow.image"
-          label="Image"
+          label="Основное изображение"
           folder="show"
           preview-alt="Превью шоу"
         />
 
         <AdminImageUploadField
           v-model="selectedShow.heroImage"
-          label="Hero image"
+          label="Hero изображение"
           folder="show"
           preview-alt="Hero шоу"
         />
@@ -165,11 +174,12 @@ const removeShow = async () => {
       </div>
 
       <div class="admin-editor__grid">
-        <label class="admin-fieldset">
-          <span class="admin-fieldset__legend">Галерея</span>
-          <textarea v-model="selectedShow.galleryText" class="admin-textarea" />
-          <span class="admin-inline-note">Одна строка: `id|src|alt`</span>
-        </label>
+        <AdminGalleryEditorField
+          v-model="selectedShow.gallery"
+          label="Галерея"
+          folder="show"
+          note="Загрузите фото для внутренней галереи карточки шоу, настройте порядок и подписи."
+        />
 
         <label class="admin-fieldset">
           <span class="admin-fieldset__legend">Списки</span>

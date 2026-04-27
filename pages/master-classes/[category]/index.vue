@@ -4,6 +4,7 @@ import {
   getMasterClassCategoryBySlug,
   getWorkshopsByCategorySlug
 } from '~/data/catalog'
+import { getMasterClassCategorySeo } from '~/data/site-seo'
 
 const route = useRoute()
 const categorySlug = computed(() => String(route.params.category))
@@ -34,17 +35,14 @@ const workshopCards = computed(() =>
     description: workshop.summary,
     metaPrimary: workshop.priceFrom,
     metaLabel: 'Стоимость',
-    metaSecondary: 'Открыть формат',
-    buttonLabel: 'Открыть формат',
+    metaSecondary: workshop.audienceLabel,
+    buttonLabel: 'Открыть',
     priceValue: workshop.priceFrom,
     productMicrodata: true
   }))
 )
 
-useSeoMeta({
-  title: () => currentCategory.value?.title ?? 'Категория мастер-классов',
-  description: () => currentCategory.value?.description ?? 'Категория мастер-классов Magic Iris.'
-})
+usePageSeo(computed(() => getMasterClassCategorySeo(currentCategory.value!)))
 </script>
 
 <template>
@@ -78,7 +76,7 @@ useSeoMeta({
         <CatalogCardsSection
           eyebrow="Каталог категории"
           title="Форматы внутри подборки"
-          description="Здесь оставили понятные превью: фото, короткое описание, стартовую стоимость и кнопку перехода в карточку."
+          description="Ниже собраны форматы этой подборки: с фото, коротким описанием, ориентиром по стоимости и переходом на страницу мастер-класса."
           :items="workshopCards"
         />
       </div>
