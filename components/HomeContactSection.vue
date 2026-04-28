@@ -4,7 +4,6 @@ import { computed, ref } from 'vue'
 import { homeCta } from '~/data/home-conversion'
 import { contactInfo } from '~/data/site'
 
-const sectionRef = ref<HTMLElement | null>(null)
 const phoneInput = ref('')
 const consentAccepted = ref(false)
 
@@ -78,17 +77,10 @@ const openSubmit = () => {
 
   window.open(submitHref.value, '_blank', 'noopener,noreferrer')
 }
-
-useGsapReveal(sectionRef, ['.container > .eyebrow', '.cta-ref__media', '.cta-ref__title > *', '.cta-ref__descr', '.cta-ref__form', '.cta-ref__consent'], {
-  start: 'top 86%',
-  stagger: 0.12,
-  y: 34,
-  blur: 8
-})
 </script>
 
 <template>
-  <section id="contacts" ref="sectionRef" class="section cta-section">
+  <section id="contacts" class="section cta-section">
     <div class="container">
       <p class="eyebrow">Готовы обсудить проект?</p>
       <div class="cta-ref">

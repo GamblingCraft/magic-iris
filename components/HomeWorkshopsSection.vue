@@ -1,25 +1,13 @@
 <script setup lang="ts">
-import { createMasterClassCategoryHref, masterClassCategories } from '~/data/catalog'
+import type { HomeWorkshopTile } from '~/types/public-catalog'
 
-const sectionRef = ref<HTMLElement | null>(null)
-
-const tiles = computed(() => [
-  { ...masterClassCategories[0], href: createMasterClassCategoryHref(masterClassCategories[0].slug), size: 'wide' },
-  { ...masterClassCategories[1], href: createMasterClassCategoryHref(masterClassCategories[1].slug), size: 'tall' },
-  { ...masterClassCategories[2], href: createMasterClassCategoryHref(masterClassCategories[2].slug), size: 'small' },
-  { ...masterClassCategories[3], href: createMasterClassCategoryHref(masterClassCategories[3].slug), size: 'small' }
-])
-
-useGsapReveal(sectionRef, ['.catalog-preview__head > div > *', '.catalog-preview__lead', '.catalog-wall__card'], {
-  start: 'top 88%',
-  stagger: 0.1,
-  y: 34,
-  blur: 8
-})
+defineProps<{
+  tiles: HomeWorkshopTile[]
+}>()
 </script>
 
 <template>
-  <section id="master-classes" ref="sectionRef" class="section section--cream catalog-preview">
+  <section id="master-classes" class="section section--cream catalog-preview">
     <div class="container">
       <div class="catalog-preview__head">
         <div>

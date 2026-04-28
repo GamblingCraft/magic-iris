@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { getShowBySlug } from '~/data/catalog'
 import { getShowSeo } from '~/data/site-seo'
+import type { ShowDetailPayload } from '~/types/public-catalog'
 
 const route = useRoute()
-const currentProgram = computed(() => getShowBySlug(String(route.params.slug)))
+const slug = String(route.params.slug)
+
+const { data: showPayload } = await useFetch<ShowDetailPayload>(`/api/site/shows/${slug}`, {
+  key: `site-show-${slug}`
+})
+
+const currentProgram = computed(() => showPayload.value?.program || null)
 
 const breadcrumbs = computed(() => [
   { label: 'Главная', href: '/' },

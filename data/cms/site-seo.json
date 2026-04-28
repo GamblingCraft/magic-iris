@@ -13,7 +13,7 @@
   },
   "show": {
     "titleTemplate": "{title} в Иркутске | {brand}",
-    "descriptionTemplate": "{lead} Формат адаптируем под площадку, гостей и тайминг события."
+    "descriptionTemplate": "{lead} Формат адаптируем под площадку, гостей и тайминг события. {title}, {kicker}, {lead}, {description}, {city}, {brand}"
   },
   "masterClassesIndex": {
     "title": "Выездные мастер-классы в Иркутске | Magic Iris",
@@ -21,11 +21,11 @@
   },
   "masterClassCategory": {
     "titleTemplate": "Мастер-классы {category} в Иркутске | {brand}",
-    "descriptionTemplate": "{description} Поможем подобрать формат под аудиторию, площадку и тайминг события."
+    "descriptionTemplate": "{description} Поможем подобрать формат под аудиторию, площадку и тайминг события.{category}, {count}, {description}, {lead}, {city}, {brand}"
   },
   "workshop": {
     "titleTemplate": "{title} — мастер-класс в Иркутске | {brand}",
-    "descriptionTemplate": "{summary} Подходит для событий разного масштаба и легко адаптируется под формат площадки."
+    "descriptionTemplate": "{summary} Подходит для событий разного масштаба и легко адаптируется под формат площадки.{title}, {category}, {summary}, {description}, {audience}, {priceFrom}, {city}, {brand}"
   },
   "yandexVerification": "",
   "googleVerification": "",

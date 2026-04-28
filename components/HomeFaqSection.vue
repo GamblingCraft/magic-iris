@@ -1,23 +1,15 @@
 <script setup lang="ts">
 import { homeFaqItems } from '~/data/home-conversion'
 
-const sectionRef = ref<HTMLElement | null>(null)
 const openIndex = ref(0)
 
 const toggleItem = (index: number) => {
   openIndex.value = openIndex.value === index ? -1 : index
 }
-
-useGsapReveal(sectionRef, ['.faq-section__head > div > *', '.faq-section__head > .text-3', '.faq-item'], {
-  start: 'top 88%',
-  stagger: 0.07,
-  y: 26,
-  blur: 6
-})
 </script>
 
 <template>
-  <section ref="sectionRef" class="section faq-section">
+  <section class="section faq-section">
     <div class="container">
                 <p class="eyebrow">FAQ</p>
       <div class="sec-title-double faq-section__head">

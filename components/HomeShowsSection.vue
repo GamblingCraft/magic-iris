@@ -1,25 +1,13 @@
 <script setup lang="ts">
-import { createShowHref, shows } from '~/data/catalog'
+import type { HomeShowTile } from '~/types/public-catalog'
 
-const sectionRef = ref<HTMLElement | null>(null)
-
-const tiles = computed(() => [
-  { ...shows[0], href: createShowHref(shows[0].slug), size: 'wide' },
-  { ...shows[1], href: createShowHref(shows[1].slug), size: 'tall' },
-  { ...shows[2], href: createShowHref(shows[2].slug), size: 'small' },
-  { ...shows[3], href: createShowHref(shows[3].slug), size: 'small' }
-])
-
-useGsapReveal(sectionRef, ['.catalog-preview__head > div > *', '.catalog-preview__lead', '.catalog-wall__card'], {
-  start: 'top 88%',
-  stagger: 0.1,
-  y: 34,
-  blur: 8
-})
+defineProps<{
+  tiles: HomeShowTile[]
+}>()
 </script>
 
 <template>
-  <section id="shows" ref="sectionRef" class="section section--light catalog-preview">
+  <section id="shows" class="section section--light catalog-preview">
     <div class="container">
       <div class="catalog-preview__head">
         <div>

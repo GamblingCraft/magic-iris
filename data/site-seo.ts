@@ -1,15 +1,5 @@
 import siteSeoContent from './cms/site-seo.json'
-import {
-  createMasterClassCategoryHref,
-  createMasterClassHref,
-  createShowHref,
-  masterClassCategories,
-  shows,
-  workshopItems,
-  type MasterClassCategory,
-  type ShowProgram,
-  type WorkshopItem
-} from './catalog'
+import type { MasterClassCategory, ShowProgram, WorkshopItem } from './catalog'
 
 type SeoBlock = {
   title: string
@@ -43,13 +33,6 @@ export type SiteHeadSettings = Pick<
   'yandexVerification' | 'googleVerification' | 'yandexMetrikaCounter'
 >
 
-export type SitemapEntry = {
-  url: string
-  path: string
-  priority: string
-  changefreq: string
-}
-
 type SeoVars = Record<string, string | number | undefined | null>
 
 export const siteSeoSettings = siteSeoContent as SiteSeoSettings
@@ -77,7 +60,17 @@ export const getHomeSeo = () =>
 export const getShowsIndexSeo = () =>
   resolveSeoBlock(siteSeoSettings.showsIndex.title, siteSeoSettings.showsIndex.description)
 
-export const getShowSeo = (show: ShowProgram) => {
+type ShowSeoSource = Pick<ShowProgram, 'title' | 'kicker' | 'lead' | 'description'>
+type MasterClassCategorySeoSource = Pick<
+  MasterClassCategory,
+  'title' | 'count' | 'description' | 'lead'
+>
+type WorkshopSeoSource = Pick<
+  WorkshopItem,
+  'title' | 'audienceLabel' | 'summary' | 'description' | 'priceFrom'
+>
+
+export const getShowSeo = (show: ShowSeoSource) => {
   const vars = {
     title: show.title,
     kicker: show.kicker,
@@ -99,7 +92,7 @@ export const getMasterClassesIndexSeo = () =>
     siteSeoSettings.masterClassesIndex.description
   )
 
-export const getMasterClassCategorySeo = (category: MasterClassCategory) => {
+export const getMasterClassCategorySeo = (category: MasterClassCategorySeoSource) => {
   const vars = {
     category: category.title,
     count: category.count,
@@ -116,8 +109,8 @@ export const getMasterClassCategorySeo = (category: MasterClassCategory) => {
 }
 
 export const getWorkshopSeo = (
-  workshop: WorkshopItem,
-  category?: MasterClassCategory | null
+  workshop: WorkshopSeoSource,
+  category?: MasterClassCategorySeoSource | null
 ) => {
   const vars = {
     title: workshop.title,
@@ -170,62 +163,4 @@ export const resolveYandexMetrikaHead = (snippet: string) => {
     script: extractTagInnerHtml(normalizedSnippet, 'script'),
     noscript: extractTagInnerHtml(normalizedSnippet, 'noscript')
   }
-}
-
-export const getSitemapEntries = (): SitemapEntry[] => [
-  {
-    url: buildAbsoluteUrl('/'),
-    path: '/',
-    priority: '1.0',
-    changefreq: 'weekly'
-  },
-  {
-    url: buildAbsoluteUrl('/shows'),
-    path: '/shows',
-    priority: '0.9',
-    changefreq: 'weekly'
-  },
-  {
-    url: buildAbsoluteUrl('/master-classes'),
-    path: '/master-classes',
-    priority: '0.9',
-    changefreq: 'weekly'
-  },
-  ...shows.map((show) => ({
-    url: buildAbsoluteUrl(createShowHref(show.slug)),
-    path: createShowHref(show.slug),
-    priority: '0.8',
-    changefreq: 'monthly'
-  })),
-  ...masterClassCategories.map((category) => ({
-    url: buildAbsoluteUrl(createMasterClassCategoryHref(category.slug)),
-    path: createMasterClassCategoryHref(category.slug),
-    priority: '0.8',
-    changefreq: 'weekly'
-  })),
-  ...workshopItems.map((workshop) => ({
-    url: buildAbsoluteUrl(createMasterClassHref(workshop.primaryCategorySlug, workshop.slug)),
-    path: createMasterClassHref(workshop.primaryCategorySlug, workshop.slug),
-    priority: '0.7',
-    changefreq: 'monthly'
-  }))
-]
-
-export const generateSitemapXml = () => {
-  const today = new Date().toISOString().slice(0, 10)
-  const urls = getSitemapEntries()
-    .map(
-      (entry) => `  <url>
-    <loc>${entry.url}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${entry.changefreq}</changefreq>
-    <priority>${entry.priority}</priority>
-  </url>`
-    )
-    .join('\n')
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls}
-</urlset>`
 }

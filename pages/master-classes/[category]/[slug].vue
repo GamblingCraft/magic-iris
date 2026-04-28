@@ -1,42 +1,27 @@
 <script setup lang="ts">
-import {
-  getMasterClassCategoryBySlug,
-  getWorkshopsByCategorySlug,
-  getWorkshopBySlugs
-} from '~/data/catalog'
 import { getWorkshopSeo } from '~/data/site-seo'
+import type { WorkshopDetailPayload } from '~/types/public-catalog'
 import { formatDisplayPrice } from '~/utils/format-price'
 
 const route = useRoute()
-const categorySlug = computed(() => String(route.params.category))
-const workshopSlug = computed(() => String(route.params.slug))
+const categorySlug = String(route.params.category)
+const workshopSlug = String(route.params.slug)
 
-const currentCategory = computed(() => getMasterClassCategoryBySlug(categorySlug.value))
-const currentWorkshop = computed(() => getWorkshopBySlugs(categorySlug.value, workshopSlug.value))
-const relatedWorkshops = computed(() =>
-  getWorkshopsByCategorySlug(categorySlug.value)
-    .filter((item) => item.slug !== workshopSlug.value)
-    .slice(0, 6)
-    .map((item) => ({
-      id: item.id,
-      href: `/master-classes/${item.primaryCategorySlug}/${item.slug}`,
-      image: item.image,
-      imageAlt: item.gallery[0]?.alt || item.title,
-      kicker: currentCategory.value?.title || item.audienceLabel,
-      title: item.title,
-      description: item.summary,
-      metaLabel: 'Стоимость',
-      metaPrimary: item.priceFrom,
-      metaSecondary: item.audienceLabel,
-      buttonLabel: 'Открыть',
-      productMicrodata: true
-    }))
+const { data: workshopPayload } = await useFetch<WorkshopDetailPayload>(
+  `/api/site/workshops/${categorySlug}/${workshopSlug}`,
+  {
+    key: `site-workshop-${categorySlug}-${workshopSlug}`
+  }
 )
+
+const currentCategory = computed(() => workshopPayload.value?.category || null)
+const currentWorkshop = computed(() => workshopPayload.value?.workshop || null)
+const relatedWorkshops = computed(() => workshopPayload.value?.relatedCards || [])
 
 const breadcrumbs = computed(() => [
   { label: 'Главная', href: '/' },
   { label: 'Мастер-классы', href: '/master-classes' },
-  { label: currentCategory.value?.title || 'Подборка', href: `/master-classes/${categorySlug.value}` },
+  { label: currentCategory.value?.title || 'Подборка', href: `/master-classes/${categorySlug}` },
   { label: currentWorkshop.value?.title || 'Карточка мастер-класса' }
 ])
 

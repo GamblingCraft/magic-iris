@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import {
-  createMasterClassCategoryHref,
-  createMasterClassHref,
-  masterClassCategories,
-  workshopItems
-} from '~/data/catalog'
 import { getMasterClassesIndexSeo } from '~/data/site-seo'
+import type { MasterClassesIndexPayload } from '~/types/public-catalog'
+
+const { data: masterClassesPayload } = await useFetch<MasterClassesIndexPayload>(
+  '/api/site/master-classes',
+  {
+    key: 'site-master-classes-index'
+  }
+)
+
+const categoryPreviews = computed(() => masterClassesPayload.value?.categories || [])
+const workshopPreviews = computed(() => masterClassesPayload.value?.workshops || [])
+const heroImage = computed(() => masterClassesPayload.value?.heroImage || '')
 
 const selectedTag = ref('all')
 
@@ -16,42 +22,15 @@ const breadcrumbs = [
 
 const filterTags = computed(() => [
   { slug: 'all', title: 'Все мастер-классы' },
-  ...masterClassCategories.map((category) => ({
+  ...categoryPreviews.value.map((category) => ({
     slug: category.slug,
     title: category.title
   }))
 ])
 
 const categoryCards = computed(() =>
-  masterClassCategories.map((category) => ({
-    id: category.id,
-    href: createMasterClassCategoryHref(category.slug),
-    image: category.image,
-    imageAlt: category.title,
-    kicker: 'Подборка',
-    title: category.title,
-    description: category.description,
-    metaPrimary: `${category.count}`,
-    metaLabel: 'Мастер-классов',
-    buttonLabel: 'Открыть',
-    productMicrodata: false
-  }))
+  categoryPreviews.value.map((category) => category.card)
 )
-
-const toWorkshopCard = (workshop: (typeof workshopItems)[number]) => ({
-  id: workshop.id,
-  href: createMasterClassHref(workshop.primaryCategorySlug, workshop.slug),
-  image: workshop.image,
-  imageAlt: workshop.title,
-  kicker: workshop.audienceLabel,
-  title: workshop.title,
-  description: workshop.summary,
-  metaPrimary: workshop.priceFrom,
-  metaLabel: 'Стоимость',
-  buttonLabel: 'Открыть',
-  priceValue: workshop.priceFrom,
-  productMicrodata: true
-})
 
 const uniqueById = <T extends { id: string }>(items: T[]) => {
   const seen = new Set<string>()
@@ -68,39 +47,41 @@ const uniqueById = <T extends { id: string }>(items: T[]) => {
 
 const filteredWorkshopItems = computed(() => {
   if (selectedTag.value === 'all') {
-    return workshopItems
+    return workshopPreviews.value
   }
 
-  return workshopItems.filter((workshop) => workshop.categorySlugs.includes(selectedTag.value))
+  return workshopPreviews.value.filter((workshop) =>
+    workshop.categorySlugs.includes(selectedTag.value)
+  )
 })
 
 const filteredWorkshopCards = computed(() =>
-  filteredWorkshopItems.value.slice(0, 8).map(toWorkshopCard)
+  filteredWorkshopItems.value.slice(0, 8).map((workshop) => workshop.card)
 )
 
 const popularWorkshopCards = computed(() => {
   const popular = [
-    ...workshopItems.filter((workshop) => workshop.categorySlugs.length >= 4),
-    ...workshopItems.filter((workshop) => workshop.categorySlugs.includes('v-shkolu')),
-    ...workshopItems
+    ...workshopPreviews.value.filter((workshop) => workshop.categorySlugs.length >= 4),
+    ...workshopPreviews.value.filter((workshop) => workshop.categorySlugs.includes('v-shkolu')),
+    ...workshopPreviews.value
   ]
 
-  return uniqueById(popular).slice(0, 8).map(toWorkshopCard)
+  return uniqueById(popular).slice(0, 8).map((workshop) => workshop.card)
 })
 
 const recommendedWorkshopCards = computed(() => {
   const recommended = [
-    ...workshopItems.filter((workshop) => workshop.categorySlugs.includes('dlya-zhenshchin')),
-    ...workshopItems.filter((workshop) => workshop.categorySlugs.includes('letnie')),
-    ...workshopItems.filter((workshop) => workshop.categorySlugs.includes('novogodnie')),
-    ...workshopItems
+    ...workshopPreviews.value.filter((workshop) => workshop.categorySlugs.includes('dlya-zhenshchin')),
+    ...workshopPreviews.value.filter((workshop) => workshop.categorySlugs.includes('letnie')),
+    ...workshopPreviews.value.filter((workshop) => workshop.categorySlugs.includes('novogodnie')),
+    ...workshopPreviews.value
   ]
 
-  return uniqueById(recommended).slice(0, 8).map(toWorkshopCard)
+  return uniqueById(recommended).slice(0, 8).map((workshop) => workshop.card)
 })
 
 const activeCategory = computed(() =>
-  masterClassCategories.find((category) => category.slug === selectedTag.value)
+  categoryPreviews.value.find((category) => category.slug === selectedTag.value)
 )
 
 const activeTagTitle = computed(() => {
@@ -126,11 +107,11 @@ const activeTagDescription = computed(() => {
 const activeTagHref = computed(() =>
   selectedTag.value === 'all'
     ? '/master-classes'
-    : createMasterClassCategoryHref(selectedTag.value)
+    : activeCategory.value?.href || '/master-classes'
 )
 
 const featuredWorkshopCards = computed(() =>
-  workshopItems.slice(0, 8).map(toWorkshopCard)
+  workshopPreviews.value.slice(0, 8).map((workshop) => workshop.card)
 )
 
 usePageSeo(getMasterClassesIndexSeo())
@@ -147,7 +128,7 @@ usePageSeo(getMasterClassesIndexSeo())
           title="Выездные творческие форматы для праздников, школ, корпоративов и городских площадок"
           lead="В каталоге собраны выездные творческие форматы для детей и взрослых: от камерных мастер-классов до потоковых зон для больших событий."
           description="Начните с подборки по аудитории или сезону, а затем откройте интересующий формат: внутри есть фото, описание, варианты проведения и ориентир по стоимости."
-          :image="masterClassCategories[0]?.image || workshopItems[0]?.image"
+          :image="heroImage"
           :actions="[
             { label: 'Оставить заявку', href: '/#contacts' },
             { label: 'Посмотреть шоу', href: '/shows', kind: 'ghost' }

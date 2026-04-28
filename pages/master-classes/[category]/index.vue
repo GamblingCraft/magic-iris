@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import {
-  createMasterClassHref,
-  getMasterClassCategoryBySlug,
-  getWorkshopsByCategorySlug
-} from '~/data/catalog'
 import { getMasterClassCategorySeo } from '~/data/site-seo'
+import type { MasterClassCategoryPagePayload } from '~/types/public-catalog'
 
 const route = useRoute()
-const categorySlug = computed(() => String(route.params.category))
-const currentCategory = computed(() => getMasterClassCategoryBySlug(categorySlug.value))
-const workshops = computed(() => getWorkshopsByCategorySlug(categorySlug.value))
+const categorySlug = String(route.params.category)
+
+const { data: categoryPayload } = await useFetch<MasterClassCategoryPagePayload>(
+  `/api/site/master-class-categories/${categorySlug}`,
+  {
+    key: `site-master-class-category-${categorySlug}`
+  }
+)
+
+const currentCategory = computed(() => categoryPayload.value?.category || null)
+const workshopCards = computed(() => categoryPayload.value?.workshopCards || [])
 
 const breadcrumbs = computed(() => [
   { label: 'Главная', href: '/' },
@@ -23,24 +27,6 @@ if (!currentCategory.value) {
     statusMessage: 'Категория не найдена'
   })
 }
-
-const workshopCards = computed(() =>
-  workshops.value.map((workshop) => ({
-    id: workshop.id,
-    href: createMasterClassHref(categorySlug.value, workshop.slug),
-    image: workshop.image,
-    imageAlt: workshop.title,
-    kicker: workshop.audienceLabel,
-    title: workshop.title,
-    description: workshop.summary,
-    metaPrimary: workshop.priceFrom,
-    metaLabel: 'Стоимость',
-    metaSecondary: workshop.audienceLabel,
-    buttonLabel: 'Открыть',
-    priceValue: workshop.priceFrom,
-    productMicrodata: true
-  }))
-)
 
 usePageSeo(computed(() => getMasterClassCategorySeo(currentCategory.value!)))
 </script>

@@ -65,6 +65,15 @@ const desktopSlideStyle = computed(() => ({
   width: `${desktopSlideWidth.value}px`
 }))
 
+const runInBrowserFrame = (callback: () => void) => {
+  if (!import.meta.client) {
+    callback()
+    return
+  }
+
+  requestAnimationFrame(callback)
+}
+
 const syncDesktopStartToActive = () => {
   if (!galleryItems.value.length) {
     desktopStartIndex.value = 0
@@ -110,7 +119,7 @@ const updateForItems = async () => {
   await nextTick()
   updateDesktopMetrics()
 
-  requestAnimationFrame(() => {
+  runInBrowserFrame(() => {
     desktopAnimate.value = true
   })
 }
@@ -215,8 +224,8 @@ const onDesktopTransitionEnd = () => {
   desktopAnimate.value = false
   desktopStartIndex.value = nextIndex
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
+  runInBrowserFrame(() => {
+    runInBrowserFrame(() => {
       desktopAnimate.value = true
     })
   })

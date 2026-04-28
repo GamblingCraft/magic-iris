@@ -269,6 +269,15 @@
   ],
   "masterClassCategories": [
     {
+      "id": "category-zwf08pls1j",
+      "slug": "new-category1",
+      "title": "В тест",
+      "count": 0,
+      "description": "321",
+      "lead": "123",
+      "image": ""
+    },
+    {
       "id": "cat-women",
       "slug": "dlya-zhenshchin",
       "title": "Для женщин",
