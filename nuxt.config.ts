@@ -5,6 +5,11 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ['@nuxt/icon'],
   css: ['~/assets/css/main.css', '~/assets/css/ref-overrides.css', '~/assets/css/admin.css'],
+  runtimeConfig: {
+    adminLogin: process.env.ADMIN_LOGIN || 'admin',
+    adminPassword: process.env.ADMIN_PASSWORD || 'magiciris2026',
+    adminSessionSecret: process.env.ADMIN_SESSION_SECRET || 'magic-iris-local-session-secret'
+  },
   vite: {
     build: {
       sourcemap: false

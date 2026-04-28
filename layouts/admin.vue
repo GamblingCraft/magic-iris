@@ -132,6 +132,14 @@ const formattedDate = computed(() =>
     timeStyle: 'short'
   }).format(new Date())
 )
+
+const logout = async () => {
+  await $fetch('/api/admin/auth/logout', {
+    method: 'POST'
+  }).catch(() => null)
+
+  await navigateTo('/admin/login')
+}
 </script>
 
 <template>
@@ -191,6 +199,9 @@ const formattedDate = computed(() =>
 
         <div class="admin-sidebar__footer">
           <NuxtLink to="/" class="admin-link-button">Открыть сайт</NuxtLink>
+          <button type="button" class="admin-link-button admin-link-button--muted" @click="logout">
+            Выйти
+          </button>
         </div>
       </aside>
 
