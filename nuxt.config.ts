@@ -2,9 +2,14 @@
 export default defineNuxtConfig({
   srcDir: '.',
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   modules: ['@nuxt/icon'],
   css: ['~/assets/css/main.css', '~/assets/css/ref-overrides.css', '~/assets/css/admin.css'],
+  vite: {
+    build: {
+      sourcemap: false
+    }
+  },
   app: {
     head: {
       htmlAttrs: {

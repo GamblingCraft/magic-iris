@@ -58,7 +58,7 @@ export const turnkeyLandingPage: LandingContent = {
       'Берём на себя сценарий, творческие форматы, тайминг, технику и визуальную подачу, чтобы событие выглядело цельно и спокойно собиралось в день проведения.',
     description:
       'Такой подход особенно удобен для свадеб, дней рождения, выпускных, семейных праздников и камерных вечеров, где важны атмосфера, красивый ритм и уверенное ведение площадки.',
-    image: 'images/event.webp',
+    image: '/images/event.webp',
     facts: [
       { label: 'Формат', value: 'под площадку и тайминг' },
       { label: 'Команда', value: 'шоу, мастера, координация' },
@@ -92,7 +92,7 @@ export const turnkeyLandingPage: LandingContent = {
       {
         id: 'turnkey-shows',
         href: '/shows',
-        image: 'images/present.webp',
+        image: '/images/present.webp',
         imageAlt: 'Шоу для праздника под ключ',
         kicker: 'Сценическая часть',
         title: 'Шоу-программы',
@@ -104,7 +104,7 @@ export const turnkeyLandingPage: LandingContent = {
       {
         id: 'turnkey-master-classes',
         href: '/master-classes',
-        image: 'images/prepare.webp',
+        image: '/images/prepare.webp',
         imageAlt: 'Мастер-классы для гостей',
         kicker: 'Гости и активности',
         title: 'Мастер-классы',
@@ -116,7 +116,7 @@ export const turnkeyLandingPage: LandingContent = {
       {
         id: 'turnkey-scenario',
         href: '/#contacts',
-        image: 'images/concept.webp',
+        image: '/images/concept.webp',
         imageAlt: 'Сценарий и координация',
         kicker: 'Сценарий и подача',
         title: 'Координация и подача',
@@ -172,7 +172,7 @@ export const corporateLandingPage: LandingContent = {
       'Создаём шоу и мастер-классы для корпоративов, клиентских встреч, презентаций, семейных дней компании и городских активаций, где важны подача, вовлечение и аккуратная интеграция в сценарий.',
     description:
       'Помогаем встроить творческую часть в деловое или праздничное событие так, чтобы она поддерживала общий ритм программы и выглядела уместно в контексте бренда.',
-    image: 'images/approve.webp',
+    image: '/images/approve.webp',
     facts: [
       { label: 'Подходит для', value: 'корпоративов и клиентских событий' },
       { label: 'Формат', value: 'welcome, сцена, интерактив' },
@@ -206,7 +206,7 @@ export const corporateLandingPage: LandingContent = {
       {
         id: 'corporate-show',
         href: '/shows/svetovoe-shou',
-        image: 'images/present.webp',
+        image: '/images/present.webp',
         imageAlt: 'Световое шоу для корпоратива',
         kicker: 'Сцена',
         title: 'Шоу для кульминации',
@@ -218,7 +218,7 @@ export const corporateLandingPage: LandingContent = {
       {
         id: 'corporate-workshops',
         href: '/master-classes',
-        image: 'images/interview.webp',
+        image: '/images/interview.webp',
         imageAlt: 'Творческие зоны для корпоративных клиентов',
         kicker: 'Интерактив',
         title: 'Творческие зоны',
@@ -230,7 +230,7 @@ export const corporateLandingPage: LandingContent = {
       {
         id: 'corporate-branding',
         href: '/#contacts',
-        image: 'images/hero.webp',
+        image: '/images/hero.webp',
         imageAlt: 'Персонализация формата под бренд',
         kicker: 'Бренд-интеграция',
         title: 'Персонализация',

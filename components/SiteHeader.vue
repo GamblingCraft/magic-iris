@@ -65,12 +65,16 @@ onBeforeUnmount(() => {
 
 <template>
   <header class="site-header s-header" :class="{ 'site-header--overlay': isHome }">
+    <!--/SA
     <Transition name="promo-pop">
       <div v-if="promoVisible" class="promo-banner">
       <div class="container promo-banner__inner">
         <p class="promo-banner__text">
           <span>соберём ваш лучший</span>
-          <em>Праздник</em>
+          <NuxtLink to="/#contacts" class="promo-banner__link">
+            <em>Праздник</em>
+          </NuxtLink>
+          <span>за 24 часа!</span>
         </p>
         <button type="button" class="promo-banner__close" aria-label="Закрыть баннер" @click="promoVisible = false">
           ×
@@ -78,6 +82,7 @@ onBeforeUnmount(() => {
       </div>
       </div>
     </Transition>
+   -->
 
     <div class="header-top">
       <div class="container">
