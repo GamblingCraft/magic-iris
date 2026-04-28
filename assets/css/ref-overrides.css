@@ -544,7 +544,9 @@ p {
   display: grid;
   gap: 14px;
   margin-top: auto;
-  padding-top: 28px;
+  justify-items: center;
+  padding-top: 20px;
+  padding-bottom: 8px;
 }
 
 .mobile-menu__phone {
@@ -554,10 +556,12 @@ p {
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.03em;
+  text-align: center;
 }
 
 .mobile-menu__socials {
   display: flex;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -593,7 +597,7 @@ p {
 }
 
 .mobile-menu__cta {
-  width: 100%;
+  width: min(100%, 280px);
   justify-content: center;
 }
 
@@ -640,7 +644,7 @@ p {
 
   .mobile-menu__footer {
     gap: 12px;
-    padding-top: 22px;
+    padding-top: 16px;
   }
 
   .mobile-menu__phone {
