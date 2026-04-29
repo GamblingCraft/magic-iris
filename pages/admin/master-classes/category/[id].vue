@@ -79,7 +79,7 @@ const saveCategory = async () => {
 
     const nextWorkshops = workshopDrafts.value.map((item) => {
       if (!originalSlug || originalSlug === nextSlug) {
-        return fromWorkshopDraft(item)
+        return fromWorkshopDraft(item, categoryDrafts.value)
       }
 
       const nextCategorySlugs = item.categorySlugs.map((slug) =>
@@ -91,7 +91,7 @@ const saveCategory = async () => {
         primaryCategorySlug:
           item.primaryCategorySlug === originalSlug ? nextSlug : item.primaryCategorySlug,
         categorySlugs: nextCategorySlugs
-      })
+      }, categoryDrafts.value)
     })
 
     await $fetch('/api/admin/catalog', {
@@ -125,7 +125,7 @@ const createWorkshop = async () => {
     nextDraft.categorySlugs = [selectedCategory.value.slug]
     nextDraft.audienceLabel = selectedCategory.value.title
 
-    const nextWorkshop = fromWorkshopDraft(nextDraft)
+    const nextWorkshop = fromWorkshopDraft(nextDraft, categoryDrafts.value)
 
     await $fetch('/api/admin/catalog', {
       method: 'PUT',

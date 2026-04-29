@@ -7,6 +7,7 @@ import {
   getWorkshopBySlugs,
   getWorkshopsByCategorySlug,
   masterClassCategories,
+  masterClassesHeroImage,
   shows,
   workshopItems
 } from '~/data/catalog'
@@ -198,7 +199,7 @@ export const getShowDetailPayload = (slug: string): ShowDetailPayload => {
 }
 
 export const getMasterClassesIndexPayload = (): MasterClassesIndexPayload => ({
-  heroImage: masterClassCategories[0]?.image || workshopItems[0]?.image || '',
+  heroImage: masterClassesHeroImage || masterClassCategories[0]?.image || workshopItems[0]?.image || '',
   categories: masterClassCategories.map(toCategoryPreview),
   workshops: workshopItems.map(toWorkshopPreview)
 })

@@ -622,6 +622,20 @@
   color: #b91c1c;
 }
 
+.admin-subsection {
+  display: grid;
+  gap: 18px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(18, 18, 18, 0.08);
+}
+
+.admin-subsection__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
 .admin-note-card {
   display: grid;
   gap: 8px;

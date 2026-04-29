@@ -3,6 +3,7 @@ import { buildAbsoluteUrl } from '~/data/site-seo'
 type SeoPayload = {
   title: string
   description: string
+  keywords?: string
 }
 
 export const usePageSeo = (seo: MaybeRefOrGetter<SeoPayload>) => {
@@ -12,6 +13,7 @@ export const usePageSeo = (seo: MaybeRefOrGetter<SeoPayload>) => {
   useSeoMeta({
     title: () => resolvedSeo.value.title,
     description: () => resolvedSeo.value.description,
+    keywords: () => resolvedSeo.value.keywords,
     ogTitle: () => resolvedSeo.value.title,
     ogDescription: () => resolvedSeo.value.description,
     twitterTitle: () => resolvedSeo.value.title,

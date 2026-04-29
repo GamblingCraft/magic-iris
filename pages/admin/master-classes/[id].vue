@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
-
+import {
+  deriveWorkshopAudienceLabel,
+  type MasterClassCategory,
+  type ShowProgram,
+  type WorkshopItem
+} from '~/data/catalog'
 import {
   fromWorkshopDraft,
   toWorkshopDraft,
@@ -48,6 +52,14 @@ const selectedWorkshop = computed(() =>
   workshopDrafts.value.find((item) => item.id === workshopId.value) || null
 )
 
+const audiencePreview = computed(() => {
+  if (!selectedWorkshop.value) {
+    return ''
+  }
+
+  return deriveWorkshopAudienceLabel(selectedWorkshop.value.categorySlugs, categories.value)
+})
+
 const primaryCategoryAdminHref = computed(() => {
   if (!selectedWorkshop.value) {
     return '/admin/master-classes'
@@ -60,6 +72,29 @@ const primaryCategoryAdminHref = computed(() => {
   return category ? `/admin/master-classes/category/${category.id}` : '/admin/master-classes'
 })
 
+const syncAudience = () => {
+  if (!selectedWorkshop.value) {
+    return
+  }
+
+  selectedWorkshop.value.audienceLabel = deriveWorkshopAudienceLabel(
+    selectedWorkshop.value.categorySlugs,
+    categories.value
+  )
+}
+
+const ensurePrimaryCategoryIncluded = () => {
+  if (!selectedWorkshop.value || !selectedWorkshop.value.primaryCategorySlug) {
+    return
+  }
+
+  if (!selectedWorkshop.value.categorySlugs.includes(selectedWorkshop.value.primaryCategorySlug)) {
+    selectedWorkshop.value.categorySlugs.push(selectedWorkshop.value.primaryCategorySlug)
+  }
+
+  syncAudience()
+}
+
 const toggleCategory = (slug: string, checked: boolean) => {
   if (!selectedWorkshop.value) {
     return
@@ -69,6 +104,8 @@ const toggleCategory = (slug: string, checked: boolean) => {
     if (!selectedWorkshop.value.categorySlugs.includes(slug)) {
       selectedWorkshop.value.categorySlugs.push(slug)
     }
+
+    syncAudience()
     return
   }
 
@@ -77,6 +114,8 @@ const toggleCategory = (slug: string, checked: boolean) => {
   if (selectedWorkshop.value.primaryCategorySlug === slug) {
     selectedWorkshop.value.primaryCategorySlug = selectedWorkshop.value.categorySlugs[0] || ''
   }
+
+  syncAudience()
 }
 
 const handleCategoryToggle = (slug: string, event: Event) => {
@@ -96,7 +135,7 @@ const saveWorkshop = async () => {
       method: 'PUT',
       body: {
         ...catalog.value,
-        workshops: workshopDrafts.value.map((item) => fromWorkshopDraft(item))
+        workshops: workshopDrafts.value.map((item) => fromWorkshopDraft(item, categories.value))
       }
     })
 
@@ -118,7 +157,7 @@ const removeWorkshop = async () => {
       ...catalog.value,
       workshops: workshopDrafts.value
         .filter((item) => item.id !== selectedWorkshop.value?.id)
-        .map((item) => fromWorkshopDraft(item))
+        .map((item) => fromWorkshopDraft(item, categories.value))
     }
   })
 
@@ -171,14 +210,18 @@ const removeWorkshop = async () => {
 
         <label class="admin-field">
           <span class="admin-label">Аудитория</span>
-          <input v-model="selectedWorkshop.audienceLabel" class="admin-input" type="text">
+          <input :value="audiencePreview" class="admin-input" type="text" readonly>
         </label>
       </div>
 
       <div class="admin-editor__grid">
         <label class="admin-field">
           <span class="admin-label">Основная категория</span>
-          <select v-model="selectedWorkshop.primaryCategorySlug" class="admin-select">
+          <select
+            v-model="selectedWorkshop.primaryCategorySlug"
+            class="admin-select"
+            @change="ensurePrimaryCategoryIncluded"
+          >
             <option v-for="category in categories" :key="category.slug" :value="category.slug">
               {{ category.title }}
             </option>

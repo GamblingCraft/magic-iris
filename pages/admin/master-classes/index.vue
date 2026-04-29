@@ -8,6 +8,7 @@ definePageMeta({
 })
 
 type CatalogPayload = {
+  masterClassesHeroImage?: string
   shows: ShowProgram[]
   masterClassCategories: MasterClassCategory[]
   workshops: WorkshopItem[]
@@ -21,9 +22,30 @@ const { data, refresh } = await useFetch<CatalogPayload>('/api/admin/catalog', {
 
 const search = ref('')
 const isCreating = ref(false)
+const isSavingHero = ref(false)
 const deletingId = ref('')
 
 const categories = computed(() => data.value?.masterClassCategories || [])
+
+const saveHeroImage = async () => {
+  if (!data.value) {
+    return
+  }
+
+  isSavingHero.value = true
+
+  try {
+    await $fetch('/api/admin/catalog', {
+      method: 'PUT',
+      body: data.value
+    })
+
+    await refresh()
+  }
+  finally {
+    isSavingHero.value = false
+  }
+}
 
 const categoryRows = computed(() => {
   const query = search.value.trim().toLowerCase()
@@ -132,11 +154,27 @@ const removeCategory = async (id: string) => {
         </div>
       </div>
 
+      <div class="admin-subsection">
+        <h4 class="admin-subsection__title">Hero страницы</h4>
+
+        <AdminImageUploadField
+          :model-value="data?.masterClassesHeroImage || ''"
+          label="Фото hero для /master-classes"
+          folder="master-classes"
+          preview-alt="Master classes hero"
+          @update:model-value="(value) => { if (data) { data.masterClassesHeroImage = value } }"
+        />
+      </div>
+
       <div class="admin-toolbar">
         <input v-model="search" class="admin-input admin-search" type="search" placeholder="Поиск по названию или slug">
       </div>
 
       <div class="admin-actions">
+        <button type="button" class="admin-button" :disabled="!data || isSavingHero" @click="saveHeroImage">
+          {{ isSavingHero ? 'Сохранение hero...' : 'Сохранить hero' }}
+        </button>
+
         <button type="button" class="admin-button admin-button--sand" :disabled="isCreating" @click="createCategory">
           {{ isCreating ? 'Создание...' : 'Добавить категорию' }}
         </button>

@@ -1,12 +1,16 @@
-import type {
-  CatalogFact,
-  CatalogImage,
-  MasterClassCategory,
-  PricePoint,
-  ShowProgram,
-  WorkshopItem
+import {
+  deriveWorkshopAudienceLabel,
+  type CatalogFact,
+  type CatalogImage,
+  type MasterClassCategory,
+  type PricePoint,
+  type ShowProgram,
+  type WorkshopItem
 } from '~/data/catalog'
 import type { HomeHeroSlide } from '~/data/home-slider'
+import type { ServiceLandingPage, ServiceScenarioItem } from '~/data/service-pages'
+import type { ShowCollectionPage } from '~/data/show-collections'
+import type { CatalogCardItem } from '~/types/public-catalog'
 
 export type ShowDraft = ShowProgram & {
   galleryText: string
@@ -21,6 +25,24 @@ export type WorkshopDraft = WorkshopItem & {
   pricingText: string
   formatsText: string
   includesText: string
+}
+
+export type ShowCollectionDraft = ShowCollectionPage & {
+  heroTagsText: string
+  heroFactsText: string
+  cardsShowSlugsText: string
+  scenarioPointsText: string
+  workshopsCategorySlugsText: string
+  aboutParagraphsText: string
+}
+
+export type ServiceLandingDraft = ServiceLandingPage & {
+  heroTagsText: string
+  heroFactsText: string
+  aboutBlocks: Array<{
+    title: string
+    itemsText: string
+  }>
 }
 
 export const createId = (prefix: string) =>
@@ -122,7 +144,10 @@ export const toWorkshopDraft = (item: WorkshopItem): WorkshopDraft => ({
   includesText: linesToText(item.includes)
 })
 
-export const fromWorkshopDraft = (item: WorkshopDraft): WorkshopItem => {
+export const fromWorkshopDraft = (
+  item: WorkshopDraft,
+  categories: MasterClassCategory[] = []
+): WorkshopItem => {
   const galleryFromText = textToLines(item.galleryText).map(parseImageLine).filter(Boolean) as CatalogImage[]
   const gallery =
     item.gallery
@@ -139,7 +164,10 @@ export const fromWorkshopDraft = (item: WorkshopDraft): WorkshopItem => {
     title: item.title,
     primaryCategorySlug: item.primaryCategorySlug,
     categorySlugs: Array.from(new Set(item.categorySlugs.filter(Boolean))),
-    audienceLabel: item.audienceLabel,
+    audienceLabel: deriveWorkshopAudienceLabel(
+      Array.from(new Set(item.categorySlugs.filter(Boolean))),
+      categories
+    ) || item.audienceLabel,
     summary: item.summary,
     description: item.description,
     priceFrom: item.priceFrom,
@@ -194,7 +222,7 @@ export const createEmptyWorkshopDraft = (categories: MasterClassCategory[]): Wor
   title: '',
   primaryCategorySlug: categories[0]?.slug || '',
   categorySlugs: categories[0] ? [categories[0].slug] : [],
-  audienceLabel: categories[0]?.title || '',
+  audienceLabel: deriveWorkshopAudienceLabel(categories[0] ? [categories[0].slug] : [], categories),
   summary: '',
   description: '',
   priceFrom: '',
@@ -220,4 +248,121 @@ export const createEmptyMasterClassCategory = (): MasterClassCategory => ({
   description: '',
   lead: '',
   image: ''
+})
+
+export const toShowCollectionDraft = (item: ShowCollectionPage): ShowCollectionDraft => ({
+  ...structuredClone(item),
+  scenario: {
+    ...structuredClone(item.scenario),
+    images: Array.from({ length: 3 }, (_, index) => item.scenario.images[index]?.trim() || '')
+  },
+  heroTagsText: linesToText(item.hero.tags),
+  heroFactsText: item.hero.facts.map(formatFactLine).join('\n'),
+  cardsShowSlugsText: linesToText(item.cards.showSlugs),
+  scenarioPointsText: linesToText(item.scenario.points),
+  workshopsCategorySlugsText: linesToText(item.workshops.categorySlugs),
+  aboutParagraphsText: linesToText(item.about.paragraphs)
+})
+
+export const fromShowCollectionDraft = (item: ShowCollectionDraft): ShowCollectionPage => ({
+  seo: structuredClone(item.seo),
+  breadcrumbLabel: item.breadcrumbLabel,
+  hero: {
+    ...structuredClone(item.hero),
+    tags: textToLines(item.heroTagsText),
+    facts: textToLines(item.heroFactsText).map(parseFactLine).filter(Boolean) as CatalogFact[]
+  },
+  cards: {
+    ...structuredClone(item.cards),
+    showSlugs: textToLines(item.cardsShowSlugsText)
+  },
+  scenario: {
+    ...structuredClone(item.scenario),
+    points: textToLines(item.scenarioPointsText),
+    images: Array.from({ length: 3 }, (_, index) => item.scenario.images[index]?.trim() || '')
+  },
+  workshops: {
+    ...structuredClone(item.workshops),
+    categorySlugs: textToLines(item.workshopsCategorySlugsText)
+  },
+  about: {
+    ...structuredClone(item.about),
+    paragraphs: textToLines(item.aboutParagraphsText)
+  },
+  cta: structuredClone(item.cta)
+})
+
+const createEmptyServiceScenarioItem = (): ServiceScenarioItem => ({
+  title: '',
+  text: '',
+  image: ''
+})
+
+const createEmptyServiceCard = (): CatalogCardItem => ({
+  id: createId('service-card'),
+  href: '',
+  image: '',
+  imageAlt: '',
+  kicker: '',
+  title: '',
+  description: '',
+  metaPrimary: '',
+  metaLabel: '',
+  buttonLabel: 'Открыть'
+})
+
+export const toServiceLandingDraft = (item: ServiceLandingPage): ServiceLandingDraft => ({
+  ...structuredClone(item),
+  scenario: {
+    ...structuredClone(item.scenario),
+    items: Array.from({ length: 3 }, (_, index) => item.scenario.items[index] || createEmptyServiceScenarioItem())
+  },
+  cards: {
+    ...structuredClone(item.cards),
+    items: Array.from({ length: 3 }, (_, index) => item.cards.items[index] || createEmptyServiceCard())
+  },
+  aboutBlocks: Array.from({ length: 2 }, (_, index) => {
+    const block = item.about.blocks[index]
+
+    return {
+      title: block?.title || '',
+      itemsText: linesToText(block?.items || [])
+    }
+  }),
+  heroTagsText: linesToText(item.hero.tags),
+  heroFactsText: item.hero.facts.map(formatFactLine).join('\n')
+})
+
+export const fromServiceLandingDraft = (item: ServiceLandingDraft): ServiceLandingPage => ({
+  seo: structuredClone(item.seo),
+  breadcrumbLabel: item.breadcrumbLabel,
+  hero: {
+    ...structuredClone(item.hero),
+    tags: textToLines(item.heroTagsText),
+    facts: textToLines(item.heroFactsText).map(parseFactLine).filter(Boolean) as CatalogFact[]
+  },
+  scenario: {
+    ...structuredClone(item.scenario),
+    items: item.scenario.items.map((scenarioItem) => ({
+      title: scenarioItem.title.trim(),
+      text: scenarioItem.text.trim(),
+      image: scenarioItem.image.trim()
+    }))
+  },
+  cards: {
+    ...structuredClone(item.cards),
+    items: item.cards.items.map((card) => ({
+      ...structuredClone(card),
+      metaPrimary: card.metaPrimary?.trim() || '',
+      metaLabel: card.metaLabel?.trim() || ''
+    }))
+  },
+  about: {
+    ...structuredClone(item.about),
+    blocks: item.aboutBlocks.map((block) => ({
+      title: block.title.trim(),
+      items: textToLines(block.itemsText)
+    }))
+  },
+  cta: structuredClone(item.cta)
 })

@@ -8,6 +8,7 @@ const { data: showsPayload } = await useFetch<ShowsIndexPayload>('/api/site/show
 
 const showCards = computed(() => showsPayload.value?.cards || [])
 const heroImage = computed(() => showsPayload.value?.heroImage || '')
+const showsCount = computed(() => showCards.value.length)
 
 const breadcrumbs = [
   { label: 'Главная', href: '/' },
@@ -30,7 +31,7 @@ usePageSeo(getShowsIndexSeo())
           description="Песочная анимация, световые номера, шоу-портреты и крутящийся портрет для событий, где хочется удивить гостей и оставить сильное впечатление."
           :image="heroImage"
           :facts="[
-            { label: 'Форматы', value: `${shows.length}` },
+            { label: 'Форматы', value: `${showsCount}` },
             { label: 'Сценарий', value: 'под ваше событие' },
             { label: 'Выезд', value: 'по Иркутску и области' }
           ]"

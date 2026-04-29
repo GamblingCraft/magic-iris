@@ -16,7 +16,7 @@ const route = useRoute()
 
 const directNavigation: AdminNavItem[] = [
   {
-    title: 'Обзор',
+    title: '\u041e\u0431\u0437\u043e\u0440',
     href: '/admin',
     icon: 'lucide:layout-dashboard'
   }
@@ -24,32 +24,42 @@ const directNavigation: AdminNavItem[] = [
 
 const groupedNavigation: AdminNavGroup[] = [
   {
-    title: 'Контент',
+    title: '\u041a\u043e\u043d\u0442\u0435\u043d\u0442',
     icon: 'lucide:images',
     items: [
       {
-        title: 'Hero секция',
+        title: 'Hero \u0441\u0435\u043a\u0446\u0438\u044f',
         href: '/admin/slider',
         icon: 'lucide:image-up'
       },
       {
-        title: 'Галерея главной',
+        title: '\u041f\u043e\u0441\u0430\u0434\u043e\u0447\u043d\u044b\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b',
+        href: '/admin/landing-pages',
+        icon: 'lucide:panels-top-left'
+      },
+      {
+        title: '\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u044b \u0443\u0441\u043b\u0443\u0433',
+        href: '/admin/service-pages',
+        icon: 'lucide:layout-template'
+      },
+      {
+        title: '\u0413\u0430\u043b\u0435\u0440\u0435\u044f \u0433\u043b\u0430\u0432\u043d\u043e\u0439',
         href: '/admin/gallery',
         icon: 'lucide:image'
       }
     ]
   },
   {
-    title: 'Каталог',
+    title: '\u041a\u0430\u0442\u0430\u043b\u043e\u0433',
     icon: 'lucide:folders',
     items: [
       {
-        title: 'Шоу',
+        title: '\u0428\u043e\u0443',
         href: '/admin/shows',
         icon: 'lucide:clapperboard'
       },
       {
-        title: 'Мастер-классы',
+        title: '\u041c\u0430\u0441\u0442\u0435\u0440-\u043a\u043b\u0430\u0441\u0441\u044b',
         href: '/admin/master-classes',
         icon: 'lucide:palette'
       }
@@ -75,7 +85,7 @@ const groupedNavigation: AdminNavGroup[] = [
         icon: 'lucide:map'
       },
       {
-        title: 'Счётчики',
+        title: '\u0421\u0447\u0451\u0442\u0447\u0438\u043a\u0438',
         href: '/admin/counters',
         icon: 'lucide:badge-check'
       }
@@ -122,9 +132,8 @@ const currentSection = computed(() => {
     .find((item) => isItemActive(item))
 })
 
-const pageTitle = computed(() => currentSection.value?.title || 'Админка')
-
-const pageEyebrow = computed(() => currentSection.value?.group || 'Панель управления')
+const pageTitle = computed(() => currentSection.value?.title || '\u0410\u0434\u043c\u0438\u043d\u043a\u0430')
+const pageEyebrow = computed(() => currentSection.value?.group || '\u041f\u0430\u043d\u0435\u043b\u044c \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f')
 
 const formattedDate = computed(() =>
   new Intl.DateTimeFormat('ru-RU', {
@@ -150,7 +159,7 @@ const logout = async () => {
           <h1 class="admin-brand__title">Magic Iris Admin</h1>
         </div>
 
-        <nav class="admin-nav" aria-label="Навигация админки">
+        <nav class="admin-nav" aria-label="&#1053;&#1072;&#1074;&#1080;&#1075;&#1072;&#1094;&#1080;&#1103; &#1072;&#1076;&#1084;&#1080;&#1085;&#1082;&#1080;">
           <NuxtLink
             v-for="item in directNavigation"
             :key="item.href"
@@ -198,9 +207,9 @@ const logout = async () => {
         </nav>
 
         <div class="admin-sidebar__footer">
-          <NuxtLink to="/" class="admin-link-button">Открыть сайт</NuxtLink>
+          <NuxtLink to="/" class="admin-link-button">&#1054;&#1090;&#1082;&#1088;&#1099;&#1090;&#1100; &#1089;&#1072;&#1081;&#1090;</NuxtLink>
           <button type="button" class="admin-link-button admin-link-button--muted" @click="logout">
-            Выйти
+            &#1042;&#1099;&#1081;&#1090;&#1080;
           </button>
         </div>
       </aside>

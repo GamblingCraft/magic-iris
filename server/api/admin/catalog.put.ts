@@ -1,4 +1,9 @@
-import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
+import {
+  deriveWorkshopAudienceLabel,
+  type MasterClassCategory,
+  type ShowProgram,
+  type WorkshopItem
+} from '~/data/catalog'
 
 import { saveCatalogContent } from '../../utils/admin-content'
 
@@ -18,7 +23,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  await saveCatalogContent(body)
+  const normalizedWorkshops = body.workshops.map((workshop) => ({
+    ...workshop,
+    audienceLabel:
+      deriveWorkshopAudienceLabel(workshop.categorySlugs, body.masterClassCategories) ||
+      workshop.audienceLabel
+  }))
+
+  await saveCatalogContent({
+    ...body,
+    workshops: normalizedWorkshops
+  })
 
   return {
     ok: true

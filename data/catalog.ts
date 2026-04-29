@@ -73,6 +73,7 @@ export type HomeCatalogTile = {
 }
 
 type RawCatalogContent = {
+  masterClassesHeroImage?: string
   shows: ShowProgram[]
   masterClassCategories: MasterClassCategory[]
   workshops: WorkshopItem[]
@@ -80,10 +81,21 @@ type RawCatalogContent = {
 
 const cmsCatalog = catalogContent as RawCatalogContent
 
+export const masterClassesHeroImage = cmsCatalog.masterClassesHeroImage || ''
+
 export const createShowHref = (slug: string) => `/shows/${slug}`
 export const createMasterClassCategoryHref = (slug: string) => `/master-classes/${slug}`
 export const createMasterClassHref = (categorySlug: string, slug: string) =>
   `/master-classes/${categorySlug}/${slug}`
+
+export const deriveWorkshopAudienceLabel = (
+  categorySlugs: string[],
+  categories: Array<Pick<MasterClassCategory, 'slug' | 'title'>>
+) =>
+  categorySlugs
+    .map((slug) => categories.find((category) => category.slug === slug)?.title || '')
+    .filter(Boolean)
+    .join(' · ')
 
 const normalizeCatalogText = (value?: string) =>
   (value || '')
@@ -210,11 +222,15 @@ const appendWorkshopDescription = (baseDescription: string, appendix: string) =>
   return `${normalizedBase}${separator}${normalizedAppendix}`
 }
 
-const normalizeWorkshopItem = (item: WorkshopItem): WorkshopItem => {
+const normalizeWorkshopItem = (
+  item: WorkshopItem,
+  categories: Array<Pick<MasterClassCategory, 'slug' | 'title'>>
+): WorkshopItem => {
   const { participants, descriptionAppendix } = splitWorkshopParticipants(item.participants)
 
   return {
     ...item,
+    audienceLabel: deriveWorkshopAudienceLabel(item.categorySlugs, categories) || item.audienceLabel,
     participants: capitalizeCatalogText(participants || item.participants),
     description: appendWorkshopDescription(item.description, descriptionAppendix)
   }
@@ -233,7 +249,7 @@ export const shows: ShowProgram[] = cmsCatalog.shows
 export const showPrograms = shows
 
 export const workshopItems: WorkshopItem[] = cmsCatalog.workshops.map((item) =>
-  normalizeWorkshopItem(item as WorkshopItem)
+  normalizeWorkshopItem(item as WorkshopItem, cmsCatalog.masterClassCategories)
 )
 
 export const masterClassCategories: MasterClassCategory[] = cmsCatalog.masterClassCategories.map(

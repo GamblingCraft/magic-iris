@@ -25,6 +25,7 @@ const { data: summary, pending, refresh } = await useFetch('/api/admin/summary',
         <NuxtLink to="/admin/slider" class="admin-button admin-button--sand">Hero секция</NuxtLink>
         <NuxtLink to="/admin/shows" class="admin-button">Шоу</NuxtLink>
         <NuxtLink to="/admin/master-classes" class="admin-button">Мастер-классы</NuxtLink>
+        <NuxtLink to="/admin/landing-pages" class="admin-button">Landing pages</NuxtLink>
         <NuxtLink to="/admin/gallery" class="admin-button">Галерея главной</NuxtLink>
       </div>
     </article>

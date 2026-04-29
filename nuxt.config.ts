@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
   modules: ['@nuxt/icon'],
-  css: ['~/assets/css/main.css', '~/assets/css/ref-overrides.css', '~/assets/css/admin.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/ref-overrides.css', '~/assets/css/collection-landings.css', '~/assets/css/admin.css'],
   runtimeConfig: {
     adminLogin: process.env.ADMIN_LOGIN || 'admin',
     adminPassword: process.env.ADMIN_PASSWORD || 'magiciris2026',

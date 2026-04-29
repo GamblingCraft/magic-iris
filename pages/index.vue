@@ -24,5 +24,6 @@ usePageSeo(getHomeSeo())
     <HomeGallerySection />
     <HomeFaqSection />
     <HomeContactSection />
+    <Reviews2GIS />
   </div>
 </template>
