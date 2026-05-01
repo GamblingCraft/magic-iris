@@ -9,6 +9,7 @@ import {
 export type NavLink = {
   label: string
   href: string
+  children?: NavLink[]
 }
 
 export const topTags = [
@@ -19,13 +20,14 @@ export const topTags = [
 ]
 
 export const mainNavigation: NavLink[] = [
-  { label: 'Песочное шоу', href: createShowHref('pesochnoe-shou') },
-  { label: 'Световое шоу', href: createShowHref('svetovoe-shou') },
-  { label: 'Шоу-портреты', href: createShowHref('shou-portrety') },
-  { label: 'Крутящийся портрет', href: createShowHref('krutyashchiysya-portret') },
+  { label: 'Песочное шоу', href: '/shows/pesochnoe-shou' },
+  { label: 'Световое шоу', href: '/shows/svetovoe-shou' },
+  { label: 'Шоу-портреты', href: '/shows/shou-portrety' },
+  { label: 'Крутящийся портрет', href: '/shows/krutyashchiysya-portret' },
   { label: 'Мастер-классы', href: '/master-classes' },
   { label: 'О студии', href: '/#about' },
-  { label: 'Контакты', href: '/#contacts' }
+  { label: 'Отзывы', href: '/#reviews' },
+  { label: 'Контакты', href: '/contacts' }
 ]
 
 export const contactInfo = {
@@ -123,8 +125,8 @@ export const footerColumns = [
     title: 'Студия',
     links: [
       { label: 'О нас', href: '/#about' },
-      { label: 'Новости', href: '/#news' },
-      { label: 'Контакты', href: '/#contacts' }
+      { label: 'Отзывы', href: '/#reviews' },
+      { label: 'Контакты', href: '/contacts' }
     ]
   }
 ]

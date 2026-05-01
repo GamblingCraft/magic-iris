@@ -1,5 +1,5 @@
 <template>
-  <section class="reviews-section section">
+  <section id="reviews" class="reviews-section section">
     <div class="container">
       <!-- Заголовок -->
       <div class="sec-title-double reviews-section__head">

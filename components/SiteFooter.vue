@@ -36,14 +36,15 @@ const featuredProgram = computed(() => showPrograms[0])
             </NuxtLink>
           </nav>
           
-
-          <div style="margin-top: 24px;">
-            <p class="footer__nav-title" style="margin-bottom: 0.55em;">популярное</p>
-            <nav class="footer__nav">
-              <NuxtLink to="/pod-klyuch">праздники «под ключ»</NuxtLink>
-              <NuxtLink to="/corporate">корпоративным клиентам</NuxtLink>
-            </nav>
-          </div>
+          <!--
+            <div style="margin-top: 24px;">
+              <p class="footer__nav-title" style="margin-bottom: 0.55em;">популярное</p>
+              <nav class="footer__nav">
+                <NuxtLink to="/pod-klyuch">праздники «под ключ»</NuxtLink>
+                <NuxtLink to="/corporate">корпоративным клиентам</NuxtLink>
+              </nav>
+            </div>
+          -->
           <div class="footer__col__bottom"></div>
         </div>
 

@@ -56,7 +56,7 @@ usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory
           :tags="[currentWorkshop?.audienceLabel || '', currentCategory?.title || ''].filter(Boolean)"
           :facts="[
             { label: 'Длительность', value: currentWorkshop?.duration || '' },
-            { label: 'Участники', value: currentWorkshop?.participants || '' },
+            { label: 'Участников', value: currentWorkshop?.participants || '' },
             { label: 'Стоимость', value: formatDisplayPrice(currentWorkshop?.priceFrom || '') }
           ]"
           :actions="[
@@ -72,7 +72,7 @@ usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory
         <div class="catalog-section-head">
           <div>
             <p class="eyebrow">Описание</p>
-            <h2>Что важно знать об этом мастер-классе</h2>
+            <h2>Что важно знать о мастер-классе</h2>
           </div>
         </div>
 
@@ -86,8 +86,8 @@ usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory
       <div class="container">
         <div class="catalog-section-head">
           <div>
-            <p class="eyebrow">Организация</p>
-            <h2>Как проходит мастер-класс</h2>
+            <p class="eyebrow">Как проходит</p>
+            <h2>Организация и детали</h2>
           </div>
         </div>
 
@@ -100,7 +100,7 @@ usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory
           </article>
 
           <article class="catalog-panel">
-            <p class="eyebrow">Что входит</p>
+            <p class="eyebrow">Что включено</p>
             <ul class="catalog-list">
               <li v-for="item in currentWorkshop?.includes" :key="item">{{ item }}</li>
             </ul>
@@ -133,7 +133,7 @@ usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory
         <div class="catalog-section-head">
           <div>
             <p class="eyebrow">Фото</p>
-            <h2>Как выглядит мастер-класс на площадке</h2>
+            <h2>Как мастер-класс выглядит на площадке</h2>
           </div>
         </div>
 
@@ -145,8 +145,8 @@ usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory
       <div class="container">
         <CatalogCarouselSection
           eyebrow="Вам может понравиться"
-          title="Другие мастер-классы из этой подборки"
-          description="Похожие форматы из этой категории, которые можно быстро добавить в программу события."
+          title="Другие мастер-классы из подборки"
+          description="Похожие форматы, которые легко добавить в программу события."
           :items="relatedWorkshops"
         />
       </div>

@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <section id="master-classes" class="section section--cream catalog-preview">
+  <section id="master-classes" class="section section--cream catalog-preview catalog-preview--workshops">
     <div class="container">
       <div class="catalog-preview__head">
         <div>
@@ -19,7 +19,8 @@ defineProps<{
         </div>
 
         <p class="catalog-preview__lead">
-          Подберите направление для корпоратива, школьного события, женской компании или сезонного праздника.
+          Подберите направление для корпоратива, школьного события, женской компании или
+          сезонного праздника.
         </p>
       </div>
 
@@ -37,10 +38,10 @@ defineProps<{
 
           <div class="catalog-wall__content">
             <h3>{{ tile.title }}</h3>
-            <p>{{ tile.count }} форматов</p>
+            <p>{{ tile.description }}</p>
           </div>
 
-          <span class="catalog-wall__arrow">↗</span>
+          <span class="catalog-wall__arrow">&#8599;</span>
         </NuxtLink>
       </div>
     </div>

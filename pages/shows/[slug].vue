@@ -67,14 +67,14 @@ usePageSeo(computed(() => getShowSeo(currentProgram.value!)))
 
         <div class="catalog-detail-grid">
           <article class="catalog-panel">
-            <p class="eyebrow">Что входит</p>
+            <p class="eyebrow">Что входит в программу</p>
             <ul class="catalog-list">
               <li v-for="feature in currentProgram?.features" :key="feature">{{ feature }}</li>
             </ul>
           </article>
 
           <article class="catalog-panel">
-            <p class="eyebrow">Подходит для</p>
+            <p class="eyebrow">Идеально подходит для</p>
             <div class="catalog-chip-cloud">
               <span v-for="item in currentProgram?.suitableFor" :key="item">{{ item }}</span>
             </div>
@@ -88,7 +88,7 @@ usePageSeo(computed(() => getShowSeo(currentProgram.value!)))
         <div class="catalog-section-head">
           <div>
             <p class="eyebrow">Стоимость</p>
-            <h2>Форматы проведения и стоимость</h2>
+            <h2>Форматы проведения и цены</h2>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ usePageSeo(computed(() => getShowSeo(currentProgram.value!)))
           <article v-for="price in currentProgram?.pricing" :key="price.label" class="catalog-price-card">
             <p>{{ price.label }}</p>
             <h3>{{ price.value }}</h3>
-            <span>{{ price.note || 'Точную стоимость уточним после обсуждения площадки, тайминга и задач события.' }}</span>
+            <span>{{ price.note || 'Точную стоимость уточним после обсуждения площадки, тайминга и ваших задач.' }}</span>
           </article>
         </div>
       </div>
@@ -107,7 +107,7 @@ usePageSeo(computed(() => getShowSeo(currentProgram.value!)))
         <div class="catalog-section-head">
           <div>
             <p class="eyebrow">Фото</p>
-            <h2>Как формат выглядит в живом событии</h2>
+            <h2>Как формат выглядит на мероприятии</h2>
           </div>
         </div>
 

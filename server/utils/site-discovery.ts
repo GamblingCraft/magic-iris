@@ -46,6 +46,12 @@ export const getRuntimeSitemapEntries = async (): Promise<RuntimeSitemapEntry[]>
       changefreq: 'monthly'
     },
     {
+      url: buildAbsoluteUrl(siteUrl, '/contacts'),
+      path: '/contacts',
+      priority: '0.7',
+      changefreq: 'monthly'
+    },
+    {
       url: buildAbsoluteUrl(siteUrl, '/shows/svadebnoe'),
       path: '/shows/svadebnoe',
       priority: '0.8',

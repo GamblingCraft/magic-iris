@@ -23,12 +23,12 @@ export type CatalogCardItem = {
   productMicrodata?: boolean
 }
 
-export type HomeShowTile = Pick<ShowProgram, 'id' | 'title' | 'kicker' | 'image'> & {
+export type HomeShowTile = Pick<ShowProgram, 'id' | 'title' | 'kicker' | 'description' | 'image'> & {
   href: string
   size: 'wide' | 'tall' | 'small'
 }
 
-export type HomeWorkshopTile = Pick<MasterClassCategory, 'id' | 'title' | 'image' | 'count'> & {
+export type HomeWorkshopTile = Pick<MasterClassCategory, 'id' | 'title' | 'description' | 'image' | 'count'> & {
   href: string
   size: 'wide' | 'tall' | 'small'
 }

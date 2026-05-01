@@ -119,7 +119,7 @@ useHead({
       </div>
     </section>
 
-    <section class="section section--light catalog-preview">
+    <section class="section section--light catalog-preview catalog-preview--shows">
       <div class="container">
         <div class="catalog-preview__head">
           <div>
@@ -144,7 +144,7 @@ useHead({
             <div class="catalog-wall__overlay" />
             <div class="catalog-wall__content">
               <h3>{{ tile.title }}</h3>
-              <p>{{ tile.kicker }}</p>
+              <p>{{ tile.description }}</p>
             </div>
             <span class="catalog-wall__arrow">&#8599;</span>
           </NuxtLink>
@@ -152,7 +152,7 @@ useHead({
       </div>
     </section>
 
-    <section class="section section--cream catalog-preview">
+    <section class="section section--cream catalog-preview catalog-preview--workshops">
       <div class="container">
         <div class="catalog-preview__head">
           <div>
@@ -177,7 +177,7 @@ useHead({
             <div class="catalog-wall__overlay" />
             <div class="catalog-wall__content">
               <h3>{{ tile.title }}</h3>
-              <p>{{ tile.count }} форматов</p>
+              <p>{{ tile.description }}</p>
             </div>
             <span class="catalog-wall__arrow">&#8599;</span>
           </NuxtLink>

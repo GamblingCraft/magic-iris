@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <section id="shows" class="section section--light catalog-preview">
+  <section id="shows" class="section section--light catalog-preview catalog-preview--shows">
     <div class="container">
       <div class="catalog-preview__head">
         <div>
@@ -37,7 +37,7 @@ defineProps<{
 
           <div class="catalog-wall__content">
             <h3>{{ tile.title }}</h3>
-            <p>{{ tile.kicker }}</p>
+            <p>{{ tile.description }}</p>
           </div>
 
           <span class="catalog-wall__arrow">↗</span>

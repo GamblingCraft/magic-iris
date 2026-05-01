@@ -156,6 +156,7 @@ export const resolveShowCollectionTiles = (slugs: string[]): HomeShowTile[] => {
         id: program.id,
         title: program.title,
         kicker: program.kicker,
+        description: program.description,
         image: program.image,
         href: createShowHref(program.slug),
         size: sizeMap.get(slug) || 'small'
@@ -183,6 +184,7 @@ export const resolveWorkshopCollectionTiles = (slugs: string[]): HomeWorkshopTil
       return {
         id: category.id,
         title: category.title,
+        description: category.description,
         image: category.image,
         count: category.count,
         href: createMasterClassCategoryHref(category.slug),

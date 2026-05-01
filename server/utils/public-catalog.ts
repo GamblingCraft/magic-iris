@@ -159,6 +159,7 @@ export const getHomeCatalogPayload = (): HomeCatalogPayload => ({
         id: program.id,
         title: program.title,
         kicker: program.kicker,
+        description: program.description,
         image: program.image,
         href: createShowHref(program.slug),
         size: config.size
@@ -176,6 +177,7 @@ export const getHomeCatalogPayload = (): HomeCatalogPayload => ({
       return {
         id: category.id,
         title: category.title,
+        description: category.description,
         image: category.image,
         count: category.count,
         href: createMasterClassCategoryHref(category.slug),

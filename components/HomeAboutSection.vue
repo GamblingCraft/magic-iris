@@ -13,7 +13,15 @@ const keywordsRef = ref<HTMLElement | null>(null)
 const keywordsRowPrimaryRef = ref<HTMLElement | null>(null)
 const keywordsRowSecondaryRef = ref<HTMLElement | null>(null)
 
+// H2 — главный заголовок секции (был h3, теперь h2)
 const headline = 'Творческая студия в Иркутске для событий, которые хочется переживать снова'
+
+// H3 — подзаголовки смысловых блоков
+const subheadingShows = 'Что мы создаём'
+const subheadingMasterclasses = 'Авторские мастер-классы и арт-форматы'
+const subheadingForWhom = 'Для кого и как мы работаем'
+
+// Лид остаётся коротким вводным абзацем
 const lead =
   'Создаём песочное шоу, световое шоу, шоу-портреты и выездные мастер-классы для свадеб, дней рождения, корпоративов и камерных праздников, где важны атмосфера, подача и сильная эмоция.'
 
@@ -335,7 +343,8 @@ onBeforeUnmount(() => {
           <div ref="overlayRef" class="about-section__card-overlay" />
 
           <figcaption ref="stageContentRef" class="about-section__card-content">
-            <h3 class="about-section__card-title">{{ headline }}</h3>
+            <!-- ТЕПЕРЬ ЭТО H2, А НЕ H3 -->
+            <h2 class="about-section__card-title">{{ headline }}</h2>
           </figcaption>
         </figure>
       </div>
@@ -346,9 +355,25 @@ onBeforeUnmount(() => {
         <p class="about-section__lead">{{ lead }}</p>
 
         <div class="about-section__text">
-          <p v-for="paragraph in aboutSeoParagraphs" :key="paragraph">
-            {{ paragraph }}
-          </p>
+          <!-- ПЕРВЫЙ АБЗАЦ — ВВОДНЫЙ -->
+          <p>{{ aboutSeoParagraphs[0] }}</p>
+          <p>{{ aboutSeoParagraphs[1] }}</p>
+
+          <!-- ПОДЗАГОЛОВОК H3: ЧТО МЫ СОЗДАЁМ -->
+          <h3 class="about-section__subheading">{{ subheadingShows }}</h3>
+          <p>{{ aboutSeoParagraphs[2] }}</p>
+
+          <!-- ПОДЗАГОЛОВОК H3: АВТОРСКИЕ МАСТЕР-КЛАССЫ -->
+          <h3 class="about-section__subheading">{{ subheadingMasterclasses }}</h3>
+          <p>{{ aboutSeoParagraphs[3] }}</p>
+
+          <!-- ПОДЗАГОЛОВОК H3: ДЛЯ КОГО И КАК МЫ РАБОТАЕМ -->
+          <h3 class="about-section__subheading">{{ subheadingForWhom }}</h3>
+          <p>{{ aboutSeoParagraphs[4] }}</p>
+          <p>{{ aboutSeoParagraphs[5] }}</p>
+
+          <!-- ЗАКЛЮЧИТЕЛЬНЫЙ АКЦЕНТ (БЕЗ ЗАГОЛОВКА) -->
+          <p class="about-section__conclusion">{{ aboutSeoParagraphs[6] }}</p>
         </div>
       </div>
     </div>
