@@ -38,11 +38,6 @@ const groupedNavigation: AdminNavGroup[] = [
         icon: 'lucide:panels-top-left'
       },
       {
-        title: '\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u044b \u0443\u0441\u043b\u0443\u0433',
-        href: '/admin/service-pages',
-        icon: 'lucide:layout-template'
-      },
-      {
         title: '\u0413\u0430\u043b\u0435\u0440\u0435\u044f \u0433\u043b\u0430\u0432\u043d\u043e\u0439',
         href: '/admin/gallery',
         icon: 'lucide:image'

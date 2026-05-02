@@ -18,19 +18,19 @@ export const homeSteps: HomeStep[] = [
     image:
       'images/interview.webp',
     navImage:
-      'images/interview.webp',
+      'images/num/1.webp',
     color: '#d9ccbc'
   },
   {
     id: 'step-concept',
-    navLabel: 'концепция',
+    navLabel: 'Концепция',
     title: 'Разработка сценария и визуальной идеи',
     description:
       'На основе брифа подбираем формат: песочное шоу, световой номер, шоу-портрет или творческую зону. Собираем сюжет, акценты и понимание, какой момент должен стать кульминацией.',
     image:
       'images/concept.webp',
     navImage:
-      'images/concept.webp',
+      'images/num/2.webp',
     color: '#edeff3'
   },
   {
@@ -42,7 +42,7 @@ export const homeSteps: HomeStep[] = [
     image:
       'images/present.webp',
     navImage:
-      'images/present.webp',
+      'images/num/3.webp',
     color: '#aacce9'
   },
   {
@@ -54,7 +54,7 @@ export const homeSteps: HomeStep[] = [
     image:
       'images/approve.webp',
     navImage:
-      'images/approve.webp',
+      'images/num/4.webp',
     color: '#edeef5'
   },
   {
@@ -66,7 +66,7 @@ export const homeSteps: HomeStep[] = [
     image:
       'images/prepare.webp',
     navImage:
-      'images/prepare.webp',
+      'images/num/5.webp',
     color: '#a8a1c8'
   },
   {
@@ -78,7 +78,7 @@ export const homeSteps: HomeStep[] = [
     image:
       'images/event.webp',
     navImage:
-      'images/event.webp',
+      'images/num/6.webp',
     color: '#e7e3ef'
   }
 ]

@@ -292,7 +292,7 @@ p {
   display: flex;
   justify-content: center;
   gap: 22px;
-  text-transform: uppercase;
+  
 }
 
 .desktop-nav__link {
@@ -597,9 +597,6 @@ p {
   align-content: end;
   gap: 14px;
   padding: 24px;
-  background:
-    radial-gradient(circle at top left, rgba(240, 239, 77, 0.16), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(115, 100, 202, 0.25));
 }
 
 .hero-card__kicker {
@@ -850,9 +847,6 @@ p {
   align-items: center;
   padding: 38px;
   border-radius: 34px;
-  background:
-    radial-gradient(circle at top left, rgba(240, 239, 77, 0.18), transparent 20%),
-    linear-gradient(135deg, #d8d2fb, #b7aeea 45%, #8776d3);
   box-shadow: var(--shadow-soft);
 }
 

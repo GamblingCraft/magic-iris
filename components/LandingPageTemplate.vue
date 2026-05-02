@@ -37,13 +37,13 @@ defineProps<{
       <div class="container">
         <div class="catalog-section-head">
           <div>
-            <p class="eyebrow">Подход</p>
-            <h2>Что получает заказчик, когда мы собираем проект целиком</h2>
+            <p class="eyebrow">{{ content.features.eyebrow }}</p>
+            <h2>{{ content.features.title }}</h2>
           </div>
         </div>
 
         <div class="catalog-pricing-grid landing-feature-grid">
-          <article v-for="feature in content.features" :key="feature.label" class="catalog-price-card">
+          <article v-for="feature in content.features.items" :key="feature.label" class="catalog-price-card">
             <p>{{ feature.label }}</p>
             <h3>{{ feature.title }}</h3>
             <span>{{ feature.text }}</span>
@@ -60,6 +60,16 @@ defineProps<{
           :description="content.cards.description"
           :items="content.cards.items"
         />
+      </div>
+    </section>
+
+    <!-- БЛОК О ПОДБОРКЕ -->
+    <section class="section about-collection">
+      <div class="container">
+        <div class="about-collection__head">
+          <h2 class="about-collection__title">О подборке</h2>
+        </div>
+        <div class="about-collection__content" v-html="content.aboutText"></div>
       </div>
     </section>
 

@@ -68,13 +68,7 @@ useHead({
 
       <div class="container hero__inner">
         <div class="hero__copy">
-          <CatalogBreadcrumbs
-            :items="[
-              { label: '\u0413\u043b\u0430\u0432\u043d\u0430\u044f', href: '/' },
-              { label: '\u0428\u043e\u0443', href: '/shows' },
-              { label: page.breadcrumbLabel }
-            ]"
-          />
+
 
           <p class="hero__eyebrow">{{ page.hero.eyebrow }}</p>
           <h1 class="hero__headline">{{ page.hero.title }}</h1>

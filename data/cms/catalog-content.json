@@ -7,8 +7,8 @@
       "kicker": "Премьера вечера",
       "description": "Живые истории, признания и воспоминания, которые оживают прямо на глазах гостей.",
       "lead": "Песочная история любви, семейный фильм вживую или трогательное признание для момента, который хочется прожить глубоко и красиво.",
-      "image": "/images/show/1777459377500-ozwdh2-hero.png",
-      "heroImage": "/images/show/1777459382858-7ytxmq-hero.png",
+      "image": "/images/slider/1777216120815-ier409-hero.webp",
+      "heroImage": "/images/slider/1777216120815-ier409-hero.webp",
       "gallery": [
         {
           "id": "sand-1",
@@ -269,15 +269,6 @@
   ],
   "masterClassCategories": [
     {
-      "id": "category-zwf08pls1j",
-      "slug": "new-category1",
-      "title": "В тест",
-      "count": 0,
-      "description": "321",
-      "lead": "123",
-      "image": "/images/master-classes/1777463959644-cdr9jb-91061dfd-123e-4ab8-9ed4-534470c1a597.png"
-    },
-    {
       "id": "cat-women",
       "slug": "dlya-zhenshchin",
       "title": "Для женщин",
@@ -324,48 +315,6 @@
     }
   ],
   "workshops": [
-    {
-      "id": "workshop-qyk3b8f676",
-      "slug": "new-master-class-mog0f676",
-      "title": "Новый мастер-класс",
-      "primaryCategorySlug": "test",
-      "categorySlugs": [
-        "test"
-      ],
-      "audienceLabel": "Новая категория",
-      "summary": "",
-      "description": "",
-      "priceFrom": "",
-      "priceNote": "",
-      "image": "",
-      "gallery": [],
-      "duration": "",
-      "participants": "",
-      "formats": [],
-      "includes": [],
-      "pricing": []
-    },
-    {
-      "id": "workshop-8x1by4j9vg",
-      "slug": "new-master-class-mofaj9vh",
-      "title": "Новый мастер-класс",
-      "primaryCategorySlug": "dlya-zhenshchin",
-      "categorySlugs": [
-        "dlya-zhenshchin"
-      ],
-      "audienceLabel": "Для женщин",
-      "summary": "",
-      "description": "",
-      "priceFrom": "",
-      "priceNote": "",
-      "image": "",
-      "gallery": [],
-      "duration": "",
-      "participants": "",
-      "formats": [],
-      "includes": [],
-      "pricing": []
-    },
     {
       "id": "workshop-001",
       "slug": "elochnye-igrushki-iz-shpagata",
@@ -429,12 +378,11 @@
       "title": "Акварель",
       "primaryCategorySlug": "dlya-zhenshchin",
       "categorySlugs": [
-        "new-category1",
         "novogodnie",
         "dlya-zhenshchin",
         "v-shkolu"
       ],
-      "audienceLabel": "В тест · Новогодние · Для женщин · В школу",
+      "audienceLabel": "Новогодние · Для женщин · В школу",
       "summary": "Акварель — выездной мастер-класс с красивым результатом и понятной механикой для гостей события.",
       "description": "Акварель — выездной мастер-класс с аккуратной подачей, понятным процессом и красивым результатом для гостей. Формат удобно адаптируется под площадку, количество участников и тайминг мероприятия. в час (1 мастер)",
       "priceFrom": "1 час (1 мастер) — от 8 000 до 48 000 ₽",

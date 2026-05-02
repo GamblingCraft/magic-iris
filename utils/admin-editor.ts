@@ -56,6 +56,8 @@ export const textToLines = (value: string) =>
     .map((item) => item.trim())
     .filter(Boolean)
 
+const clonePlain = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T
+
 const formatImageLine = (item: CatalogImage) => `${item.id}|${item.src}|${item.alt}`
 const parseImageLine = (line: string): CatalogImage | null => {
   const [id, src, alt] = line.split('|').map((part) => part.trim())
@@ -251,9 +253,9 @@ export const createEmptyMasterClassCategory = (): MasterClassCategory => ({
 })
 
 export const toShowCollectionDraft = (item: ShowCollectionPage): ShowCollectionDraft => ({
-  ...structuredClone(item),
+  ...clonePlain(item),
   scenario: {
-    ...structuredClone(item.scenario),
+    ...clonePlain(item.scenario),
     images: Array.from({ length: 3 }, (_, index) => item.scenario.images[index]?.trim() || '')
   },
   heroTagsText: linesToText(item.hero.tags),
@@ -265,31 +267,31 @@ export const toShowCollectionDraft = (item: ShowCollectionPage): ShowCollectionD
 })
 
 export const fromShowCollectionDraft = (item: ShowCollectionDraft): ShowCollectionPage => ({
-  seo: structuredClone(item.seo),
+  seo: clonePlain(item.seo),
   breadcrumbLabel: item.breadcrumbLabel,
   hero: {
-    ...structuredClone(item.hero),
+    ...clonePlain(item.hero),
     tags: textToLines(item.heroTagsText),
     facts: textToLines(item.heroFactsText).map(parseFactLine).filter(Boolean) as CatalogFact[]
   },
   cards: {
-    ...structuredClone(item.cards),
+    ...clonePlain(item.cards),
     showSlugs: textToLines(item.cardsShowSlugsText)
   },
   scenario: {
-    ...structuredClone(item.scenario),
+    ...clonePlain(item.scenario),
     points: textToLines(item.scenarioPointsText),
     images: Array.from({ length: 3 }, (_, index) => item.scenario.images[index]?.trim() || '')
   },
   workshops: {
-    ...structuredClone(item.workshops),
+    ...clonePlain(item.workshops),
     categorySlugs: textToLines(item.workshopsCategorySlugsText)
   },
   about: {
-    ...structuredClone(item.about),
+    ...clonePlain(item.about),
     paragraphs: textToLines(item.aboutParagraphsText)
   },
-  cta: structuredClone(item.cta)
+  cta: clonePlain(item.cta)
 })
 
 const createEmptyServiceScenarioItem = (): ServiceScenarioItem => ({

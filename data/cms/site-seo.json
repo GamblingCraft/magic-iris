@@ -4,31 +4,31 @@
   "siteUrl": "https://magiciris.ru",
   "defaultDescription": "Шоу и выездные мастер-классы в Иркутске для свадеб, дней рождения, корпоративов, выпускных и городских событий с красивой подачей и понятной организацией.",
   "home": {
-    "title": "Организация праздников в Иркутске - Шоу и мастер-классы",
+    "title": "Организация праздников в Иркутске - Шоу и мастер-классы для взрослых и детей",
     "description": "Заказать песочное и световое шоу, шоу-портреты, авторские мастер-классы. Свадьбы, дни рождения, корпоративы, выпускные - организация праздника под ключ в Иркутске и области. Не просто шоу — магия, которую запомнят все гости ✨"
   },
   "showsIndex": {
-    "title": "Шоу-программы в Иркутске | Magic Iris",
+    "title": "Шоу-программы в Иркутске ",
     "description": "Каталог шоу-программ Magic Iris: песочное шоу, световое шоу, шоу-портреты и визуальные номера для свадеб, дней рождения, корпоративов и городских событий."
   },
   "show": {
-    "titleTemplate": "{title} в Иркутске | {brand}",
-    "descriptionTemplate": "{lead} Формат адаптируем под площадку, гостей и тайминг события. {title}, {kicker}, {lead}, {description}, {city}, {brand}"
+    "titleTemplate": "Заказать {title} в Иркутске ",
+    "descriptionTemplate": "{lead} Адаптируем под вашу площадку, гостей и формат праздника."
   },
   "masterClassesIndex": {
-    "title": "Выездные мастер-классы в Иркутске | Magic Iris",
-    "description": "Каталог выездных мастер-классов Magic Iris в Иркутске: творческие форматы для женщин, мужчин, школ, корпоративов, сезонных и городских событий."
+    "title": "Мастер-классы в Иркутске ",
+    "description": "Каталог мастер-классов Magic Iris в Иркутске: творческие форматы для женщин, мужчин, школ, корпоративов, сезонных и городских событий."
   },
   "masterClassCategory": {
-    "titleTemplate": "Мастер-классы {category} в Иркутске | {brand}",
+    "titleTemplate": "Творческие мастер-классы {category} в Иркутске ",
     "descriptionTemplate": "{description} Поможем подобрать формат под аудиторию, площадку и тайминг события.{category}, {count}, {description}, {lead}, {city}, {brand}"
   },
   "workshop": {
-    "titleTemplate": "{title} — мастер-класс в Иркутске | {brand}",
-    "descriptionTemplate": "{summary} Подходит для событий разного масштаба и легко адаптируется под формат площадки.{title}, {category}, {summary}, {description}, {audience}, {priceFrom}, {city}, {brand}"
+    "titleTemplate": "Заказать {title} — творческий мастер-класс в Иркутске",
+    "descriptionTemplate": "{summary} Подходит для событий разного масштаба, от камерных праздников до городских выступлений!  и легко адаптируется под формат площадки."
   },
   "yandexVerification": "",
   "googleVerification": "",
-  "yandexMetrikaCounter": "",
+  "yandexMetrikaCounter": "\n<!-- Yandex.Metrika counter -->\n<script type=\"text/javascript\">\n    (function(m,e,t,r,i,k,a){\n        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};\n        m[i].l=1*new Date();\n        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}\n        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)\n    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109002153', 'ym');\n\n    ym(109002153, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:\"dataLayer\", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});\n</script>\n<noscript><div><img src=\"https://mc.yandex.ru/watch/109002153\" style=\"position:absolute; left:-9999px;\" alt=\"\" /></div></noscript>\n<!-- /Yandex.Metrika counter -->\n\n\n",
   "robotsContent": "User-agent: *\nAllow: /\n\nSitemap: {sitemapUrl}\nHost: {siteUrl}"
 }

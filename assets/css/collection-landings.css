@@ -17,7 +17,10 @@
 
 .collection-landing .scenario-showcase__head,
 .collection-landing .catalog-preview__head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 40px;
+  align-items: start;
   margin-bottom: 44px;
 }
 
@@ -27,6 +30,7 @@
   font-size: clamp(32px, 3.2vw, 56px);
   line-height: 0.98;
   letter-spacing: -0.05em;
+  margin: 0;
 }
 
 .collection-landing .scenario-showcase__lead,
@@ -36,6 +40,7 @@
   color: rgba(28, 24, 34, 0.82);
   font-size: 17px;
   line-height: 1.5;
+  margin: 0;
 }
 
 .collection-landing .scenario-showcase__grid {
@@ -310,6 +315,38 @@
   background: #d7a86e;
 }
 
+/* НОВЫЙ БЛОК — О ПОДБОРКЕ (БЕЗ КОЛОНОК) */
+.collection-landing .about-collection {
+  padding: 60px 0;
+}
+
+.collection-landing .about-collection__head {
+  margin-bottom: 32px;
+}
+
+.collection-landing .about-collection__title {
+  font-size: clamp(32px, 3.2vw, 56px);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  margin: 0;
+  font-weight: 600;
+}
+
+.collection-landing .about-collection__content {
+  max-width: 860px;
+}
+
+.collection-landing .about-collection__content p {
+  margin-bottom: 20px;
+  color: rgba(28, 24, 34, 0.82);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.collection-landing .about-collection__content p:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 1100px) {
   .collection-landing .about-section__body {
     grid-template-columns: 1fr;
@@ -356,4 +393,18 @@
   .catalog-preview--workshops .catalog-wall {
     grid-template-columns: 1fr;
   }
+
+  .collection-landing .about-collection {
+    padding: 40px 0;
+  }
+
+  .collection-landing .about-collection__head {
+    margin-bottom: 24px;
+  }
+
+  .collection-landing .about-collection__content p {
+    font-size: 16px;
+    line-height: 1.45;
+  }
 }
+

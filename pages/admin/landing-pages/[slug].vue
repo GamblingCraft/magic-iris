@@ -17,6 +17,9 @@ type CatalogInfo = {
   masterClassCategories: Array<{ slug: string; title: string }>
 }
 
+const cloneLandingPages = (value: LandingPagesPayload): LandingPagesPayload =>
+  JSON.parse(JSON.stringify(value)) as LandingPagesPayload
+
 const route = useRoute()
 const slug = computed(() => String(route.params.slug || '') as ShowCollectionSlug)
 
@@ -44,6 +47,8 @@ const { data: catalog } = await useFetch<CatalogInfo>('/api/admin/catalog', {
 const pagesDraft = ref<LandingPagesPayload | null>(null)
 const draft = ref<ShowCollectionDraft | null>(null)
 const isSaving = ref(false)
+const saveError = ref('')
+const saveSuccess = ref('')
 
 watch(
   data,
@@ -52,7 +57,7 @@ watch(
       return
     }
 
-    pagesDraft.value = structuredClone(value)
+    pagesDraft.value = cloneLandingPages(value)
     const selected = value[slug.value]
     draft.value = selected ? toShowCollectionDraft(selected) : null
   },
@@ -73,6 +78,8 @@ const savePage = async () => {
   }
 
   isSaving.value = true
+  saveError.value = ''
+  saveSuccess.value = ''
 
   try {
     pagesDraft.value[slug.value] = fromShowCollectionDraft(draft.value)
@@ -83,6 +90,13 @@ const savePage = async () => {
     })
 
     await refresh()
+    saveSuccess.value = 'Изменения сохранены'
+  }
+  catch (error) {
+    saveError.value =
+      error instanceof Error && error.message
+        ? error.message
+        : 'Не удалось сохранить страницу'
   }
   finally {
     isSaving.value = false
@@ -115,6 +129,9 @@ const savePage = async () => {
           {{ isSaving ? '\u0421\u043e\u0445\u0440\u0430\u043d\u0435\u043d\u0438\u0435...' : '\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443' }}
         </button>
       </div>
+
+      <p v-if="saveSuccess" class="admin-inline-note">{{ saveSuccess }}</p>
+      <p v-if="saveError" class="admin-inline-note admin-inline-note--danger">{{ saveError }}</p>
 
       <div class="admin-subsection">
         <h4 class="admin-subsection__title">SEO</h4>
