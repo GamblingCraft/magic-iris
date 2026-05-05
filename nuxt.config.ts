@@ -20,19 +20,27 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    build: {
-      sourcemap: false,
-      cssCodeSplit: true,
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('gsap')) return 'gsap'
-            if (id.includes('Reviews2GIS')) return 'reviews'
-          }
+  optimizeDeps: {
+    include: [
+      'imask',
+      'gsap',
+      'gsap/ScrollTrigger'
+    ]
+  },
+
+  build: {
+    sourcemap: false,
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('gsap')) return 'gsap'
+          if (id.includes('Reviews2GIS')) return 'reviews'
         }
       }
     }
-  },
+  }
+},
 
   app: {
     head: {

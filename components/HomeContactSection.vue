@@ -1,84 +1,3 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue'
-
-import { homeCta } from '~/data/home-conversion'
-import { contactInfo } from '~/data/site'
-
-const phoneInput = ref('')
-const consentAccepted = ref(false)
-
-const formatPhone = (rawValue: string) => {
-  let digits = rawValue.replace(/\D/g, '')
-
-  if (digits.startsWith('8')) {
-    digits = `7${digits.slice(1)}`
-  }
-
-  if (digits.startsWith('9')) {
-    digits = `7${digits}`
-  }
-
-  if (!digits.startsWith('7')) {
-    digits = `7${digits}`
-  }
-
-  digits = digits.slice(0, 11)
-
-  const country = digits[0] ?? '7'
-  const area = digits.slice(1, 4)
-  const first = digits.slice(4, 7)
-  const second = digits.slice(7, 9)
-  const third = digits.slice(9, 11)
-
-  let result = `+${country}`
-
-  if (area) {
-    result += ` (${area}`
-  }
-
-  if (area.length === 3) {
-    result += ')'
-  }
-
-  if (first) {
-    result += ` ${first}`
-  }
-
-  if (second) {
-    result += `-${second}`
-  }
-
-  if (third) {
-    result += `-${third}`
-  }
-
-  return result
-}
-
-const onPhoneInput = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  phoneInput.value = formatPhone(target.value)
-}
-
-const phoneDigits = computed(() => phoneInput.value.replace(/\D/g, '').slice(0, 11))
-const canSend = computed(() => consentAccepted.value && phoneDigits.value.length === 11)
-const submitHref = computed(() => {
-  const message = encodeURIComponent(
-    `Здравствуйте! Хочу обсудить мероприятие в Magic Iris. Мой телефон: ${phoneInput.value || 'не указан'}.`
-  )
-
-  return `${contactInfo.whatsapp}?text=${message}`
-})
-
-const openSubmit = () => {
-  if (!canSend.value || !import.meta.client) {
-    return
-  }
-
-  window.open(submitHref.value, '_blank', 'noopener,noreferrer')
-}
-</script>
-
 <template>
   <section id="contacts" class="section cta-section">
     <div class="container">
@@ -99,21 +18,23 @@ const openSubmit = () => {
             {{ homeCta.description }}
           </p>
 
-          <form class="cta-ref__form" @submit.prevent="openSubmit">
+          <form class="cta-ref__form" @submit.prevent="handleSubmit">
             <label class="cta-ref__field">
               <span>{{ homeCta.phoneLabel }}</span>
               <input
+                ref="phoneInput"
+                v-model="phoneInputValue"
                 type="tel"
                 name="phone"
                 :placeholder="homeCta.phonePlaceholder"
-                :value="phoneInput"
                 autocomplete="tel"
-                @input="onPhoneInput"
-              >
+                class="cta-ref__input"
+              />
             </label>
 
-            <button type="submit" class="cta-ref__submit" :disabled="!canSend">
-              {{ homeCta.submitLabel }}
+            <button type="submit" class="cta-ref__submit" :disabled="!canSend || isSubmitting">
+              <span v-if="isSubmitting">Отправка...</span>
+              <span v-else>{{ homeCta.submitLabel }}</span>
             </button>
 
             <div class="cta-ref__messengers">
@@ -179,3 +100,89 @@ const openSubmit = () => {
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import IMask from 'imask'
+
+import { homeCta } from '~/data/home-conversion'
+import { contactInfo } from '~/data/site'
+
+// состояние
+const phoneInputValue = ref('')
+const consentAccepted = ref(false)
+const isSubmitting = ref(false)
+
+// маска
+const phoneInput = ref<HTMLInputElement | null>(null)
+let phoneMask: IMask.InputMask | null = null
+
+// вычисления
+const phoneDigits = computed(() =>
+  phoneInputValue.value.replace(/\D/g, '')
+)
+
+const canSend = computed(() =>
+  consentAccepted.value && phoneDigits.value.length === 11
+)
+
+// ссылка
+const submitHref = computed(() => {
+  const message = encodeURIComponent(
+    `Здравствуйте! Хочу обсудить мероприятие в Magic Iris. Телефон: ${phoneInputValue.value}`
+  )
+  return `${contactInfo.whatsapp}?text=${message}`
+})
+
+// API
+const sendToMaxApi = async (phone: string): Promise<boolean> => {
+  try {
+    await $fetch('/api/max-send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa('admin:magiciris2026')}`
+      },
+      body: {
+        type: 'cta',
+        data: { phone }
+      }
+    })
+    return true
+  } catch {
+    return false
+  }
+}
+
+// submit
+const handleSubmit = async () => {
+  if (!canSend.value || !import.meta.client) return
+
+  isSubmitting.value = true
+
+  try {
+    await sendToMaxApi(phoneInputValue.value)
+
+    window.open(submitHref.value, '_blank', 'noopener,noreferrer')
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+// lifecycle
+onMounted(() => {
+  if (phoneInput.value) {
+    phoneMask = IMask(phoneInput.value, {
+      mask: '+{7} (000) 000-00-00',
+      lazy: false // сразу показывает +7
+    })
+
+    phoneMask.on('accept', () => {
+      phoneInputValue.value = phoneMask?.value || ''
+    })
+  }
+})
+
+onBeforeUnmount(() => {
+  phoneMask?.destroy()
+})
+</script>

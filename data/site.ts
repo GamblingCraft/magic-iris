@@ -36,7 +36,7 @@ export const contactInfo = {
   telegram: 'https://t.me/iris_magic',
   whatsapp: 'https://wa.me/79501225413',
   vk: 'https://vk.com/iris_show',
-  max: 'https://wa.me/79501225413'
+  max: 'https://max.ru/241934919'
 }
 
 export const heroHighlights = [
@@ -117,7 +117,7 @@ export const footerColumns = [
   {
     title: 'Мастер-классы',
     links: masterClassCategories.map((category) => ({
-      label: category.title,
+      label: `Мастер-классы ${category.title.toLowerCase()}`,
       href: createMasterClassCategoryHref(category.slug)
     }))
   },

@@ -45,10 +45,10 @@ usePageSeo(computed(() => getMasterClassCategorySeo(currentCategory.value!)))
           :image="currentCategory?.image || ''"
           :facts="[
             { label: 'Форматов', value: `${currentCategory?.count || 0}` },
-            { label: 'Проведение', value: 'на вашей площадке' },
+            { label: 'Проведение', value: 'в студии' },
             { label: 'Подготовка', value: 'материалы и мастера' }
           ]"
-          :tags="['выездной формат', 'для гостей', 'под тайминг события']"
+          :tags="['выездной формат', 'в студии', 'под ваше событие']"
           :actions="[
             { label: 'Оставить заявку', href: '/#contacts' },
             { label: 'Все подборки', href: '/master-classes', kind: 'ghost' }

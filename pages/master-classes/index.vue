@@ -26,7 +26,7 @@ const breadcrumbs = [
 ]
 
 const filterTags = computed(() => [
-  { slug: 'all', title: 'Все мастер-классы' },
+  { slug: 'all', title: 'Все' },
   ...categoryPreviews.value.map((category) => ({
     slug: category.slug,
     title: category.title
@@ -193,7 +193,7 @@ usePageSeo(getMasterClassesIndexSeo())
 
         <CatalogHeroPanel
           eyebrow="Мастер-классы"
-          title="Выездные творческие форматы для праздников, школ, корпоративов и городских площадок"
+          title="Творческие форматы для праздников, школ, корпоративов и городских площадок"
           description="В каталоге собраны творческие мастер-классы для детей и взрослых."
           :image="heroImage"
           :actions="[
@@ -223,7 +223,7 @@ usePageSeo(getMasterClassesIndexSeo())
           <div class="catalog-cards-section__head">
             <div>
               <p class="eyebrow">Подберите формат</p>
-              <h2>Мастер-классы под задачу события</h2>
+              <h2>Мастер-классы</h2>
             </div>
           </div>
 
@@ -246,8 +246,6 @@ usePageSeo(getMasterClassesIndexSeo())
     <section class="section catalog-shell__section catalog-shell__section--tight">
       <div class="container">
         <CatalogCarouselSection
-          :title="activeTagTitle"
-          :description="activeTagDescription"
           :items="filteredWorkshopCards"
         />
       </div>
@@ -257,8 +255,7 @@ usePageSeo(getMasterClassesIndexSeo())
     <section class="section catalog-shell__section catalog-shell__section--tight">
       <div class="container">
         <CatalogCarouselSection
-          eyebrow="Популярные"
-          title="Форматы, которые хорошо работают"
+          title="Популярные"
           description="Подходят для разных сценариев мероприятий."
           :items="popularWorkshopCards"
         />
@@ -269,22 +266,9 @@ usePageSeo(getMasterClassesIndexSeo())
     <section class="section catalog-shell__section catalog-shell__section--tight">
       <div class="container">
         <CatalogCarouselSection
-          eyebrow="Рекомендуем"
-          title="Идеи для старта"
+          title="Рекомендуем"
           description="Универсальные решения."
           :items="recommendedWorkshopCards"
-        />
-      </div>
-    </section>
-
-    <!-- ВСЕ -->
-    <section class="section catalog-shell__section catalog-shell__section--tight">
-      <div class="container">
-        <CatalogCardsSection
-          eyebrow="Все мастер-классы"
-          title="Ещё форматы"
-          description="Дополнительные идеи."
-          :items="featuredWorkshopCards"
         />
       </div>
     </section>
@@ -295,7 +279,7 @@ usePageSeo(getMasterClassesIndexSeo())
 
     <div class="sec-title-double catalog-text-head">
       <div>
-        <h1 class="h2">Мастер-классы на мероприятия в Иркутске</h1>
+        <h1 class="h2">Мастер-классы в Иркутске</h1>
       </div>
     </div>
 

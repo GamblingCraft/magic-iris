@@ -9,7 +9,7 @@ const featuredProgram = computed(() => showPrograms[0])
     <div class="container">
       <div class="footer">
         <div class="footer__col">
-          <p class="footer__nav-title">{{ footerColumns[0]?.title || 'услуги' }}</p>
+          <p class="footer__nav-title">{{ footerColumns[0]?.title || 'Шоу' }}</p>
           <nav class="footer__nav">
             <NuxtLink v-for="link in footerColumns[0]?.links" :key="link.href + link.label" :to="link.href">
               {{ link.label }}
@@ -19,7 +19,7 @@ const featuredProgram = computed(() => showPrograms[0])
         </div>
 
         <div class="footer__col">
-          <p class="footer__nav-title">{{ footerColumns[1]?.title || 'праздники' }}</p>
+          <p class="footer__nav-title">{{ footerColumns[1]?.title || 'Мастер классы' }}</p>
           <nav class="footer__nav">
             <NuxtLink v-for="link in footerColumns[1]?.links" :key="link.href + link.label" :to="link.href">
               {{ link.label }}
@@ -29,22 +29,23 @@ const featuredProgram = computed(() => showPrograms[0])
         </div>
 
         <div class="footer__col">
-          <p class="footer__nav-title">{{ footerColumns[2]?.title || 'о нас' }}</p>
+          <p class="footer__nav-title">{{ footerColumns[2]?.title || 'Студия' }}</p>
           <nav class="footer__nav">
             <NuxtLink v-for="link in footerColumns[2]?.links" :key="link.href + link.label" :to="link.href">
               {{ link.label }}
             </NuxtLink>
           </nav>
           
-          <!--
+
             <div style="margin-top: 24px;">
-              <p class="footer__nav-title" style="margin-bottom: 0.55em;">популярное</p>
+              <p class="footer__nav-title" style="margin-bottom: 0.55em;">Популярное</p>
               <nav class="footer__nav">
-                <NuxtLink to="/pod-klyuch">праздники «под ключ»</NuxtLink>
-                <NuxtLink to="/corporate">корпоративным клиентам</NuxtLink>
+                <NuxtLink to="/shows/svadebnoe">Шоу на свадьбу</NuxtLink>
+                <NuxtLink to="/shows/korporativ">Шоу на корпоратив</NuxtLink>
+                <NuxtLink to="/shows/rozhdenie">Шоу на день рожденья</NuxtLink>
               </nav>
             </div>
-          -->
+
           <div class="footer__col__bottom"></div>
         </div>
 

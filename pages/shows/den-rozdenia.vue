@@ -179,24 +179,29 @@ useHead({
       </div>
     </section>
 
-    <section class="section about-section">
-      <div class="container about-section__intro">
-        <p class="eyebrow">{{ page.about.eyebrow }}</p>
-      </div>
+<section class="section about-section">
+  <div class="container about-section__intro">
+    <p class="eyebrow">{{ page.about.eyebrow }}</p>
+  </div>
 
-      <div class="container">
-        <div class="about-section__body">
-          <p class="about-section__lead">{{ page.about.lead }}</p>
+  <div class="container about-section__inner">
 
-          <div class="about-section__text">
-            <h3 class="about-section__title">{{ page.about.title }}</h3>
-            <p v-for="paragraph in page.about.paragraphs" :key="paragraph">
-              {{ paragraph }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <h2 class="about-section__title">
+      {{ page.about.title }}
+    </h2>
+
+    <p class="about-section__lead">
+      {{ page.about.lead }}
+    </p>
+
+    <div class="about-section__text">
+      <p v-for="paragraph in page.about.paragraphs" :key="paragraph">
+        {{ paragraph }}
+      </p>
+    </div>
+
+  </div>
+</section>
 
     <CollectionContactSection
       :eyebrow="page.cta.eyebrow"

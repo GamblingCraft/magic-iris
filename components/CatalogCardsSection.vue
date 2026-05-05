@@ -33,7 +33,6 @@ const gridClass = computed(() =>
 
 <template>
   <div class="catalog-cards-section">
-    <div class="catalog-cards-section__head">
       <div>
         <p class="eyebrow">{{ eyebrow }}</p>
         <h2>{{ title }}</h2>
@@ -48,6 +47,5 @@ const gridClass = computed(() =>
         :key="item.id"
         :item="item"
       />
-    </div>
   </div>
 </template>

@@ -26,7 +26,7 @@
 
 .collection-landing .scenario-showcase__title,
 .collection-landing .catalog-preview__title {
-  max-width: 14ch;
+  max-width: 22ch;
   font-size: clamp(32px, 3.2vw, 56px);
   line-height: 0.98;
   letter-spacing: -0.05em;
@@ -222,46 +222,63 @@
 
 .collection-landing .about-section {
   background: linear-gradient(180deg, #fff 0%, #f7f7fb 100%);
+  padding: 80px 0;
 }
 
-.collection-landing .about-section__intro {
+.collection-landing .about-section__inner {
+  max-width: 1300px;
+}
+
+.collection-landing .about-section .eyebrow {
   margin-bottom: 18px;
 }
 
-.collection-landing .about-section__body {
-  display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-  gap: 48px;
-  align-items: start;
-}
-
-.collection-landing .about-section__lead {
-  max-width: 24ch;
-  font-size: clamp(22px, 2vw, 32px);
-  font-weight: 600;
-  line-height: 1.16;
-  letter-spacing: -0.03em;
-}
-
-.collection-landing .about-section__text {
-  gap: 16px;
-}
-
 .collection-landing .about-section__title {
-  margin: 0 0 6px;
+  margin: 0 0 16px;
   color: #1d1b22;
   font-family: 'Unbounded', sans-serif;
-  font-size: clamp(28px, 2.2vw, 40px);
+  font-size: clamp(32px, 3vw, 48px);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.02;
   letter-spacing: -0.04em;
 }
 
+.collection-landing .about-section__lead {
+  margin: 0 0 20px;
+  font-size: clamp(18px, 1.4vw, 22px);
+  line-height: 1.4;
+  color: rgba(28, 24, 34, 0.9);
+}
+
+.collection-landing .about-section__text {
+  display: grid;
+  gap: 16px;
+}
+
 .collection-landing .about-section__text p {
-  max-width: 62ch;
-  color: rgba(38, 38, 38, 0.78);
+  margin: 0;
+  color: rgba(38, 38, 38, 0.8);
   font-size: 17px;
-  line-height: 1.58;
+  line-height: 1.6;
+}
+
+/* адаптив */
+@media (max-width: 900px) {
+  .collection-landing .about-section {
+    padding: 50px 0;
+  }
+
+  .collection-landing .about-section__title {
+    font-size: 28px;
+  }
+
+  .collection-landing .about-section__lead {
+    font-size: 17px;
+  }
+
+  .collection-landing .about-section__text p {
+    font-size: 16px;
+  }
 }
 
 .service-landing .service-about-grid {

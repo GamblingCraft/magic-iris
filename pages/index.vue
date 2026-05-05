@@ -11,11 +11,32 @@ const workshopTiles = computed(() => homeCatalog.value?.workshopTiles || [])
 
 usePageSeo(getHomeSeo())
 
-// Ref для попапа
-const quizPopupRef = ref(null)
+// Убираем ClientOnly и используем обычный импорт
+const quizPopupRef = ref<InstanceType<typeof QuizPopup> | null>(null)
 
-const openQuiz = () => {
-  quizPopupRef.value?.openPopup()
+// Импортируем компонент напрямую (не лениво)
+const QuizPopup = defineAsyncComponent(() => import('~/components/popup/QuizPopup.vue'))
+
+const openQuiz = async () => {
+  console.log('Opening quiz...')
+  
+  // Даём время на полную инициализацию компонента
+  await nextTick()
+  await new Promise(resolve => setTimeout(resolve, 100))
+  
+  if (quizPopupRef.value && typeof quizPopupRef.value.openPopup === 'function') {
+    quizPopupRef.value.openPopup()
+    console.log('Quiz popup opened successfully')
+  } else {
+    console.error('Quiz popup method not available', quizPopupRef.value)
+    // Повторная попытка через 500ms
+    setTimeout(() => {
+      if (quizPopupRef.value && typeof quizPopupRef.value.openPopup === 'function') {
+        quizPopupRef.value.openPopup()
+        console.log('Quiz popup opened successfully on retry')
+      }
+    }, 500)
+  }
 }
 </script>
 
@@ -39,40 +60,12 @@ const openQuiz = () => {
       <LazyReviews2GIS />
     </ClientOnly>
 
-    <!-- Кнопка подарок (только иконка) -->
+    <!-- Кнопка подарок -->
     <button class="gift-button" @click="openQuiz">
       <Icon name="lucide:gift" size="32" />
     </button>
 
-    <!-- Попап -->
-    <ClientOnly>
-      <LazyQuizPopup ref="quizPopupRef" :auto-open="false" />
-    </ClientOnly>
+    <!-- Убираем ClientOnly и v-if -->
+    <QuizPopup ref="quizPopupRef" :auto-open="false" />
   </div>
 </template>
-
-<style scoped>
-.gift-button {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 68px;
-  height: 68px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #f7d176, #e0b55f);
-  color: #1c1628;
-  border: none;
-  border-radius: 50%;
-  box-shadow: 0 12px 35px rgba(247, 209, 118, 0.45);
-  z-index: 150;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.gift-button:hover {
-  transform: scale(1.15) rotate(15deg);
-  box-shadow: 0 20px 45px rgba(247, 209, 118, 0.55);
-}
-</style>
