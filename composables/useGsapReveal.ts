@@ -19,17 +19,11 @@ export const useGsapReveal = (
   options: RevealOptions = {}
 ) => {
   let observer: IntersectionObserver | null = null
-  const route = useRoute()
 
   onMounted(() => {
     const root = rootRef.value
 
     if (!root || !import.meta.client) {
-      return
-    }
-
-    // Safe mode for the homepage: render content immediately without reveal effects.
-    if (route.path === '/') {
       return
     }
 

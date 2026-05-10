@@ -32,10 +32,36 @@ const goToSlide = (index: number) => {
 
 const goToNext = () => goToSlide(activeIndex.value + 1)
 const goToPrev = () => goToSlide(activeIndex.value - 1)
+
+let autoplayTimer: ReturnType<typeof setInterval> | null = null
+
+const startAutoplay = () => {
+  if (!import.meta.client || slides.length < 2 || autoplayTimer) {
+    return
+  }
+
+  autoplayTimer = window.setInterval(goToNext, 6500)
+}
+
+const stopAutoplay = () => {
+  if (!autoplayTimer) {
+    return
+  }
+
+  clearInterval(autoplayTimer)
+  autoplayTimer = null
+}
+
+onMounted(startAutoplay)
+onBeforeUnmount(stopAutoplay)
 </script>
 
 <template>
-  <section class="hero intro hero--reference">
+  <section
+    class="hero intro hero--reference"
+    @mouseenter="stopAutoplay"
+    @mouseleave="startAutoplay"
+  >
     <div class="hero__scene">
       <img
         :src="activeSlide.image"
