@@ -16,9 +16,9 @@ export const homeSteps: HomeStep[] = [
     description:
       'Уточняем формат мероприятия, площадку, количество гостей, тайминг и настроение вечера. На этом этапе собираем всю основу для будущего шоу или мастер-класса.',
     image:
-      'images/interview.webp',
+      '/images/interview.webp',
     navImage:
-      'images/num/1.webp',
+      '/images/num/1.webp',
     color: '#d9ccbc'
   },
   {
@@ -28,9 +28,9 @@ export const homeSteps: HomeStep[] = [
     description:
       'На основе брифа подбираем формат: песочное шоу, световой номер, шоу-портрет или творческую зону. Собираем сюжет, акценты и понимание, какой момент должен стать кульминацией.',
     image:
-      'images/concept.webp',
+      '/images/concept.webp',
     navImage:
-      'images/num/2.webp',
+      '/images/num/2.webp',
     color: '#edeff3'
   },
   {
@@ -40,9 +40,9 @@ export const homeSteps: HomeStep[] = [
     description:
       'Показываем, как будет выглядеть номер или вся программа: тайминг, музыка, визуальные акценты, желаемое настроение и точки вовлечения гостей.',
     image:
-      'images/present.webp',
+      '/images/present.webp',
     navImage:
-      'images/num/3.webp',
+      '/images/num/3.webp',
     color: '#aacce9'
   },
   {
@@ -52,9 +52,9 @@ export const homeSteps: HomeStep[] = [
     description:
       'Фиксируем итоговый сценарий, логистику, время монтажа, работу с ведущим и точную стоимость. На этом этапе у вас есть полное понимание, как все будет происходить.',
     image:
-      'images/approve.webp',
+      '/images/approve.webp',
     navImage:
-      'images/num/4.webp',
+      '/images/num/4.webp',
     color: '#edeef5'
   },
   {
@@ -64,9 +64,9 @@ export const homeSteps: HomeStep[] = [
     description:
       'Готовим все, что нужно для площадки: оборудование, графику, реквизит, расходники, мастеров и выездную команду. Контролируем детали, чтобы в день события все сработало без спешки.',
     image:
-      'images/prepare.webp',
+      '/images/prepare.webp',
     navImage:
-      'images/num/5.webp',
+      '/images/num/5.webp',
     color: '#a8a1c8'
   },
   {
@@ -76,9 +76,9 @@ export const homeSteps: HomeStep[] = [
     description:
       'Приезжаем заранее, монтируемся, проверяем свет, музыку и встраиваемся в общий тайминг. Вы наслаждаетесь моментом, а мы отвечаем за вау-эффект и четкую организацию.',
     image:
-      'images/event.webp',
+      '/images/event.webp',
     navImage:
-      'images/num/6.webp',
+      '/images/num/6.webp',
     color: '#e7e3ef'
   }
 ]

@@ -1,349 +1,31 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { aboutPortrait, aboutSeoParagraphs, aboutSeoTags } from '~/data/home-about'
 
-const sectionRef = ref<HTMLElement | null>(null)
-const introRef = ref<HTMLElement | null>(null)
-const stageRef = ref<HTMLElement | null>(null)
-const cardRef = ref<HTMLElement | null>(null)
-const imageRef = ref<HTMLImageElement | null>(null)
-const overlayRef = ref<HTMLElement | null>(null)
-const stageContentRef = ref<HTMLElement | null>(null)
-const bodyRef = ref<HTMLElement | null>(null)
-const keywordsRef = ref<HTMLElement | null>(null)
-const keywordsRowPrimaryRef = ref<HTMLElement | null>(null)
-const keywordsRowSecondaryRef = ref<HTMLElement | null>(null)
+const headline = 'РўРІРѕСЂС‡РµСЃРєР°СЏ СЃС‚СѓРґРёСЏ РІ РСЂРєСѓС‚СЃРєРµ РґР»СЏ СЃРѕР±С‹С‚РёР№, РєРѕС‚РѕСЂС‹Рµ С…РѕС‡РµС‚СЃСЏ РїРµСЂРµР¶РёРІР°С‚СЊ СЃРЅРѕРІР°'
+const subheadingShows = 'Р§С‚Рѕ РјС‹ СЃРѕР·РґР°С‘Рј'
+const subheadingMasterclasses = 'РђРІС‚РѕСЂСЃРєРёРµ РјР°СЃС‚РµСЂ-РєР»Р°СЃСЃС‹ Рё Р°СЂС‚-С„РѕСЂРјР°С‚С‹'
+const subheadingForWhom = 'Р”Р»СЏ РєРѕРіРѕ Рё РєР°Рє РјС‹ СЂР°Р±РѕС‚Р°РµРј'
 
-// H2 — главный заголовок секции (был h3, теперь h2)
-const headline = 'Творческая студия в Иркутске для событий, которые хочется переживать снова'
-
-// H3 — подзаголовки смысловых блоков
-const subheadingShows = 'Что мы создаём'
-const subheadingMasterclasses = 'Авторские мастер-классы и арт-форматы'
-const subheadingForWhom = 'Для кого и как мы работаем'
-
-// Лид остаётся коротким вводным абзацем
 const lead =
-  'Создаём песочное шоу, световое шоу, шоу-портреты и выездные мастер-классы для свадеб, дней рождения, корпоративов и камерных праздников, где важны атмосфера, подача и сильная эмоция.'
+  'РЎРѕР·РґР°С‘Рј РїРµСЃРѕС‡РЅРѕРµ С€РѕСѓ, СЃРІРµС‚РѕРІРѕРµ С€РѕСѓ, С€РѕСѓ-РїРѕСЂС‚СЂРµС‚С‹ Рё РІС‹РµР·РґРЅС‹Рµ РјР°СЃС‚РµСЂ-РєР»Р°СЃСЃС‹ РґР»СЏ СЃРІР°РґРµР±, РґРЅРµР№ СЂРѕР¶РґРµРЅРёСЏ, РєРѕСЂРїРѕСЂР°С‚РёРІРѕРІ Рё РєР°РјРµСЂРЅС‹С… РїСЂР°Р·РґРЅРёРєРѕРІ, РіРґРµ РІР°Р¶РЅС‹ Р°С‚РјРѕСЃС„РµСЂР°, РїРѕРґР°С‡Р° Рё СЃРёР»СЊРЅР°СЏ СЌРјРѕС†РёСЏ.'
 
-const keywordRowPrimary = [...aboutSeoTags, ...aboutSeoTags, ...aboutSeoTags]
-const keywordRowSecondary = [...[...aboutSeoTags].reverse(), ...[...aboutSeoTags].reverse(), ...[...aboutSeoTags].reverse()]
-
-let animationContext: { revert: () => void } | null = null
-let mediaMatcher: { revert: () => void } | null = null
-
-onMounted(async () => {
-  if (
-    !sectionRef.value ||
-    !introRef.value ||
-    !stageRef.value ||
-    !cardRef.value ||
-    !imageRef.value ||
-    !overlayRef.value ||
-    !stageContentRef.value ||
-    !bodyRef.value ||
-    !keywordsRef.value ||
-    !keywordsRowPrimaryRef.value ||
-    !keywordsRowSecondaryRef.value
-  ) {
-    return
-  }
-
-  const gsapModule = await import('gsap')
-  const scrollTriggerModule = await import('gsap/ScrollTrigger')
-  const gsap = gsapModule.gsap || gsapModule.default || gsapModule
-  const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default
-
-  if (!ScrollTrigger) {
-    return
-  }
-
-  gsap.registerPlugin(ScrollTrigger)
-
-  const getViewportWidth = () => document.documentElement.clientWidth
-  const getViewportHeight = () => window.innerHeight
-  const getCollapsedWidth = () => Math.min(getViewportWidth() - 120, 1120)
-  const getCollapsedHeight = () => Math.min(getViewportHeight() * 0.68, 720)
-
-  animationContext = gsap.context(() => {
-    mediaMatcher = gsap.matchMedia()
-
-    const introTargets = Array.from(introRef.value?.querySelectorAll<HTMLElement>(':scope > *') || [])
-    const stageTargets = Array.from(stageContentRef.value?.querySelectorAll<HTMLElement>(':scope > *') || [])
-    const bodyTargets = Array.from(bodyRef.value?.querySelectorAll<HTMLElement>(':scope > *') || [])
-    const aboutStageHold = { progress: 0 }
-
-    const revealConfig = {
-      autoAlpha: 0,
-      y: 30,
-      filter: 'blur(10px)',
-      willChange: 'transform, opacity, filter'
-    }
-
-    gsap.set(introTargets, revealConfig)
-    gsap.set(bodyTargets, revealConfig)
-    gsap.set(keywordsRef.value, {
-      autoAlpha: 0,
-      y: 20,
-      filter: 'blur(10px)',
-      willChange: 'transform, opacity, filter'
-    })
-
-    gsap.to(introTargets, {
-      autoAlpha: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      duration: 0.82,
-      stagger: 0.08,
-      ease: 'power3.out',
-      clearProps: 'willChange',
-      scrollTrigger: {
-        trigger: introRef.value,
-        start: 'top 84%',
-        once: true
-      }
-    })
-
-    gsap.to(bodyTargets, {
-      autoAlpha: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      duration: 0.84,
-      stagger: 0.08,
-      ease: 'power3.out',
-      clearProps: 'willChange',
-      scrollTrigger: {
-        trigger: bodyRef.value,
-        start: 'top 82%',
-        once: true
-      }
-    })
-
-    gsap.to(keywordsRef.value, {
-      autoAlpha: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      duration: 0.84,
-      ease: 'power3.out',
-      clearProps: 'willChange',
-      scrollTrigger: {
-        trigger: keywordsRef.value,
-        start: 'top 88%',
-        once: true
-      }
-    })
-
-    mediaMatcher.add('(min-width: 901px)', () => {
-      gsap.set(cardRef.value, {
-        y: 42,
-        width: () => getCollapsedWidth(),
-        height: () => getCollapsedHeight(),
-        borderRadius: 34,
-        transformOrigin: 'center center',
-        willChange: 'width, height, transform, border-radius'
-      })
-
-      gsap.set(imageRef.value, {
-        scale: 1.1,
-        yPercent: -4,
-        transformOrigin: 'center center',
-        willChange: 'transform'
-      })
-
-      gsap.set(overlayRef.value, {
-        opacity: 0.12,
-        willChange: 'opacity'
-      })
-
-      gsap.set(stageTargets, {
-        autoAlpha: 0,
-        y: 28,
-        filter: 'blur(10px)',
-        willChange: 'transform, opacity, filter'
-      })
-
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: stageRef.value,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 0.78,
-          invalidateOnRefresh: true
-        }
-      })
-        .to(cardRef.value, {
-          y: 0,
-          width: () => getViewportWidth(),
-          height: () => getViewportHeight(),
-          borderRadius: 28,
-          ease: 'none',
-          duration: 0.62
-        }, 0)
-        .to(imageRef.value, {
-          scale: 1.14,
-          yPercent: 2,
-          ease: 'none',
-          duration: 0.62
-        }, 0)
-        .to(overlayRef.value, {
-          opacity: 1,
-          ease: 'none',
-          duration: 0.62
-        }, 0.06)
-        .to(stageTargets, {
-          autoAlpha: 1,
-          y: 0,
-          filter: 'blur(0px)',
-          duration: 0.24,
-          stagger: 0.08,
-          ease: 'power2.out'
-        }, 0.68)
-        .to(aboutStageHold, {
-          progress: 1,
-          duration: 0.42,
-          ease: 'none'
-        })
-
-      const getKeywordTravel = () => Math.min(window.innerWidth * 0.24, 320)
-
-      gsap.fromTo(
-        keywordsRowPrimaryRef.value,
-        { x: 0 },
-        {
-          x: () => -getKeywordTravel(),
-          ease: 'none',
-          scrollTrigger: {
-            trigger: keywordsRef.value,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.1,
-            invalidateOnRefresh: true
-          }
-        }
-      )
-
-      gsap.fromTo(
-        keywordsRowSecondaryRef.value,
-        { x: () => -getKeywordTravel() * 0.45 },
-        {
-          x: () => getKeywordTravel() * 0.8,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: keywordsRef.value,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.1,
-            invalidateOnRefresh: true
-          }
-        }
-      )
-    })
-
-    mediaMatcher.add('(max-width: 900px)', () => {
-      gsap.set(stageTargets, {
-        autoAlpha: 0,
-        y: 24,
-        filter: 'blur(8px)',
-        willChange: 'transform, opacity, filter'
-      })
-
-      gsap.fromTo(
-        cardRef.value,
-        {
-          autoAlpha: 0,
-          y: 28,
-          scale: 0.97,
-          filter: 'blur(10px)'
-        },
-        {
-          autoAlpha: 1,
-          y: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 0.86,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: stageRef.value,
-            start: 'top 88%',
-            once: true
-          }
-        }
-      )
-
-      gsap.fromTo(
-        stageTargets,
-        {
-          autoAlpha: 0,
-          y: 22,
-          filter: 'blur(8px)'
-        },
-        {
-          autoAlpha: 1,
-          y: 0,
-          filter: 'blur(0px)',
-          duration: 0.74,
-          stagger: 0.08,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: stageRef.value,
-            start: 'top 82%',
-            once: true
-          }
-        }
-      )
-
-      gsap.fromTo(
-        keywordsRowPrimaryRef.value,
-        { x: -30 },
-        {
-          x: 12,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: keywordsRef.value,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.15
-          }
-        }
-      )
-
-      gsap.fromTo(
-        keywordsRowSecondaryRef.value,
-        { x: 18 },
-        {
-          x: -28,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: keywordsRef.value,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.15
-          }
-        }
-      )
-    })
-  }, sectionRef.value)
-})
-
-onBeforeUnmount(() => {
-  mediaMatcher?.revert()
-  animationContext?.revert()
-})
+const keywordRowPrimary = [...aboutSeoTags, ...aboutSeoTags]
+const keywordRowSecondary = [...[...aboutSeoTags].reverse(), ...[...aboutSeoTags].reverse()]
 </script>
 
 <template>
-  <section id="about" ref="sectionRef" class="section about-section">
-    <div ref="introRef" class="container about-section__intro">
-      <p class="eyebrow">О нас</p>
+  <section id="about" class="section about-section">
+    <div class="container about-section__intro">
+      <p class="eyebrow">Рћ РЅР°СЃ</p>
     </div>
 
-    <div ref="stageRef" class="container about-section__stage">
+    <div class="container about-section__stage">
       <div class="about-section__sticky">
-        <figure ref="cardRef" class="about-section__card">
-          <img ref="imageRef" :src="aboutPortrait.src" :alt="aboutPortrait.alt" loading="lazy">
-          <div ref="overlayRef" class="about-section__card-overlay" />
+        <figure class="about-section__card">
+          <img :src="aboutPortrait.src" :alt="aboutPortrait.alt" loading="lazy">
+          <div class="about-section__card-overlay" />
 
-          <figcaption ref="stageContentRef" class="about-section__card-content">
-            <!-- ТЕПЕРЬ ЭТО H2, А НЕ H3 -->
+          <figcaption class="about-section__card-content">
             <h2 class="about-section__card-title">{{ headline }}</h2>
           </figcaption>
         </figure>
@@ -351,42 +33,37 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="container">
-      <div ref="bodyRef" class="about-section__body">
+      <div class="about-section__body">
         <p class="about-section__lead">{{ lead }}</p>
 
         <div class="about-section__text">
-          <!-- ПЕРВЫЙ АБЗАЦ — ВВОДНЫЙ -->
           <p>{{ aboutSeoParagraphs[0] }}</p>
           <p>{{ aboutSeoParagraphs[1] }}</p>
 
-          <!-- ПОДЗАГОЛОВОК H3: ЧТО МЫ СОЗДАЁМ -->
           <h3 class="about-section__subheading">{{ subheadingShows }}</h3>
           <p>{{ aboutSeoParagraphs[2] }}</p>
 
-          <!-- ПОДЗАГОЛОВОК H3: АВТОРСКИЕ МАСТЕР-КЛАССЫ -->
           <h3 class="about-section__subheading">{{ subheadingMasterclasses }}</h3>
           <p>{{ aboutSeoParagraphs[3] }}</p>
 
-          <!-- ПОДЗАГОЛОВОК H3: ДЛЯ КОГО И КАК МЫ РАБОТАЕМ -->
           <h3 class="about-section__subheading">{{ subheadingForWhom }}</h3>
           <p>{{ aboutSeoParagraphs[4] }}</p>
           <p>{{ aboutSeoParagraphs[5] }}</p>
 
-          <!-- ЗАКЛЮЧИТЕЛЬНЫЙ АКЦЕНТ (БЕЗ ЗАГОЛОВКА) -->
           <p class="about-section__conclusion">{{ aboutSeoParagraphs[6] }}</p>
         </div>
       </div>
     </div>
 
-    <div ref="keywordsRef" class="about-section__keywords">
+    <div class="about-section__keywords">
       <div class="about-section__keywords-mask">
-        <div ref="keywordsRowPrimaryRef" class="about-section__keywords-track about-section__keywords-track--primary">
+        <div class="about-section__keywords-track about-section__keywords-track--primary">
           <span v-for="(tag, index) in keywordRowPrimary" :key="`about-primary-${index}`">{{ tag }}</span>
         </div>
       </div>
 
       <div class="about-section__keywords-mask">
-        <div ref="keywordsRowSecondaryRef" class="about-section__keywords-track about-section__keywords-track--secondary">
+        <div class="about-section__keywords-track about-section__keywords-track--secondary">
           <span v-for="(tag, index) in keywordRowSecondary" :key="`about-secondary-${index}`">{{ tag }}</span>
         </div>
       </div>
