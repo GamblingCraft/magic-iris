@@ -99,22 +99,22 @@ onMounted(() => {
   nextTick(syncActiveNav)
 })
 
-useGsapReveal(
-  sectionRef,
-  [
-    '.home-steps-section__head > div:first-child > *',
-    '.home-steps-section__lead',
-    '.home-steps-nav',
-    '.steps-slider',
-    '.home-steps-slider__progress'
-  ],
-  {
-    start: 'top 84%',
-    stagger: 0.08,
-    y: 34,
-    blur: 8
-  }
-)
+// Временно не используем reveal для HomeStepsSection.
+// В этом блоке есть refs, слайдер, scrollTo и активное состояние,
+// поэтому лучше не навешивать дополнительную reveal-анимацию на контейнеры.
+
+// useGsapReveal(sectionRef, [
+//   '.home-steps-section__head > div:first-child > *',
+//   '.home-steps-section__lead',
+//   '.home-steps-nav',
+//   '.steps-slider',
+//   '.home-steps-slider__progress'
+// ], {
+//   start: 'top 84%',
+//   stagger: 0.08,
+//   y: 34,
+//   blur: 8
+// })
 </script>
 
 <template>

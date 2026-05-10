@@ -95,7 +95,7 @@ export const deriveWorkshopAudienceLabel = (
   categorySlugs
     .map((slug) => categories.find((category) => category.slug === slug)?.title || '')
     .filter(Boolean)
-    .join(' · ')
+    .join(' В· ')
 
 const normalizeCatalogText = (value?: string) =>
   (value || '')
@@ -108,27 +108,27 @@ const capitalizeCatalogText = (value: string) =>
 
 const stripParticipantsPrefix = (value: string) =>
   value
-    .replace(/^Общее количество участников\s*[—-]\s*/iu, '')
-    .replace(/^Количество участников\s*[—-]\s*/iu, '')
+    .replace(/^РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ\s*[вЂ”-]\s*/iu, '')
+    .replace(/^РљРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ\s*[вЂ”-]\s*/iu, '')
     .trim()
 
 const participantDetailMarkers = [
-  ' Изготовление ',
-  ' Большой выбор ',
-  ' Работа с ',
-  ' Работа ',
-  ' Украшение ',
-  ' Крепление ',
-  ' Упаковка ',
-  ' Мастер-класс ',
-  ' Время создания ',
-  ' Продолжительность ',
-  ' Формат подходит ',
-  ' Формат удобно ',
-  ' Гости ',
-  ' ЗАКАЗАТЬ ',
-  ' ГРУППОВОЙ ФОРМАТ ',
-  ' Главная '
+  ' РР·РіРѕС‚РѕРІР»РµРЅРёРµ ',
+  ' Р‘РѕР»СЊС€РѕР№ РІС‹Р±РѕСЂ ',
+  ' Р Р°Р±РѕС‚Р° СЃ ',
+  ' Р Р°Р±РѕС‚Р° ',
+  ' РЈРєСЂР°С€РµРЅРёРµ ',
+  ' РљСЂРµРїР»РµРЅРёРµ ',
+  ' РЈРїР°РєРѕРІРєР° ',
+  ' РњР°СЃС‚РµСЂ-РєР»Р°СЃСЃ ',
+  ' Р’СЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ ',
+  ' РџСЂРѕРґРѕР»Р¶РёС‚РµР»СЊРЅРѕСЃС‚СЊ ',
+  ' Р¤РѕСЂРјР°С‚ РїРѕРґС…РѕРґРёС‚ ',
+  ' Р¤РѕСЂРјР°С‚ СѓРґРѕР±РЅРѕ ',
+  ' Р“РѕСЃС‚Рё ',
+  ' Р—РђРљРђР—РђРўР¬ ',
+  ' Р“Р РЈРџРџРћР’РћР™ Р¤РћР РњРђРў ',
+  ' Р“Р»Р°РІРЅР°СЏ '
 ]
 
 const formatWorkshopDescriptionAppendix = (value: string) => {
@@ -163,7 +163,7 @@ const splitWorkshopParticipants = (rawValue: string) => {
   }
 
   const explicitMatch = value.match(
-    /^Общее количество участников\s*[—-]\s*(не ограничено|до\s*\d+\s*(?:участников|человек)(?:\s*на\s*одного\s*мастера)?)/iu
+    /^РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ\s*[вЂ”-]\s*(РЅРµ РѕРіСЂР°РЅРёС‡РµРЅРѕ|РґРѕ\s*\d+\s*(?:СѓС‡Р°СЃС‚РЅРёРєРѕРІ|С‡РµР»РѕРІРµРє)(?:\s*РЅР°\s*РѕРґРЅРѕРіРѕ\s*РјР°СЃС‚РµСЂР°)?)/iu
   )
 
   if (explicitMatch?.[0]) {
@@ -174,7 +174,7 @@ const splitWorkshopParticipants = (rawValue: string) => {
   }
 
   const shortMatch = value.match(
-    /^(не ограничено|до\s*\d+\s*(?:участников|человек)(?:\s*на\s*одного\s*мастера)?|под формат события)/iu
+    /^(РЅРµ РѕРіСЂР°РЅРёС‡РµРЅРѕ|РґРѕ\s*\d+\s*(?:СѓС‡Р°СЃС‚РЅРёРєРѕРІ|С‡РµР»РѕРІРµРє)(?:\s*РЅР°\s*РѕРґРЅРѕРіРѕ\s*РјР°СЃС‚РµСЂР°)?|РїРѕРґ С„РѕСЂРјР°С‚ СЃРѕР±С‹С‚РёСЏ)/iu
   )
 
   if (shortMatch?.[0]) {
@@ -218,7 +218,7 @@ const appendWorkshopDescription = (baseDescription: string, appendix: string) =>
     return normalizedBase
   }
 
-  const separator = /[.!?…]$/u.test(normalizedBase) ? ' ' : '. '
+  const separator = /[.!?вЂ¦]$/u.test(normalizedBase) ? ' ' : '. '
   return `${normalizedBase}${separator}${normalizedAppendix}`
 }
 
@@ -297,7 +297,7 @@ export const homeCatalogTiles: HomeCatalogTile[] = [
     .map((category, index) => ({
       id: `tile-category-${category.id}`,
       title: category.title,
-      subtitle: `${category.count} ????????`,
+      subtitle: `${category.count} форматов`,
       href: createMasterClassCategoryHref(category.slug),
       image: category.image,
       size: homeCategoryTileSizes[index] || 'medium'

@@ -1,20 +1,92 @@
 ﻿<script setup lang="ts">
 import { aboutPortrait, aboutSeoParagraphs, aboutSeoTags } from '~/data/home-about'
 
-const headline = 'Творческая студия в Иркутске для событий, которые хочется переживать снова'
-const subheadingShows = 'Что мы создаём'
-const subheadingMasterclasses = 'Авторские мастер-классы и арт-форматы'
-const subheadingForWhom = 'Для кого и как мы работаем'
+const headline = 'Творческая студия в Иркутске'
+const cardText = ''
+const subheadingShows = 'Шоу на праздник'
+const subheadingMasterclasses = 'Творческие мастер-классы и арт-вечера'
+const subheadingForWhom = 'Для кого и где мы работаем'
 
 const lead =
-  'Создаём песочное шоу, световое шоу, шоу-портреты и выездные мастер-классы для свадеб, дней рождения, корпоративов и камерных праздников, где важны атмосфера, подача и сильная эмоция.'
+  'Magic Iris — творческая студия в Иркутске. Мы создаём песочное и световое шоу, шоу-портреты и авторские мастер-классы для частных и городских событий.'
 
 const keywordRowPrimary = [...aboutSeoTags, ...aboutSeoTags]
 const keywordRowSecondary = [...[...aboutSeoTags].reverse(), ...[...aboutSeoTags].reverse()]
+
+const aboutSectionRef = ref<HTMLElement | null>(null)
+
+let rafId = 0
+let removeListeners: (() => void) | null = null
+
+const setAboutZoom = () => {
+  const section = aboutSectionRef.value
+
+  if (!section) {
+    return
+  }
+
+  if (window.innerWidth <= 900 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    section.style.setProperty('--about-card-scale', '1')
+    section.style.setProperty('--about-image-scale', '1')
+    section.style.setProperty('--about-card-shift', '0px')
+    return
+  }
+
+  const stage = section.querySelector<HTMLElement>('.about-section__stage')
+  const rect = (stage || section).getBoundingClientRect()
+  const viewportHeight = window.innerHeight || 1
+  const rawProgress = (viewportHeight - rect.top) / (viewportHeight + rect.height * 0.45)
+  const progress = Math.min(1, Math.max(0, rawProgress))
+
+  const eased = 1 - Math.pow(1 - progress, 2)
+  const cardScale = 0.78 + eased * 0.22
+  const imageScale = 1.24 - eased * 0.24
+  const cardShift = 52 - eased * 52
+
+  section.style.setProperty('--about-card-scale', cardScale.toFixed(3))
+  section.style.setProperty('--about-image-scale', imageScale.toFixed(3))
+  section.style.setProperty('--about-card-shift', `${cardShift.toFixed(1)}px`)
+}
+
+const queueAboutZoom = () => {
+  if (rafId) {
+    return
+  }
+
+  rafId = window.requestAnimationFrame(() => {
+    rafId = 0
+    setAboutZoom()
+  })
+}
+
+onMounted(() => {
+  setAboutZoom()
+
+  const onScroll = () => queueAboutZoom()
+  const onResize = () => queueAboutZoom()
+
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onResize, { passive: true })
+
+  removeListeners = () => {
+    window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('resize', onResize)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (rafId) {
+    window.cancelAnimationFrame(rafId)
+    rafId = 0
+  }
+
+  removeListeners?.()
+  removeListeners = null
+})
 </script>
 
 <template>
-  <section id="about" class="section about-section">
+  <section id="about" ref="aboutSectionRef" class="section about-section">
     <div class="container about-section__intro">
       <p class="eyebrow">О нас</p>
     </div>
@@ -27,6 +99,7 @@ const keywordRowSecondary = [...[...aboutSeoTags].reverse(), ...[...aboutSeoTags
 
           <figcaption class="about-section__card-content">
             <h2 class="about-section__card-title">{{ headline }}</h2>
+            <p class="about-section__card-text">{{ cardText }}</p>
           </figcaption>
         </figure>
       </div>

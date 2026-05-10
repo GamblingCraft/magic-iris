@@ -26,6 +26,13 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown)
 })
 
+useGsapReveal(sectionRef, ['.scenario-showcase__title-wrap > *', '.scenario-showcase__lead', '.scenario-card'], {
+  start: 'top 88%',
+  stagger: 0.12,
+  y: 36,
+  blur: 8
+})
+
 </script>
 
 <template>
