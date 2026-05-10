@@ -55,9 +55,7 @@ const openQuiz = async () => {
     <LazyHomeFaqSection hydrate-on-visible />
     <LazyHomeContactSection hydrate-on-visible />
 
-    <ClientOnly>
-      <LazyReviews2GIS hydrate-on-visible />
-    </ClientOnly>
+    <!-- Temporarily disabled to verify whether homepage crashes are caused by animated review carousel. -->
 
     <button class="gift-button" @click="openQuiz">
       <Icon name="lucide:gift" size="32" />

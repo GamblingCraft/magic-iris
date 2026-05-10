@@ -1,4 +1,4 @@
-export type HomeStep = {
+﻿export type HomeStep = {
   id: string
   navLabel: string
   title: string

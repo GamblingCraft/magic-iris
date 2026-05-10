@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { homeHeroSlides } from '~/data/home-slider'
 
 import { contactInfo } from '~/data/site'
@@ -6,14 +6,14 @@ import { contactInfo } from '~/data/site'
 const slides = homeHeroSlides.length ? homeHeroSlides : [
   {
     id: 'fallback-slide',
-    eyebrow: 'Творческая студия в Иркутске',
-    title: 'Шоу и мастер-классы, созданные специально для вашего события',
-    script: 'в Иркутске',
+    eyebrow: 'РўРІРѕСЂС‡РµСЃРєР°СЏ СЃС‚СѓРґРёСЏ РІ РСЂРєСѓС‚СЃРєРµ',
+    title: 'РЁРѕСѓ Рё РјР°СЃС‚РµСЂ-РєР»Р°СЃСЃС‹, СЃРѕР·РґР°РЅРЅС‹Рµ СЃРїРµС†РёР°Р»СЊРЅРѕ РґР»СЏ РІР°С€РµРіРѕ СЃРѕР±С‹С‚РёСЏ',
+    script: 'РІ РСЂРєСѓС‚СЃРєРµ',
     summary:
-      'Оставьте заявку и мы подберём песочное шоу, световой номер, шоу-портрет или выездной мастер-класс под формат вашего праздника.',
-    buttonLabel: 'заказать шоу',
+      'РћСЃС‚Р°РІСЊС‚Рµ Р·Р°СЏРІРєСѓ Рё РјС‹ РїРѕРґР±РµСЂС‘Рј РїРµСЃРѕС‡РЅРѕРµ С€РѕСѓ, СЃРІРµС‚РѕРІРѕР№ РЅРѕРјРµСЂ, С€РѕСѓ-РїРѕСЂС‚СЂРµС‚ РёР»Рё РІС‹РµР·РґРЅРѕР№ РјР°СЃС‚РµСЂ-РєР»Р°СЃСЃ РїРѕРґ С„РѕСЂРјР°С‚ РІР°С€РµРіРѕ РїСЂР°Р·РґРЅРёРєР°.',
+    buttonLabel: 'Р·Р°РєР°Р·Р°С‚СЊ С€РѕСѓ',
     buttonHref: contactInfo.whatsapp,
-    image: 'images/hero.webp',
+    image: '/images/hero.webp',
     imageAlt: 'Magic Iris event show'
   }
 ]
@@ -32,36 +32,10 @@ const goToSlide = (index: number) => {
 
 const goToNext = () => goToSlide(activeIndex.value + 1)
 const goToPrev = () => goToSlide(activeIndex.value - 1)
-
-let autoplayTimer: ReturnType<typeof setInterval> | null = null
-
-const startAutoplay = () => {
-  if (!import.meta.client || slides.length < 2 || autoplayTimer) {
-    return
-  }
-
-  autoplayTimer = window.setInterval(goToNext, 6500)
-}
-
-const stopAutoplay = () => {
-  if (!autoplayTimer) {
-    return
-  }
-
-  clearInterval(autoplayTimer)
-  autoplayTimer = null
-}
-
-onMounted(startAutoplay)
-onBeforeUnmount(stopAutoplay)
 </script>
 
 <template>
-  <section
-    class="hero intro hero--reference"
-    @mouseenter="stopAutoplay"
-    @mouseleave="startAutoplay"
-  >
+  <section class="hero intro hero--reference">
     <div class="hero__scene">
       <img
         :src="activeSlide.image"
@@ -98,26 +72,26 @@ onBeforeUnmount(stopAutoplay)
 
       <div v-if="slides.length > 1" class="hero__slider-ui">
         <div class="hero__slider-controls">
-          <button type="button" class="hero__slider-control" aria-label="Предыдущий слайд" @click="goToPrev">
+          <button type="button" class="hero__slider-control" aria-label="РџСЂРµРґС‹РґСѓС‰РёР№ СЃР»Р°Р№Рґ" @click="goToPrev">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M15 5L8 12L15 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
 
-          <button type="button" class="hero__slider-control" aria-label="Следующий слайд" @click="goToNext">
+          <button type="button" class="hero__slider-control" aria-label="РЎР»РµРґСѓСЋС‰РёР№ СЃР»Р°Р№Рґ" @click="goToNext">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </button>
         </div>
 
-        <div class="hero__slider-dots" role="tablist" aria-label="Слайды">
+        <div class="hero__slider-dots" role="tablist" aria-label="РЎР»Р°Р№РґС‹">
           <button
             v-for="(slide, index) in slides"
             :key="slide.id"
             type="button"
             :class="['hero__slider-dot', { 'is-active': index === activeIndex }]"
-            :aria-label="`Слайд ${index + 1}`"
+            :aria-label="`РЎР»Р°Р№Рґ ${index + 1}`"
             :aria-pressed="index === activeIndex"
             @click="goToSlide(index)"
           />
@@ -126,3 +100,4 @@ onBeforeUnmount(stopAutoplay)
     </div>
   </section>
 </template>
+

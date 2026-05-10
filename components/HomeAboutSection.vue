@@ -1,13 +1,13 @@
 ﻿<script setup lang="ts">
 import { aboutPortrait, aboutSeoParagraphs, aboutSeoTags } from '~/data/home-about'
 
-const headline = 'РўРІРѕСЂС‡РµСЃРєР°СЏ СЃС‚СѓРґРёСЏ РІ РСЂРєСѓС‚СЃРєРµ РґР»СЏ СЃРѕР±С‹С‚РёР№, РєРѕС‚РѕСЂС‹Рµ С…РѕС‡РµС‚СЃСЏ РїРµСЂРµР¶РёРІР°С‚СЊ СЃРЅРѕРІР°'
-const subheadingShows = 'Р§С‚Рѕ РјС‹ СЃРѕР·РґР°С‘Рј'
-const subheadingMasterclasses = 'РђРІС‚РѕСЂСЃРєРёРµ РјР°СЃС‚РµСЂ-РєР»Р°СЃСЃС‹ Рё Р°СЂС‚-С„РѕСЂРјР°С‚С‹'
-const subheadingForWhom = 'Р”Р»СЏ РєРѕРіРѕ Рё РєР°Рє РјС‹ СЂР°Р±РѕС‚Р°РµРј'
+const headline = 'Творческая студия в Иркутске для событий, которые хочется переживать снова'
+const subheadingShows = 'Что мы создаём'
+const subheadingMasterclasses = 'Авторские мастер-классы и арт-форматы'
+const subheadingForWhom = 'Для кого и как мы работаем'
 
 const lead =
-  'РЎРѕР·РґР°С‘Рј РїРµСЃРѕС‡РЅРѕРµ С€РѕСѓ, СЃРІРµС‚РѕРІРѕРµ С€РѕСѓ, С€РѕСѓ-РїРѕСЂС‚СЂРµС‚С‹ Рё РІС‹РµР·РґРЅС‹Рµ РјР°СЃС‚РµСЂ-РєР»Р°СЃСЃС‹ РґР»СЏ СЃРІР°РґРµР±, РґРЅРµР№ СЂРѕР¶РґРµРЅРёСЏ, РєРѕСЂРїРѕСЂР°С‚РёРІРѕРІ Рё РєР°РјРµСЂРЅС‹С… РїСЂР°Р·РґРЅРёРєРѕРІ, РіРґРµ РІР°Р¶РЅС‹ Р°С‚РјРѕСЃС„РµСЂР°, РїРѕРґР°С‡Р° Рё СЃРёР»СЊРЅР°СЏ СЌРјРѕС†РёСЏ.'
+  'Создаём песочное шоу, световое шоу, шоу-портреты и выездные мастер-классы для свадеб, дней рождения, корпоративов и камерных праздников, где важны атмосфера, подача и сильная эмоция.'
 
 const keywordRowPrimary = [...aboutSeoTags, ...aboutSeoTags]
 const keywordRowSecondary = [...[...aboutSeoTags].reverse(), ...[...aboutSeoTags].reverse()]
@@ -16,7 +16,7 @@ const keywordRowSecondary = [...[...aboutSeoTags].reverse(), ...[...aboutSeoTags
 <template>
   <section id="about" class="section about-section">
     <div class="container about-section__intro">
-      <p class="eyebrow">Рћ РЅР°СЃ</p>
+      <p class="eyebrow">О нас</p>
     </div>
 
     <div class="container about-section__stage">
