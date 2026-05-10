@@ -33,12 +33,7 @@ const showTileConfigs = [
   { slug: 'krutyashchiysya-portret', size: 'small' as const }
 ]
 
-const categoryTileConfigs = [
-  { slug: 'dlya-zhenshchin', size: 'wide' as const },
-  { slug: 'dlya-muzhchin', size: 'tall' as const },
-  { slug: 'novogodnie', size: 'small' as const },
-  { slug: 'v-shkolu', size: 'small' as const }
-]
+const homeWorkshopTileSizes = ['wide', 'tall', 'small', 'small'] as const
 
 const toShowCard = (program: ShowProgram): CatalogCardItem => ({
   id: program.id,
@@ -166,25 +161,18 @@ export const getHomeCatalogPayload = (): HomeCatalogPayload => ({
       }
     })
     .filter(Boolean) as HomeCatalogPayload['showTiles'],
-  workshopTiles: categoryTileConfigs
-    .map((config) => {
-      const category = masterClassCategories.find((item) => item.slug === config.slug)
-
-      if (!category) {
-        return null
-      }
-
-      return {
-        id: category.id,
-        title: category.title,
-        description: category.description,
-        image: category.image,
-        count: category.count,
-        href: createMasterClassCategoryHref(category.slug),
-        size: config.size
-      }
-    })
-    .filter(Boolean) as HomeCatalogPayload['workshopTiles']
+  workshopTiles: masterClassCategories
+    .filter((category) => category.count > 0)
+    .slice(0, homeWorkshopTileSizes.length)
+    .map((category, index) => ({
+      id: category.id,
+      title: category.title,
+      description: category.description,
+      image: category.image,
+      count: category.count,
+      href: createMasterClassCategoryHref(category.slug),
+      size: homeWorkshopTileSizes[index] || 'small'
+    })) as HomeCatalogPayload['workshopTiles']
 })
 
 export const getShowsIndexPayload = (): ShowsIndexPayload => ({

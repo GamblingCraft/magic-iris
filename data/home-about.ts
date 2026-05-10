@@ -45,25 +45,25 @@ export const aboutVideoItems: AboutVideoItem[] = [
     id: 'sand-show',
     title: 'Песочное шоу',
     videoId: 'nqqMVMssZAtV7mP6porCg5',
-    poster: 'https://static.tildacdn.com/tild3730-6132-4364-a664-613439376538/_1.jpg'
+    poster: 'images/placeholder.webp'
   },
   {
     id: 'light-show',
     title: 'Световое шоу',
     videoId: '016uV7wzT71WAUbPV5n7HQ',
-    poster: 'https://static.tildacdn.com/tild6231-6562-4735-a365-666531623531/_2.jpg'
+    poster: 'images/placeholder.webp'
   },
   {
     id: 'portrait-show',
     title: 'Шоу-портреты',
     videoId: 'gJwZ6zjzQ8GMQCS8VbXR2S',
-    poster: 'https://static.tildacdn.com/tild3638-3434-4565-a633-383931363962/_3.jpg'
+    poster: 'images/placeholder.webp'
   },
   {
     id: 'spinning-portrait',
     title: 'Крутящийся портрет',
     videoId: 'bvSonFzmpz6TtPgTc4KADd',
-    poster: 'https://static.tildacdn.com/tild3364-3631-4739-a662-303738313137/Group_427322100.jpg'
+    poster: 'images/placeholder.webp'
   }
 ]
 

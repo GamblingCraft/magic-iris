@@ -3,13 +3,15 @@ import { homeSteps } from '~/data/home-steps'
 
 const sectionRef = ref<HTMLElement | null>(null)
 const navRef = ref<HTMLElement | null>(null)
-const navItemRefs = ref<HTMLElement[]>([])
+
+let navItemRefs: HTMLElement[] = []
+
 const activeIndex = ref(0)
 const touchStartX = ref<number | null>(null)
 
 const setNavItemRef = (el: unknown) => {
-  if (el instanceof HTMLElement && !navItemRefs.value.includes(el)) {
-    navItemRefs.value.push(el)
+  if (el instanceof HTMLElement && !navItemRefs.includes(el)) {
+    navItemRefs.push(el)
   }
 }
 
@@ -31,7 +33,7 @@ const syncActiveNav = () => {
     return
   }
 
-  const activeItem = navItemRefs.value[activeIndex.value]
+  const activeItem = navItemRefs[activeIndex.value]
 
   if (!activeItem) {
     return
@@ -90,19 +92,29 @@ const onTouchEnd = (event: TouchEvent) => {
 }
 
 onBeforeUpdate(() => {
-  navItemRefs.value = []
+  navItemRefs = []
 })
 
 onMounted(() => {
   nextTick(syncActiveNav)
 })
 
-useGsapReveal(sectionRef, ['.home-steps-section__head > div:first-child > *', '.home-steps-section__lead', '.home-steps-nav', '.steps-slider', '.home-steps-slider__progress'], {
-  start: 'top 84%',
-  stagger: 0.08,
-  y: 34,
-  blur: 8
-})
+useGsapReveal(
+  sectionRef,
+  [
+    '.home-steps-section__head > div:first-child > *',
+    '.home-steps-section__lead',
+    '.home-steps-nav',
+    '.steps-slider',
+    '.home-steps-slider__progress'
+  ],
+  {
+    start: 'top 84%',
+    stagger: 0.08,
+    y: 34,
+    blur: 8
+  }
+)
 </script>
 
 <template>
@@ -115,6 +127,7 @@ useGsapReveal(sectionRef, ['.home-steps-section__head > div:first-child > *', '.
             6 шагов <strong>как мы создадим</strong> ваше событие
           </div>
         </div>
+
         <div class="text-3 home-steps-section__lead">
           Показываем путь от первой идеи до готового шоу или мастер-класса. На каждом этапе вы понимаете,
           что происходит, сколько это стоит и как именно будет выглядеть событие в день проведения.
@@ -137,8 +150,14 @@ useGsapReveal(sectionRef, ['.home-steps-section__head > div:first-child > *', '.
             @click="setActiveStep(index)"
           >
             <span class="home-steps-nav__thumb">
-              <img :src="step.navImage || step.image" :alt="step.navLabel">
+              <img
+                :src="step.navImage || step.image"
+                :alt="step.navLabel"
+                loading="lazy"
+                decoding="async"
+              >
             </span>
+
             <span class="home-steps-nav__label">{{ step.navLabel }}</span>
           </button>
         </div>
@@ -147,7 +166,7 @@ useGsapReveal(sectionRef, ['.home-steps-section__head > div:first-child > *', '.
           <button
             type="button"
             class="step-panel step-panel--side step-panel--prev"
-            :style="{ '--bg-color': previousStep.color, '--panel-image': `url(${previousStep.image})` }"
+            :style="{ '--bg-color': previousStep.color }"
             :aria-label="`Открыть шаг ${getStepNumber(previousIndex)}`"
             @click="goPrevious"
           >
@@ -164,7 +183,13 @@ useGsapReveal(sectionRef, ['.home-steps-section__head > div:first-child > *', '.
               <div class="step-panel__track">
                 <div class="step-panel__slide" :style="{ '--bg-color': activeStep.color }">
                   <picture class="step-panel__picture">
-                    <img :src="activeStep.image" :alt="activeStep.navLabel" class="step-panel__img" loading="lazy">
+                    <img
+                      :src="activeStep.image"
+                      :alt="activeStep.navLabel"
+                      class="step-panel__img"
+                      loading="lazy"
+                      decoding="async"
+                    >
                   </picture>
 
                   <div class="step-panel__body">
@@ -207,7 +232,7 @@ useGsapReveal(sectionRef, ['.home-steps-section__head > div:first-child > *', '.
           <button
             type="button"
             class="step-panel step-panel--side step-panel--next"
-            :style="{ '--bg-color': nextStep.color, '--panel-image': `url(${nextStep.image})` }"
+            :style="{ '--bg-color': nextStep.color }"
             :aria-label="`Открыть шаг ${getStepNumber(nextIndex)}`"
             @click="goNext"
           >

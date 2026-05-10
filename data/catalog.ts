@@ -270,11 +270,7 @@ const showTileConfigs = [
   { id: 'tile-rotating', slug: 'krutyashchiysya-portret', size: 'small' as const }
 ]
 
-const categoryTileConfigs = [
-  { id: 'tile-women', slug: 'dlya-zhenshchin', size: 'medium' as const },
-  { id: 'tile-school', slug: 'v-shkolu', size: 'medium' as const },
-  { id: 'tile-new-year', slug: 'novogodnie', size: 'medium' as const }
-]
+const homeCategoryTileSizes = ['medium', 'medium', 'medium'] as const
 
 export const homeCatalogTiles: HomeCatalogTile[] = [
   ...showTileConfigs
@@ -295,24 +291,17 @@ export const homeCatalogTiles: HomeCatalogTile[] = [
       }
     })
     .filter(Boolean) as HomeCatalogTile[],
-  ...categoryTileConfigs
-    .map((config) => {
-      const category = masterClassCategories.find((item) => item.slug === config.slug)
-
-      if (!category) {
-        return null
-      }
-
-      return {
-        id: config.id,
-        title: category.title,
-        subtitle: `${category.count} форматов`,
-        href: createMasterClassCategoryHref(category.slug),
-        image: category.image,
-        size: config.size
-      }
-    })
-    .filter(Boolean) as HomeCatalogTile[]
+  ...masterClassCategories
+    .filter((category) => category.count > 0)
+    .slice(0, homeCategoryTileSizes.length)
+    .map((category, index) => ({
+      id: `tile-category-${category.id}`,
+      title: category.title,
+      subtitle: `${category.count} ????????`,
+      href: createMasterClassCategoryHref(category.slug),
+      image: category.image,
+      size: homeCategoryTileSizes[index] || 'medium'
+    }))
 ]
 
 export const getShowBySlug = (slug: string) => shows.find((item) => item.slug === slug)

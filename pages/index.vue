@@ -2,11 +2,6 @@
 import { getHomeSeo } from '~/data/site-seo'
 import type { HomeCatalogPayload } from '~/types/public-catalog'
 
-defineRouteRules({
-  prerender: true,
-  swr: 3600
-})
-
 const { data: homeCatalog } = await useFetch<HomeCatalogPayload>('/api/site/home-catalog', {
   key: 'site-home-catalog'
 })
@@ -50,19 +45,14 @@ const openQuiz = async () => {
 
     <LazyHomeStepsSection hydrate-on-visible />
     <LazyHomeAboutSection hydrate-on-visible />
-    <LazyHomeShortsSection hydrate-on-visible /> 
+
+    <LazyHomeShortsSection hydrate-on-visible />
     <LazyHomeGallerySection hydrate-on-visible />
     <LazyHomeFaqSection hydrate-on-visible />
     <LazyHomeContactSection hydrate-on-visible />
-    <LazyHomeReviewsSection hydrate-on-visible />
-    <button class="gift-button" @click="openQuiz">
-      <Icon name="lucide:gift" size="32" />
-    </button>
+    <ClientOnly>
+      <LazyReviews2GIS hydrate-on-visible />
+    </ClientOnly>
 
-    <QuizPopup
-      v-if="isQuizMounted"
-      ref="quizPopupRef"
-      :auto-open="false"
-    />
   </div>
 </template>

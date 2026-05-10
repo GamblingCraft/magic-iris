@@ -4,9 +4,9 @@ import { serviceHighlights } from '~/data/site'
 const sectionRef = ref<HTMLElement | null>(null)
 
 const scenarioImages = [
-  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1200&q=80'
+  '/images/placeholder.webp',
+  '/images/placeholder.webp',
+  '/images/placeholder.webp'
 ]
 
 const scenarioCards = computed(() =>

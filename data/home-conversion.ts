@@ -43,6 +43,6 @@ export const homeCta = {
   submitLabel: 'отправить',
   consentLabel:
     'Нажимая кнопку, я даю согласие на обработку персональных данных и принимаю условия оферты.',
-  image: 'https://static.tildacdn.com/tild3062-3533-4661-b666-303737376131/IMG_4692_-___1.jpg',
+  image: 'images/placeholder.webp',
   imageAlt: 'Праздничная шоу-программа Magic Iris'
 }
