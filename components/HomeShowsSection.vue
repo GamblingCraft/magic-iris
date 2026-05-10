@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import type { HomeShowTile } from '~/types/public-catalog'
 
+const sectionRef = ref<HTMLElement | null>(null)
+
 defineProps<{
   tiles: HomeShowTile[]
 }>()
+
+useGsapReveal(sectionRef, ['.eyebrow', '.catalog-preview__head > *', '.catalog-wall__card'], {
+  start: 'top 88%',
+  stagger: 0.12,
+  y: 36,
+  blur: 8
+})
 </script>
 
 <template>
-  <section id="shows" class="section section--light catalog-preview catalog-preview--shows">
+  <section
+    id="shows"
+    ref="sectionRef"
+    class="section section--light catalog-preview catalog-preview--shows"
+  >
     <div class="container">
       <div class="catalog-preview__head">
         <div>

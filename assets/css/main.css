@@ -3913,7 +3913,7 @@ p {
 
 .hero__eyebrow {
   margin: 0 0 18px;
-  color: rgba(255, 255, 255, 0.86);
+  color: #f7d176;
   font-family: var(--font-title);
   font-size: 12px;
   font-weight: 700;
@@ -4356,7 +4356,9 @@ p {
 .step-panel__body {
   display: grid;
   align-content: start;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 18px;
+  height: 100%;
   padding: 46px 44px 40px;
 }
 
@@ -4387,6 +4389,7 @@ p {
   color: rgba(38, 38, 38, 0.82);
   font-size: 18px;
   line-height: 1.42;
+  align-self: start;
 }
 
 .step-panel__actions {
@@ -4394,7 +4397,7 @@ p {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: auto;
+  align-self: end;
   padding-top: 16px;
 }
 
@@ -7871,8 +7874,8 @@ p {
 
 .catalog-chip-cloud span {
   border-color: rgba(82, 47, 116, 0.12);
-  background: rgba(247, 209, 118, 0.2);
-  color: #171327;
+    background: #8d51c7;
+    color: #ffffff;
 }
 
 .catalog-hero-panel__facts {

@@ -34,6 +34,10 @@ const openQuiz = async () => {
     }
   }, 500)
 }
+
+onMounted(() => {
+  isQuizMounted.value = true
+})
 </script>
 
 <template>
@@ -52,6 +56,17 @@ const openQuiz = async () => {
     <LazyHomeContactSection hydrate-on-visible />
     <ClientOnly>
       <LazyReviews2GIS hydrate-on-visible />
+    </ClientOnly>
+    <ClientOnly>
+    <button class="gift-button" @click="openQuiz">
+      <Icon name="lucide:gift" size="32" />
+    </button>
+
+    <QuizPopup
+      v-if="isQuizMounted"
+      ref="quizPopupRef"
+      :auto-open="false"
+    />
     </ClientOnly>
 
   </div>
