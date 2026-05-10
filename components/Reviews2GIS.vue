@@ -289,9 +289,10 @@ const updateCarouselMeasurements = async () => {
 
   slideStep.value = cardWidth + gap
 
-  const centerCardIndex = cards.indexOf(centerCard)
+  const centerCardOffset = centerCard.offsetLeft
 
-  baseX.value = viewport.offsetWidth / 2 - cardWidth / 2 - centerCardIndex * slideStep.value
+  // Center against the card's real offset so mobile sizing/padding doesn't skew the active slide.
+  baseX.value = viewport.offsetWidth / 2 - centerCardOffset - cardWidth / 2
 
   gsap.set(track, {
     x: baseX.value
