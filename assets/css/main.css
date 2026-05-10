@@ -7292,18 +7292,20 @@ p {
 }
 
 .about-section__keywords-mask {
-  overflow: visible;
+  overflow: hidden;
 }
 
 .about-section__keywords-track {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: clamp(22px, 2.4vw, 40px);
-  width: 100%;
-  max-width: 100%;
-  padding-inline: 0;
-  will-change: auto;
+  width: max-content;
+  min-width: max-content;
+  max-width: none;
+  padding-inline: clamp(24px, 4vw, 64px);
+  will-change: transform;
+  animation: about-keywords-marquee 34s linear infinite;
 }
 
 .about-section__keywords-track span {
@@ -7328,10 +7330,15 @@ p {
 }
 
 .about-section__keywords-track span::after {
-  content: 'вЂў';
+  content: '•';
   margin-left: clamp(22px, 2vw, 34px);
   color: rgba(23, 19, 39, 0.24);
   font-size: 0.5em;
+}
+
+.about-section__keywords-track--secondary {
+  animation-direction: reverse;
+  animation-duration: 38s;
 }
 
 .about-section__keywords-track--secondary span:nth-child(odd) {
@@ -7340,6 +7347,16 @@ p {
 
 .about-section__keywords-track--secondary span:nth-child(even) {
   color: var(--salat);
+}
+
+@keyframes about-keywords-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .gallery-section {
@@ -7567,6 +7584,7 @@ p {
   .about-section__keywords-track {
     gap: 18px;
     padding-inline: 20px;
+    animation-duration: 28s;
   }
 
   .about-section__keywords-track span {
@@ -7722,6 +7740,13 @@ p {
 
 .catalog-shell__section {
   padding-block: clamp(0px, 4.4vw, 34px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-section__keywords-track {
+    animation: none;
+    transform: none;
+  }
 }
 
 .catalog-shell__section--hero {

@@ -16,11 +16,7 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      include: [
-        'imask',
-        'gsap',
-        'gsap/ScrollTrigger'
-      ]
+      include: ['imask']
     },
     build: {
       sourcemap: false,
@@ -64,4 +60,3 @@ export default defineNuxtConfig({
     compressPublicAssets: true
   }
 })
-
