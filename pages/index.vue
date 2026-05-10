@@ -50,8 +50,8 @@ const openQuiz = async () => {
 
     <LazyHomeStepsSection hydrate-on-visible />
     <LazyHomeAboutSection hydrate-on-visible />
-    <LazyHomeShortsSection hydrate-on-visible />
-    <LazyHomeGallerySection hydrate-on-visible />
+<!-- <LazyHomeShortsSection hydrate-on-visible /> -->
+<!-- <LazyHomeGallerySection hydrate-on-visible /> -->
     <LazyHomeFaqSection hydrate-on-visible />
     <LazyHomeContactSection hydrate-on-visible />
     <button class="gift-button" @click="openQuiz">
