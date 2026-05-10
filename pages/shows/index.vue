@@ -86,7 +86,7 @@ usePageSeo(getShowsIndexSeo())
 </script>
 
 <template>
-  <div class="catalog-shell">
+  <div class="catalog-shell catalog-shell--shows">
     <!-- HERO -->
     <section class="section catalog-shell__section catalog-shell__section--hero">
       <div class="container">
@@ -120,7 +120,7 @@ usePageSeo(getShowsIndexSeo())
           eyebrow="Каталог шоу"
           title="Выберите программу под ваш праздник"
           description="Фото, короткое описание, ориентир по стоимости и страница с деталями — всё понятно, без лишнего."
-          :columns="2"
+          :columns="3"
           :items="showCards"
         />
       </div>

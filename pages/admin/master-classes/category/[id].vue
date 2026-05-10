@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
 
 import {
@@ -32,6 +32,8 @@ const workshopDrafts = ref<WorkshopDraft[]>([])
 const isSaving = ref(false)
 const isCreatingWorkshop = ref(false)
 const deletingWorkshopId = ref('')
+const workshopSearch = ref('')
+const showCategoryEditor = ref(false)
 
 watch(
   data,
@@ -62,6 +64,28 @@ const categoryWorkshops = computed(() => {
 })
 
 const workshopsCount = computed(() => categoryWorkshops.value.length)
+
+const filteredCategoryWorkshops = computed(() => {
+  const query = workshopSearch.value.trim().toLowerCase()
+
+  if (!query) {
+    return categoryWorkshops.value
+  }
+
+  return categoryWorkshops.value.filter((item) => {
+    const haystack = [
+      item.title,
+      item.slug,
+      item.audienceLabel,
+      item.categorySlugs.join(' ')
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+
+    return haystack.includes(query)
+  })
+})
 
 const saveCategory = async () => {
   if (!catalog.value || !selectedCategory.value) {
@@ -104,6 +128,7 @@ const saveCategory = async () => {
     })
 
     await refresh()
+    showCategoryEditor.value = false
   }
   finally {
     isSaving.value = false
@@ -169,11 +194,13 @@ const removeWorkshop = async (id: string) => {
 
 <template>
   <section v-if="selectedCategory" class="admin-grid">
-    <div class="admin-card admin-card--editor">
+    <div class="admin-card">
       <div class="admin-card__head">
         <div>
-          <h3 class="admin-card__title">Категория мастер-классов</h3>
-          <p class="admin-card__descr">Редактируйте тексты и изображение подборки, а ниже управляйте карточками, которые в неё входят.</p>
+          <h3 class="admin-card__title">Карточки внутри категории</h3>
+          <p class="admin-card__descr">
+            Быстрый поиск по названию или slug и управление мастер-классами в этой подборке.
+          </p>
         </div>
       </div>
 
@@ -181,61 +208,70 @@ const removeWorkshop = async (id: string) => {
         <NuxtLink to="/admin/master-classes" class="admin-button">К категориям</NuxtLink>
         <button
           type="button"
-          class="admin-button admin-button--accent"
-          :disabled="isSaving"
-          @click="saveCategory"
+          class="admin-button"
+          @click="showCategoryEditor = !showCategoryEditor"
         >
-          {{ isSaving ? 'Сохранение...' : 'Сохранить категорию' }}
+          {{ showCategoryEditor ? 'Скрыть категорию' : 'Редактировать категорию' }}
         </button>
+        <div class="admin-status">Мастер-классов в подборке: {{ workshopsCount }}</div>
       </div>
 
-      <div class="admin-editor__grid">
-        <label class="admin-field">
-          <span class="admin-label">ID</span>
-          <input v-model="selectedCategory.id" class="admin-input" type="text">
-        </label>
-
-        <label class="admin-field">
-          <span class="admin-label">Slug</span>
-          <input v-model="selectedCategory.slug" class="admin-input" type="text">
-        </label>
-      </div>
-
-      <label class="admin-field">
-        <span class="admin-label">Название</span>
-        <input v-model="selectedCategory.title" class="admin-input" type="text">
-      </label>
-
-      <label class="admin-field">
-        <span class="admin-label">Lead</span>
-        <textarea v-model="selectedCategory.lead" class="admin-textarea" />
-      </label>
-
-      <label class="admin-field">
-        <span class="admin-label">Описание</span>
-        <textarea v-model="selectedCategory.description" class="admin-textarea" />
-      </label>
-
-      <AdminImageUploadField
-        v-model="selectedCategory.image"
-        label="Изображение категории"
-        folder="master-classes"
-        preview-alt="Категория мастер-классов"
-      />
-
-      <div class="admin-note-card">
-        <strong>Мастер-классов в подборке: {{ workshopsCount }}</strong>
-      </div>
-    </div>
-
-    <div class="admin-card">
-      <div class="admin-card__head">
-        <div>
-          <h3 class="admin-card__title">Карточки внутри категории</h3>
+      <div v-if="showCategoryEditor" class="admin-subsection">
+        <div class="admin-toolbar">
+          <strong>Настройки категории</strong>
+          <button
+            type="button"
+            class="admin-button admin-button--accent"
+            :disabled="isSaving"
+            @click="saveCategory"
+          >
+            {{ isSaving ? 'Сохранение...' : 'Сохранить категорию' }}
+          </button>
         </div>
+
+        <div class="admin-editor__grid">
+          <label class="admin-field">
+            <span class="admin-label">ID</span>
+            <input v-model="selectedCategory.id" class="admin-input" type="text">
+          </label>
+
+          <label class="admin-field">
+            <span class="admin-label">Slug</span>
+            <input v-model="selectedCategory.slug" class="admin-input" type="text">
+          </label>
+        </div>
+
+        <label class="admin-field">
+          <span class="admin-label">Название</span>
+          <input v-model="selectedCategory.title" class="admin-input" type="text">
+        </label>
+
+        <label class="admin-field">
+          <span class="admin-label">Lead</span>
+          <textarea v-model="selectedCategory.lead" class="admin-textarea" />
+        </label>
+
+        <label class="admin-field">
+          <span class="admin-label">Описание</span>
+          <textarea v-model="selectedCategory.description" class="admin-textarea" />
+        </label>
+
+        <AdminImageUploadField
+          v-model="selectedCategory.image"
+          label="Изображение категории"
+          folder="master-classes"
+          preview-alt="Категория мастер-классов"
+        />
       </div>
 
       <div class="admin-actions">
+        <input
+          v-model="workshopSearch"
+          class="admin-input admin-search"
+          type="search"
+          placeholder="Поиск по названию или slug"
+        >
+
         <button
           type="button"
           class="admin-button admin-button--sand"
@@ -246,8 +282,8 @@ const removeWorkshop = async (id: string) => {
         </button>
       </div>
 
-      <div class="admin-rows">
-        <article v-for="item in categoryWorkshops" :key="item.id" class="admin-row">
+      <div v-if="filteredCategoryWorkshops.length" class="admin-rows">
+        <article v-for="item in filteredCategoryWorkshops" :key="item.id" class="admin-row">
           <img class="admin-row__thumb" :src="item.image || 'https://placehold.co/800x520?text=Workshop'" :alt="item.title || 'Workshop'">
 
           <div class="admin-row__meta">
@@ -272,6 +308,10 @@ const removeWorkshop = async (id: string) => {
             </button>
           </div>
         </article>
+      </div>
+
+      <div v-else class="admin-empty admin-empty--compact">
+        <p>По вашему запросу ничего не найдено.</p>
       </div>
     </div>
   </section>

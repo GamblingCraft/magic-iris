@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import type { SiteHeadSettings } from '~/data/site-seo'
 import { resolveYandexMetrikaHead } from '~/data/site-seo'
 
@@ -6,9 +6,27 @@ const { data: headSettings } = await useFetch<SiteHeadSettings>('/api/site/head-
   key: 'site-head-settings'
 })
 
+const isMetrikaReady = ref(false)
 const metrikaHead = computed(() =>
   resolveYandexMetrikaHead(headSettings.value?.yandexMetrikaCounter || '')
 )
+
+onMounted(() => {
+  if (import.meta.dev || !metrikaHead.value.script) {
+    return
+  }
+
+  const activateMetrika = () => {
+    isMetrikaReady.value = true
+  }
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(activateMetrika, { timeout: 4000 })
+    return
+  }
+
+  window.setTimeout(activateMetrika, 2500)
+})
 
 useHead(() => {
   const meta = []
@@ -31,7 +49,7 @@ useHead(() => {
 
   return {
     meta,
-    script: metrikaHead.value.script
+    script: isMetrikaReady.value && metrikaHead.value.script
       ? [
           {
             key: 'yandex-metrika',
@@ -39,7 +57,7 @@ useHead(() => {
           }
         ]
       : [],
-    noscript: metrikaHead.value.noscript
+    noscript: isMetrikaReady.value && metrikaHead.value.noscript
       ? [
           {
             key: 'yandex-metrika-noscript',

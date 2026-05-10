@@ -1,12 +1,11 @@
 <template>
   <section id="reviews" class="reviews-section section">
     <div class="container">
-      <!-- Заголовок -->
       <div class="sec-title-double reviews-section__head">
         <div>
           <p class="eyebrow">Отзывы</p>
           <div class="h2 reviews-section__title">
-            <strong>Нас рекомендуют</strong> 
+            <strong>Нас рекомендуют</strong>
           </div>
         </div>
 
@@ -15,13 +14,11 @@
         </div>
       </div>
 
-      <!-- Загрузка -->
       <div v-if="pending" class="reviews-loading">
         <div class="loading-spinner"></div>
         <span>Загрузка отзывов...</span>
       </div>
 
-      <!-- Карусель -->
       <div v-else-if="allReviewsList.length" class="reviews-carousel-wrapper">
         <div
           ref="viewportRef"
@@ -46,7 +43,6 @@
               ]"
             >
               <div class="review-card__inner">
-                <!-- Звезды -->
                 <div class="review-stars">
                   <span
                     v-for="star in 5"
@@ -58,25 +54,23 @@
                   </span>
                 </div>
 
-                <!-- Текст отзыва -->
                 <p class="review-card__text">
                   {{ truncateText(item.review.text, item.position === 0 ? 520 : 420) }}
                 </p>
 
-                <!-- Фото -->
                 <div v-if="item.review.photos?.length" class="review-photos">
                   <img
-                    v-for="photo in item.review.photos.slice(0, item.position === 0 ? 3 : 2)"
+                    v-for="photo in item.review.photos.slice(0, item.position === 0 ? 2 : 1)"
                     :key="photo.id"
                     :src="photo.preview_urls?.['320x']"
                     alt="Фото отзыва"
                     loading="lazy"
+                    decoding="async"
                   />
                 </div>
 
                 <div v-else class="review-photos review-photos--empty"></div>
 
-                <!-- Автор -->
                 <div class="review-card__footer">
                   <div class="review-author">
                     <div class="author-avatar" :style="getAvatarStyle(item.review.user)">
@@ -102,7 +96,6 @@
           </div>
         </div>
 
-        <!-- Стрелки: на мобильных скрываются -->
         <button
           v-if="allReviewsList.length > 1"
           class="carousel-nav carousel-prev"
@@ -147,7 +140,6 @@
           </svg>
         </button>
 
-        <!-- Индикатор прогресса -->
         <div v-if="allReviewsList.length > 1" class="reviews-progress">
           <div
             class="progress-bar"
@@ -156,7 +148,6 @@
         </div>
       </div>
 
-      <!-- Ошибка / нет отзывов -->
       <div v-else class="reviews-error">
         <p>Не удалось загрузить отзывы.</p>
 
@@ -170,7 +161,6 @@
         </a>
       </div>
 
-      <!-- Ссылка -->
       <div class="reviews-footer-link">
         <a
           :href="dgisUrl"
@@ -191,6 +181,7 @@ import { computed, nextTick, onMounted, onBeforeUnmount, ref, watch } from 'vue'
 import { gsap } from 'gsap'
 
 const dgisUrl = 'https://2gis.ru/irkutsk/firm/70000001112913476/tab/reviews'
+const REVIEWS_LIMIT = 12
 
 const viewportRef = ref(null)
 const trackRef = ref(null)
@@ -209,37 +200,31 @@ const isHorizontalSwipe = ref(false)
 
 let resizeObserver = null
 
-const fetchAllReviews = async () => {
-  const allReviewsList = []
-
-  let url =
-    'https://public-api.reviews.2gis.com/2.0/branches/70000001112913476/reviews?key=6e7e1929-4ea9-4a5d-8c05-d601860389bd&locale=ru_RU&rated=true&sort_by=friends&limit=50'
+const fetchReviews = async () => {
+  const url =
+    `https://public-api.reviews.2gis.com/2.0/branches/70000001112913476/reviews` +
+    `?key=6e7e1929-4ea9-4a5d-8c05-d601860389bd&locale=ru_RU&rated=true&sort_by=friends&limit=${REVIEWS_LIMIT}`
 
   try {
-    while (url) {
-      const response = await fetch(url)
+    const response = await fetch(url)
 
-      if (!response.ok) {
-        throw new Error(`Ошибка загрузки отзывов: ${response.status}`)
-      }
-
-      const data = await response.json()
-
-      allReviewsList.push(...(data.reviews || []))
-      url = data.meta?.next_link || null
+    if (!response.ok) {
+      throw new Error(`Ошибка загрузки отзывов: ${response.status}`)
     }
 
-    return allReviewsList
+    const data = await response.json()
+    return (data.reviews || []).slice(0, REVIEWS_LIMIT)
   } catch (error) {
     console.error(error)
     return []
   }
 }
 
-const { data: allReviews, pending } = await useAsyncData(
+const { data: allReviews, pending } = useLazyAsyncData(
   '2gis-reviews',
-  () => fetchAllReviews(),
+  () => fetchReviews(),
   {
+    server: false,
     default: () => []
   }
 )
@@ -432,7 +417,6 @@ const prevSlide = () => {
   switchSlide('prev')
 }
 
-/* Свайп на мобильных */
 const handleTouchStart = (event) => {
   if (allReviewsList.value.length <= 1 || isAnimating.value) return
 

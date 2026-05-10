@@ -1,4 +1,4 @@
-import type { Ref } from 'vue'
+﻿import type { Ref } from 'vue'
 
 type RevealOptions = {
   start?: string
@@ -18,67 +18,85 @@ export const useGsapReveal = (
   selectors: string | string[],
   options: RevealOptions = {}
 ) => {
-  let animationContext: { revert: () => void } | null = null
+  let observer: IntersectionObserver | null = null
 
-  onMounted(async () => {
-    if (!rootRef.value) {
+  onMounted(() => {
+    const root = rootRef.value
+
+    if (!root || !import.meta.client) {
       return
     }
 
-    const gsapModule = await import('gsap')
-    const scrollTriggerModule = await import('gsap/ScrollTrigger')
-    const gsap = gsapModule.gsap || gsapModule.default || gsapModule
-    const ScrollTrigger = scrollTriggerModule.ScrollTrigger || scrollTriggerModule.default
+    const selectorGroups = (Array.isArray(selectors) ? selectors : [selectors])
+      .map((selector) => Array.from(root.querySelectorAll<HTMLElement>(selector)))
+      .filter((group) => group.length > 0)
 
-    if (!ScrollTrigger) {
+    if (!selectorGroups.length) {
       return
     }
 
-    gsap.registerPlugin(ScrollTrigger)
+    const baseDuration = options.duration ?? 0.72
+    const stagger = options.stagger ?? 0.08
+    const groupDelay = options.groupDelay ?? 0.08
+    const offsetX = options.x ?? 0
+    const offsetY = options.y ?? 42
+    const offsetScale = options.scale ?? 0.985
+    const offsetBlur = options.blur ?? 10
+    const once = options.once ?? true
 
-    animationContext = gsap.context(() => {
-      const selectorGroups = (Array.isArray(selectors) ? selectors : [selectors])
-        .map((selector) => Array.from(rootRef.value?.querySelectorAll<HTMLElement>(selector) || []))
-        .filter((group) => group.length > 0)
+    selectorGroups.forEach((targets) => {
+      targets.forEach((target) => {
+        target.style.opacity = '0'
+        target.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(${offsetScale})`
+        target.style.filter = `blur(${offsetBlur}px)`
+        target.style.willChange = 'transform, opacity, filter'
+      })
+    })
 
-      if (!selectorGroups.length) {
+    const reveal = () => {
+      selectorGroups.forEach((targets, groupIndex) => {
+        targets.forEach((target, itemIndex) => {
+          const delay = groupIndex * groupDelay + itemIndex * stagger
+
+          target.style.transition =
+            `opacity ${baseDuration}s ease, transform ${baseDuration}s ease, filter ${baseDuration}s ease`
+          target.style.transitionDelay = `${delay}s`
+
+          requestAnimationFrame(() => {
+            target.style.opacity = '1'
+            target.style.transform = 'translate3d(0, 0, 0) scale(1)'
+            target.style.filter = 'blur(0px)'
+          })
+
+          window.setTimeout(() => {
+            target.style.willChange = ''
+          }, (delay + baseDuration) * 1000 + 60)
+        })
+      })
+    }
+
+    observer = new IntersectionObserver((entries) => {
+      const entry = entries[0]
+
+      if (!entry?.isIntersecting) {
         return
       }
 
-      const triggerTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: rootRef.value,
-          start: options.start ?? 'top 82%',
-          once: options.once ?? true
-        }
-      })
+      reveal()
 
-      selectorGroups.forEach((targets, index) => {
-        gsap.set(targets, {
-          autoAlpha: 0,
-          x: options.x ?? 0,
-          y: options.y ?? 42,
-          scale: options.scale ?? 0.985,
-          filter: `blur(${options.blur ?? 10}px)`,
-          willChange: 'transform, opacity, filter'
-        })
+      if (once) {
+        observer?.disconnect()
+        observer = null
+      }
+    }, {
+      rootMargin: '0px 0px -12% 0px',
+      threshold: 0.12
+    })
 
-        triggerTimeline.to(targets, {
-          autoAlpha: 1,
-          x: 0,
-          y: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: options.duration ?? 0.72,
-          stagger: options.stagger ?? 0.08,
-          ease: options.ease ?? 'power3.out',
-          clearProps: 'willChange'
-        }, index === 0 ? 0 : `+=${options.groupDelay ?? 0.08}`)
-      })
-    }, rootRef.value)
+    observer.observe(root)
   })
 
   onBeforeUnmount(() => {
-    animationContext?.revert()
+    observer?.disconnect()
   })
 }

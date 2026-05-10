@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import IMask from 'imask'
 
 import { contactInfo } from '~/data/site'
 
@@ -11,79 +12,75 @@ const props = defineProps<{
   imageAlt: string
 }>()
 
-const phoneInput = ref('')
+const phoneInputValue = ref('')
 const consentAccepted = ref(false)
+const isSubmitting = ref(false)
 
-const formatPhone = (rawValue: string) => {
-  let digits = rawValue.replace(/\D/g, '')
+const phoneInput = ref<HTMLInputElement | null>(null)
+let phoneMask: IMask.InputMask | null = null
 
-  if (digits.startsWith('8')) {
-    digits = `7${digits.slice(1)}`
-  }
+const phoneDigits = computed(() =>
+  phoneInputValue.value.replace(/\D/g, '')
+)
 
-  if (digits.startsWith('9')) {
-    digits = `7${digits}`
-  }
+const canSend = computed(() =>
+  consentAccepted.value && phoneDigits.value.length === 11
+)
 
-  if (!digits.startsWith('7')) {
-    digits = `7${digits}`
-  }
-
-  digits = digits.slice(0, 11)
-
-  const country = digits[0] ?? '7'
-  const area = digits.slice(1, 4)
-  const first = digits.slice(4, 7)
-  const second = digits.slice(7, 9)
-  const third = digits.slice(9, 11)
-
-  let result = `+${country}`
-
-  if (area) {
-    result += ` (${area}`
-  }
-
-  if (area.length === 3) {
-    result += ')'
-  }
-
-  if (first) {
-    result += ` ${first}`
-  }
-
-  if (second) {
-    result += `-${second}`
-  }
-
-  if (third) {
-    result += `-${third}`
-  }
-
-  return result
-}
-
-const onPhoneInput = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  phoneInput.value = formatPhone(target.value)
-}
-
-const phoneDigits = computed(() => phoneInput.value.replace(/\D/g, '').slice(0, 11))
-const canSend = computed(() => consentAccepted.value && phoneDigits.value.length === 11)
 const submitHref = computed(() => {
   const message = encodeURIComponent(
-    `Здравствуйте! Хочу обсудить мероприятие в Magic Iris. Мой телефон: ${phoneInput.value || 'не указан'}.`
+    `????????????????????????! ???????? ???????????????? ?????????????????????? ?? Magic Iris. ??????????????: ${phoneInputValue.value}`
   )
-
   return `${contactInfo.whatsapp}?text=${message}`
 })
 
-const openSubmit = () => {
-  if (!canSend.value || !import.meta.client) {
-    return
+const sendToMaxApi = async (phone: string): Promise<boolean> => {
+  try {
+    await $fetch('/api/max-send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${btoa('admin:magiciris2026')}`
+      },
+      body: {
+        type: 'cta',
+        data: { phone }
+      }
+    })
+    return true
+  } catch {
+    return false
   }
-
-  window.open(submitHref.value, '_blank', 'noopener,noreferrer')
 }
+
+const handleSubmit = async () => {
+  if (!canSend.value || !import.meta.client) return
+
+  isSubmitting.value = true
+
+  try {
+    await sendToMaxApi(phoneInputValue.value)
+    window.open(submitHref.value, '_blank', 'noopener,noreferrer')
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+onMounted(() => {
+  if (phoneInput.value) {
+    phoneMask = IMask(phoneInput.value, {
+      mask: '+{7} (000) 000-00-00',
+      lazy: false
+    })
+
+    phoneMask.on('accept', () => {
+      phoneInputValue.value = phoneMask?.value || ''
+    })
+  }
+})
+
+onBeforeUnmount(() => {
+  phoneMask?.destroy()
+})
 </script>
 
 <template>
@@ -100,20 +97,22 @@ const openSubmit = () => {
 
           <p class="cta-ref__descr">{{ props.text }}</p>
 
-          <form class="cta-ref__form" @submit.prevent="openSubmit">
+          <form class="cta-ref__form" @submit.prevent="handleSubmit">
             <label class="cta-ref__field">
               <span>Ваш телефон</span>
               <input
                 type="tel"
                 name="phone"
                 placeholder="+7 (999) 123-45-67"
-                :value="phoneInput"
+                class="cta-ref__input"
+                ref="phoneInput"
+                v-model="phoneInputValue"
                 autocomplete="tel"
-                @input="onPhoneInput"
+                
               >
             </label>
 
-            <button type="submit" class="cta-ref__submit" :disabled="!canSend">
+            <button type="submit" class="cta-ref__submit" :disabled="!canSend || isSubmitting">
               Оставить заявку
             </button>
 

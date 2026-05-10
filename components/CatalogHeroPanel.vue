@@ -23,6 +23,7 @@ type CatalogHeroProduct = {
 const props = withDefaults(defineProps<{
   eyebrow: string
   title: string
+  titleTag?: 'h1' | 'h2' | 'div' | 'p'
   lead?: string
   description?: string
   image: string
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<{
   actions?: CatalogHeroAction[]
   product?: CatalogHeroProduct
 }>(), {
+  titleTag: 'h1',
   lead: '',
   description: '',
   imageAlt: '',
@@ -156,7 +158,13 @@ const displayTags = computed(() => {
 
     <div class="catalog-hero-panel__content">
       <p class="eyebrow eyebrow--light">{{ eyebrow }}</p>
-      <h1 class="catalog-hero-panel__title" :itemprop="product ? 'name' : undefined">{{ title }}</h1>
+      <component
+        :is="titleTag"
+        class="catalog-hero-panel__title"
+        :itemprop="product ? 'name' : undefined"
+      >
+        {{ title }}
+      </component>
       <p v-if="displayLead" class="catalog-hero-panel__lead">{{ displayLead }}</p>
       <p v-if="displayDescription" class="catalog-hero-panel__copy">{{ displayDescription }}</p>
 

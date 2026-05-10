@@ -180,12 +180,10 @@ useHead({
     </section>
 
 <section class="section about-section">
-  <!-- eyebrow отдельно -->
   <div class="container about-section__intro">
     <p class="eyebrow">{{ page.about.eyebrow }}</p>
   </div>
 
-  <!-- основной контент -->
   <div class="container about-section__inner">
 
     <h2 class="about-section__title">

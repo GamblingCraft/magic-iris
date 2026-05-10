@@ -63,7 +63,13 @@ onBeforeUnmount(stopAutoplay)
     @mouseleave="startAutoplay"
   >
     <div class="hero__scene">
-      <img :src="activeSlide.image" :alt="activeSlide.imageAlt || activeSlide.title">
+      <img
+        :src="activeSlide.image"
+        :alt="activeSlide.imageAlt || activeSlide.title"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      >
     </div>
 
     <div class="hero__overlay" />

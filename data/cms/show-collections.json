@@ -54,9 +54,9 @@
         "финал вечера с сильной эмоцией и красивым кадром"
       ],
       "images": [
-        "/images/event.webp",
-        "/images/event.webp",
-        "/images/event.webp"
+        "/images/landing-pages/1778395885096-0nqbx7-a-videki-eskuvohelyszin-varazsa-dekorotletek-minden-evszakra.jpg",
+        "/images/landing-pages/1778395887227-kerssu-a-videki-eskuvohelyszin-varazsa-dekorotletek-minden-evszakra.jpg",
+        "/images/landing-pages/1778395890067-4vytyk-a-videki-eskuvohelyszin-varazsa-dekorotletek-minden-evszakra.jpg"
       ]
     },
     "workshops": {
@@ -84,7 +84,7 @@
       "eyebrow": "Обсудить свадьбу",
       "title": "Расскажите о площадке, количестве гостей и ритме вечера, а мы предложим шоу, которое действительно подойдет вашей свадьбе",
       "text": "Можно прийти с готовым сценарием или только с настроением, которое хочется создать. Поможем спокойно собрать программу без лишней суеты.",
-      "image": "/images/event.webp",
+      "image": "/images/landing-pages/1778395895258-bp30vw-a-videki-eskuvohelyszin-varazsa-dekorotletek-minden-evszakra.jpg",
       "imageAlt": "Шоу для свадьбы Magic Iris",
       "primary": {
         "label": "Оставить заявку",
@@ -151,9 +151,9 @@
         "финальный wow-момент для фото, видео и впечатления"
       ],
       "images": [
-        "/images/present.webp",
-        "/images/present.webp",
-        "/images/present.webp"
+        "/images/landing-pages/1778395924949-7ihilu-shutterstock-2194833301-a-17416080289hpta.jpg",
+        "/images/landing-pages/1778395927741-eowjs5-shutterstock-2194833301-a-17416080289hpta.jpg",
+        "/images/landing-pages/1778395931014-ygx0ex-shutterstock-2194833301-a-17416080289hpta.jpg"
       ]
     },
     "workshops": {
@@ -181,7 +181,7 @@
       "eyebrow": "Обсудить праздник",
       "title": "Расскажите, каким вы хотите видеть день рождения, и мы подберем программу под именинника, гостей и площадку",
       "text": "Соберем спокойное, яркое или трогательное решение без шаблонности и лишней суеты в подготовке.",
-      "image": "/images/present.webp",
+      "image": "/images/landing-pages/1778395935168-myq3w9-shutterstock-2194833301-a-17416080289hpta.jpg",
       "imageAlt": "Шоу на день рождения Magic Iris",
       "primary": {
         "label": "Оставить заявку",
@@ -248,9 +248,9 @@
         "финальная точка, которую запомнит команда и партнеры"
       ],
       "images": [
-        "/images/approve.webp",
-        "/images/approve.webp",
-        "/images/approve.webp"
+        "/images/landing-pages/1778395842962-dvwgj6-vecherinka-v-stile-minuta-slavy6.jpg",
+        "/images/landing-pages/1778395848526-35rhv9-vecherinka-v-stile-minuta-slavy6.jpg",
+        "/images/landing-pages/1778395851312-lm5d87-vecherinka-v-stile-minuta-slavy6.jpg"
       ]
     },
     "workshops": {
@@ -259,9 +259,9 @@
       "description": "Если нужно добавить вовлечение гостей и живую активность вне сцены, можно подключить мастер-классы как отдельную часть программы или welcome-зону.",
       "categorySlugs": [
         "dlya-zhenshchin",
-        "dlya-muzhchin",
-        "novogodnie",
-        "v-shkolu"
+        "v-shkolu",
+        "letnie",
+        "novogodnie"
       ]
     },
     "about": {
@@ -278,7 +278,7 @@
       "eyebrow": "Обсудить событие",
       "title": "Расскажите о формате корпоратива, и мы подберем шоу, которое будет выглядеть уместно, современно и сильно",
       "text": "Можно обратиться и за одним номером, и за более цельной сценической частью вечера. Подскажем, что лучше сработает именно у вас.",
-      "image": "/images/approve.webp",
+      "image": "/images/landing-pages/1778395817097-j3qk4w-vecherinka-v-stile-minuta-slavy6.jpg",
       "imageAlt": "Шоу на корпоратив Magic Iris",
       "primary": {
         "label": "Оставить заявку",

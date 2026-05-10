@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
-  eyebrow: string
-  title: string
+  eyebrow?: string
+  title?: string
   description?: string
   items: Array<{
     id: string
@@ -19,6 +19,8 @@ const props = withDefaults(defineProps<{
     productMicrodata?: boolean
   }>
 }>(), {
+  eyebrow: '',
+  title: '',
   description: ''
 })
 

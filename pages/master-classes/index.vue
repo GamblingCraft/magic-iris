@@ -194,6 +194,7 @@ usePageSeo(getMasterClassesIndexSeo())
         <CatalogHeroPanel
           eyebrow="Мастер-классы"
           title="Творческие форматы для праздников, школ, корпоративов и городских площадок"
+          title-tag="h2"
           description="В каталоге собраны творческие мастер-классы для детей и взрослых."
           :image="heroImage"
           :actions="[

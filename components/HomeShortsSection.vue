@@ -26,12 +26,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown)
 })
 
-useGsapReveal(sectionRef, ['.shorts-section__head > div > *', '.shorts-section__head > p', '.about-reel-card'], {
-  start: 'top 88%',
-  stagger: 0.1,
-  y: 34,
-  blur: 8
-})
 </script>
 
 <template>

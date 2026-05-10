@@ -1,6 +1,11 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { getHomeSeo } from '~/data/site-seo'
 import type { HomeCatalogPayload } from '~/types/public-catalog'
+
+defineRouteRules({
+  prerender: true,
+  swr: 3600
+})
 
 const { data: homeCatalog } = await useFetch<HomeCatalogPayload>('/api/site/home-catalog', {
   key: 'site-home-catalog'
@@ -11,61 +16,57 @@ const workshopTiles = computed(() => homeCatalog.value?.workshopTiles || [])
 
 usePageSeo(getHomeSeo())
 
-// Убираем ClientOnly и используем обычный импорт
 const quizPopupRef = ref<InstanceType<typeof QuizPopup> | null>(null)
-
-// Импортируем компонент напрямую (не лениво)
+const isQuizMounted = ref(false)
 const QuizPopup = defineAsyncComponent(() => import('~/components/popup/QuizPopup.vue'))
 
 const openQuiz = async () => {
-  console.log('Opening quiz...')
-  
-  // Даём время на полную инициализацию компонента
+  if (!isQuizMounted.value) {
+    isQuizMounted.value = true
+  }
+
   await nextTick()
-  await new Promise(resolve => setTimeout(resolve, 100))
-  
+  await new Promise((resolve) => setTimeout(resolve, 100))
+
   if (quizPopupRef.value && typeof quizPopupRef.value.openPopup === 'function') {
     quizPopupRef.value.openPopup()
-    console.log('Quiz popup opened successfully')
-  } else {
-    console.error('Quiz popup method not available', quizPopupRef.value)
-    // Повторная попытка через 500ms
-    setTimeout(() => {
-      if (quizPopupRef.value && typeof quizPopupRef.value.openPopup === 'function') {
-        quizPopupRef.value.openPopup()
-        console.log('Quiz popup opened successfully on retry')
-      }
-    }, 500)
+    return
   }
+
+  setTimeout(() => {
+    if (quizPopupRef.value && typeof quizPopupRef.value.openPopup === 'function') {
+      quizPopupRef.value.openPopup()
+    }
+  }, 500)
 }
 </script>
 
 <template>
   <div class="home-page">
     <HomeHeroSection />
-    <HomeServiceHighlightsSection />
-    <HomeShowsSection :tiles="showTiles" />
-    <HomeWorkshopsSection :tiles="workshopTiles" />
+    <LazyHomeServiceHighlightsSection hydrate-on-visible />
+    <LazyHomeShowsSection :tiles="showTiles" hydrate-on-visible />
+    <LazyHomeWorkshopsSection :tiles="workshopTiles" hydrate-on-visible />
 
-    <!-- Ленивые компоненты -->
-    <LazyHomeStepsSection />
-    <LazyHomeAboutSection />
-    <LazyHomeShortsSection />
-    <LazyHomeGallerySection />
-    <LazyHomeFaqSection />
-    <LazyHomeContactSection />
+    <LazyHomeStepsSection hydrate-on-visible />
+    <LazyHomeAboutSection hydrate-on-visible />
+    <LazyHomeShortsSection hydrate-on-visible />
+    <LazyHomeGallerySection hydrate-on-visible />
+    <LazyHomeFaqSection hydrate-on-visible />
+    <LazyHomeContactSection hydrate-on-visible />
 
-    <!-- Отзывы -->
     <ClientOnly>
-      <LazyReviews2GIS />
+      <LazyReviews2GIS hydrate-on-visible />
     </ClientOnly>
 
-    <!-- Кнопка подарок -->
     <button class="gift-button" @click="openQuiz">
       <Icon name="lucide:gift" size="32" />
     </button>
 
-    <!-- Убираем ClientOnly и v-if -->
-    <QuizPopup ref="quizPopupRef" :auto-open="false" />
+    <QuizPopup
+      v-if="isQuizMounted"
+      ref="quizPopupRef"
+      :auto-open="false"
+    />
   </div>
 </template>
