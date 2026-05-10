@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { getHomeSeo } from '~/data/site-seo'
 import type { HomeCatalogPayload } from '~/types/public-catalog'
 
@@ -54,11 +54,6 @@ const openQuiz = async () => {
     <LazyHomeGallerySection hydrate-on-visible />
     <LazyHomeFaqSection hydrate-on-visible />
     <LazyHomeContactSection hydrate-on-visible />
-
-    <ClientOnly>
-      <LazyReviews2GIS hydrate-on-visible />
-    </ClientOnly>
-
     <button class="gift-button" @click="openQuiz">
       <Icon name="lucide:gift" size="32" />
     </button>
