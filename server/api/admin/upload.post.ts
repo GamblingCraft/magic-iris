@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises'
+import { access, mkdir, writeFile } from 'node:fs/promises'
 import { basename, extname, join } from 'node:path'
 
 const allowedFolders = new Set(['show', 'master-classes', 'gallery', 'slider', 'landing-pages'])
@@ -13,6 +13,16 @@ const sanitizeFileName = (value: string) => {
     .toLowerCase()
 
   return normalized || 'image'
+}
+
+const pathExists = async (targetPath: string) => {
+  try {
+    await access(targetPath)
+    return true
+  }
+  catch {
+    return false
+  }
 }
 
 export default defineEventHandler(async (event) => {
@@ -45,11 +55,18 @@ export default defineEventHandler(async (event) => {
 
   const baseName = sanitizeFileName(basename(filePart.filename, extension))
   const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${baseName}${extension}`
-  const targetDir = join(process.cwd(), 'public', 'images', folderValue)
-  const targetPath = join(targetDir, fileName)
+  const rootPublicDir = join(process.cwd(), 'public', 'images', folderValue)
+  const outputPublicRoot = join(process.cwd(), '.output', 'public')
+  const targetDirs = [rootPublicDir]
 
-  await mkdir(targetDir, { recursive: true })
-  await writeFile(targetPath, filePart.data)
+  if (await pathExists(outputPublicRoot)) {
+    targetDirs.push(join(outputPublicRoot, 'images', folderValue))
+  }
+
+  await Promise.all(targetDirs.map(async (targetDir) => {
+    await mkdir(targetDir, { recursive: true })
+    await writeFile(join(targetDir, fileName), filePart.data)
+  }))
 
   return {
     ok: true,
