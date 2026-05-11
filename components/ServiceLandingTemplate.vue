@@ -1,10 +1,27 @@
 <script setup lang="ts">
 import type { ServiceLandingPage } from '~/data/service-pages'
 
+const scenarioSectionRef = ref<HTMLElement | null>(null)
+const cardsSectionRef = ref<HTMLElement | null>(null)
+
 defineProps<{
   page: ServiceLandingPage
   breadcrumbs: Array<{ label: string; href?: string }>
 }>()
+
+useGsapReveal(scenarioSectionRef, ['.scenario-showcase__title-wrap > *', '.scenario-showcase__lead', '.scenario-card'], {
+  start: 'top 88%',
+  stagger: 0.12,
+  y: 36,
+  blur: 8
+})
+
+useGsapReveal(cardsSectionRef, ['.eyebrow', '.catalog-preview__head > *', '.service-card'], {
+  start: 'top 88%',
+  stagger: 0.12,
+  y: 36,
+  blur: 8
+})
 </script>
 
 <template>
@@ -34,7 +51,7 @@ defineProps<{
       </div>
     </section>
 
-    <section class="section section--light scenario-showcase">
+    <section ref="scenarioSectionRef" class="section section--light scenario-showcase">
       <div class="container">
         <div class="scenario-showcase__head">
           <div class="scenario-showcase__title-wrap">
@@ -64,7 +81,7 @@ defineProps<{
       </div>
     </section>
 
-    <section class="section section--light catalog-preview">
+    <section ref="cardsSectionRef" class="section section--light catalog-preview">
       <div class="container">
         <div class="catalog-preview__head">
           <div>

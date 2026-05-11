@@ -11,6 +11,7 @@ import {
   shows,
   workshopItems
 } from '~/data/catalog'
+import { getCatalogContent } from '~/server/utils/admin-content'
 import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
 import type {
   CatalogCardItem,
@@ -151,43 +152,49 @@ const toPublicWorkshopDetail = (workshop: WorkshopItem): PublicWorkshopDetail =>
   pricing: workshop.pricing
 })
 
-export const getHomeCatalogPayload = (): HomeCatalogPayload => ({
-  showTiles: showTileConfigs
-    .map((config) => {
-      const program = shows.find((item) => item.slug === config.slug)
+export const getHomeCatalogPayload = async (): Promise<HomeCatalogPayload> => {
+  const catalog = await getCatalogContent()
+  const homeShows = catalog.shows
+  const homeCategories = catalog.masterClassCategories
 
-      if (!program) {
-        return null
-      }
+  return {
+    showTiles: showTileConfigs
+      .map((config) => {
+        const program = homeShows.find((item) => item.slug === config.slug)
 
-      return {
-        id: program.id,
-        title: program.title,
-        kicker: program.kicker,
-        description: program.description,
-        image: program.image,
-        href: createShowHref(program.slug),
-        size: config.size
-      }
-    })
-    .filter(Boolean) as HomeCatalogPayload['showTiles'],
-  workshopTiles: (() => {
-    const categories = masterClassCategories.filter((category) => category.count > 0)
-    const sizes = getHomeWorkshopTileSizes(categories.length)
+        if (!program) {
+          return null
+        }
 
-    return categories
-      .slice(0, sizes.length)
-      .map((category, index) => ({
-        id: category.id,
-        title: category.title,
-        description: category.description,
-        image: category.image,
-        count: category.count,
-        href: createMasterClassCategoryHref(category.slug),
-        size: sizes[index] || 'small'
-      })) as HomeCatalogPayload['workshopTiles']
-  })()
-})
+        return {
+          id: program.id,
+          title: program.title,
+          kicker: program.kicker,
+          description: program.description,
+          image: program.image,
+          href: createShowHref(program.slug),
+          size: config.size
+        }
+      })
+      .filter(Boolean) as HomeCatalogPayload['showTiles'],
+    workshopTiles: (() => {
+      const categories = homeCategories.filter((category) => category.count > 0)
+      const sizes = getHomeWorkshopTileSizes(categories.length)
+
+      return categories
+        .slice(0, sizes.length)
+        .map((category, index) => ({
+          id: category.id,
+          title: category.title,
+          description: category.description,
+          image: category.image,
+          count: category.count,
+          href: createMasterClassCategoryHref(category.slug),
+          size: sizes[index] || 'small'
+        })) as HomeCatalogPayload['workshopTiles']
+    })()
+  }
+}
 
 export const getShowsIndexPayload = (): ShowsIndexPayload => ({
   heroImage: shows[1]?.heroImage || shows[0]?.heroImage || '',

@@ -41,8 +41,8 @@ const featuredProgram = computed(() => showPrograms[0])
               <p class="footer__nav-title" style="margin-bottom: 0.55em;">Популярное</p>
               <nav class="footer__nav">
                 <NuxtLink to="/shows/svadebnoe">Шоу на свадьбу</NuxtLink>
-                <NuxtLink to="/shows/korporativ">Шоу на корпоратив</NuxtLink>
-                <NuxtLink to="/shows/rozhdenie">Шоу на день рожденья</NuxtLink>
+                <NuxtLink to="/shows/сorporativе">Шоу на корпоратив</NuxtLink>
+                <NuxtLink to="/shows/rozhdenie">Шоу на день рождения</NuxtLink>
               </nav>
             </div>
 

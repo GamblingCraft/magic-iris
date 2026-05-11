@@ -1,3 +1,3 @@
 import { getHomeCatalogPayload } from '~/server/utils/public-catalog'
 
-export default defineEventHandler(() => getHomeCatalogPayload())
+export default defineEventHandler(async () => await getHomeCatalogPayload())

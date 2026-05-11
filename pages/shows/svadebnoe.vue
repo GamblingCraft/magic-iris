@@ -8,6 +8,9 @@ import {
 import { buildAbsoluteUrl } from '~/data/site-seo'
 
 const route = useRoute()
+const scenarioSectionRef = ref<HTMLElement | null>(null)
+const showsSectionRef = ref<HTMLElement | null>(null)
+const workshopsSectionRef = ref<HTMLElement | null>(null)
 const { data: pageData } = await useFetch<ShowCollectionPage>('/api/site/landing-pages/svadebnoe', {
   key: 'svadebnoe.vue-landing-page'
 })
@@ -22,6 +25,27 @@ const scenarioImages = computed(() =>
 const pageUrl = computed(() => buildAbsoluteUrl(route.path))
 
 usePageSeo(page.value.seo)
+
+useGsapReveal(scenarioSectionRef, ['.scenario-showcase__title-wrap > *', '.scenario-showcase__lead', '.scenario-card'], {
+  start: 'top 88%',
+  stagger: 0.12,
+  y: 36,
+  blur: 8
+})
+
+useGsapReveal(showsSectionRef, ['.eyebrow', '.catalog-preview__head > *', '.catalog-wall__card'], {
+  start: 'top 88%',
+  stagger: 0.12,
+  y: 36,
+  blur: 8
+})
+
+useGsapReveal(workshopsSectionRef, ['.eyebrow', '.catalog-preview__head > *', '.catalog-wall__card'], {
+  start: 'top 88%',
+  stagger: 0.12,
+  y: 36,
+  blur: 8
+})
 
 useHead({
   script: [
@@ -84,7 +108,7 @@ useHead({
       </div>
     </section>
 
-    <section class="section section--light scenario-showcase">
+    <section ref="scenarioSectionRef" class="section section--light scenario-showcase">
       <div class="container">
         <div class="scenario-showcase__head">
           <div class="scenario-showcase__title-wrap">
@@ -113,7 +137,7 @@ useHead({
       </div>
     </section>
 
-    <section class="section section--light catalog-preview catalog-preview--shows">
+    <section ref="showsSectionRef" class="section section--light catalog-preview catalog-preview--shows">
       <div class="container">
         <div class="catalog-preview__head">
           <div>
@@ -146,7 +170,7 @@ useHead({
       </div>
     </section>
 
-    <section class="section section--cream catalog-preview catalog-preview--workshops">
+    <section ref="workshopsSectionRef" class="section section--cream catalog-preview catalog-preview--workshops">
       <div class="container">
         <div class="catalog-preview__head">
           <div>

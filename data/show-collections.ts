@@ -103,7 +103,7 @@ export const normalizeShowCollectionPage = (page: ShowCollectionPage): ShowColle
   },
   cards: {
     ...page.cards,
-    showSlugs: Array.from(new Set(page.cards.showSlugs.map((item) => item.trim()).filter(Boolean))).slice(0, 4)
+    showSlugs: Array.from(new Set(page.cards.showSlugs.map((item) => item.trim()).filter(Boolean))).slice(0, 6)
   },
   scenario: {
     ...page.scenario,
@@ -117,7 +117,7 @@ export const normalizeShowCollectionPage = (page: ShowCollectionPage): ShowColle
     ...page.workshops,
     categorySlugs: Array.from(
       new Set(page.workshops.categorySlugs.map((item) => item.trim()).filter(Boolean))
-    ).slice(0, 4)
+    ).slice(0, 6)
   },
   about: {
     ...page.about,
@@ -136,13 +136,23 @@ export const normalizeShowCollectionPage = (page: ShowCollectionPage): ShowColle
   }
 })
 
+const getCollectionTileSizes = (count: number) => {
+  if (count >= 6) {
+    return ['small', 'small', 'small', 'small', 'small', 'small'] as const
+  }
+
+  if (count === 5) {
+    return ['wide', 'small', 'small', 'small', 'small'] as const
+  }
+
+  return ['wide', 'tall', 'small', 'small'] as const
+}
+
 export const resolveShowCollectionTiles = (slugs: string[]): HomeShowTile[] => {
-  const sizeMap = new Map([
-    [slugs[0], 'wide'],
-    [slugs[1], 'tall'],
-    [slugs[2], 'small'],
-    [slugs[3], 'small']
-  ]) as Map<string, HomeShowTile['size']>
+  const sizes = getCollectionTileSizes(slugs.length)
+  const sizeMap = new Map(
+    slugs.slice(0, sizes.length).map((slug, index) => [slug, sizes[index] || 'small'])
+  ) as Map<string, HomeShowTile['size']>
 
   return slugs
     .map((slug) => {
@@ -166,12 +176,10 @@ export const resolveShowCollectionTiles = (slugs: string[]): HomeShowTile[] => {
 }
 
 export const resolveWorkshopCollectionTiles = (slugs: string[]): HomeWorkshopTile[] => {
-  const sizeMap = new Map([
-    [slugs[0], 'wide'],
-    [slugs[1], 'tall'],
-    [slugs[2], 'small'],
-    [slugs[3], 'small']
-  ]) as Map<string, HomeWorkshopTile['size']>
+  const sizes = getCollectionTileSizes(slugs.length)
+  const sizeMap = new Map(
+    slugs.slice(0, sizes.length).map((slug, index) => [slug, sizes[index] || 'small'])
+  ) as Map<string, HomeWorkshopTile['size']>
 
   return slugs
     .map((slug) => {

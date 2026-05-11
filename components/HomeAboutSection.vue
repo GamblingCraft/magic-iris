@@ -239,6 +239,32 @@ onMounted(async () => {
     })
 
     mediaMatcher.add('(max-width: 900px)', () => {
+      const getMobileCardWidth = () => Math.min(getViewportWidth() - 44, 520)
+      const getMobileCardHeight = () => Math.min(getViewportHeight() * 0.48, 420)
+      const getMobileExpandedWidth = () => getViewportWidth() - 12
+      const getMobileExpandedHeight = () => Math.min(getViewportHeight() * 0.76, 620)
+
+      gsap.set(cardRef.value, {
+        width: () => getMobileCardWidth(),
+        height: () => getMobileCardHeight(),
+        y: 18,
+        borderRadius: 24,
+        transformOrigin: 'center center',
+        willChange: 'width, height, transform, border-radius'
+      })
+
+      gsap.set(imageRef.value, {
+        scale: 1.04,
+        yPercent: -2,
+        transformOrigin: 'center center',
+        willChange: 'transform'
+      })
+
+      gsap.set(overlayRef.value, {
+        opacity: 0.18,
+        willChange: 'opacity'
+      })
+
       gsap.set(stageTargets, {
         autoAlpha: 0,
         y: 24,
@@ -246,50 +272,45 @@ onMounted(async () => {
         willChange: 'transform, opacity, filter'
       })
 
-      gsap.fromTo(
-        cardRef.value,
-        {
-          autoAlpha: 0,
-          y: 28,
-          scale: 0.97,
-          filter: 'blur(10px)'
-        },
-        {
-          autoAlpha: 1,
-          y: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 0.86,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: stageRef.value,
-            start: 'top 88%',
-            once: true
-          }
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: stageRef.value,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.9,
+          invalidateOnRefresh: true
         }
-      )
-
-      gsap.fromTo(
-        stageTargets,
-        {
-          autoAlpha: 0,
-          y: 22,
-          filter: 'blur(8px)'
-        },
-        {
+      })
+        .to(cardRef.value, {
+          y: 0,
+          width: () => getMobileExpandedWidth(),
+          height: () => getMobileExpandedHeight(),
+          borderRadius: 16,
+          ease: 'none',
+          duration: 0.58
+        }, 0)
+        .to(imageRef.value, {
+          scale: 1.12,
+          yPercent: 0,
+          ease: 'none',
+          duration: 0.58
+        }, 0)
+        .to(overlayRef.value, {
+          opacity: 1,
+          ease: 'none',
+          duration: 0.58
+        }, 0.06)
+        .to(stageTargets, {
           autoAlpha: 1,
           y: 0,
           filter: 'blur(0px)',
-          duration: 0.74,
+          duration: 0.18,
           stagger: 0.08,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: stageRef.value,
-            start: 'top 82%',
-            once: true
-          }
-        }
-      )
+          ease: 'power2.out'
+        }, 0.62)
+        .to({}, {
+          duration: 0.56
+        })
 
       gsap.fromTo(
         keywordsRowPrimaryRef.value,
