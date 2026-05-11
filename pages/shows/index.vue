@@ -82,7 +82,12 @@ useHead({
   ]
 })
 
-usePageSeo(getShowsIndexSeo())
+usePageSeo(
+  computed(() => ({
+    ...getShowsIndexSeo(),
+    image: heroImage.value || '/images/hero.webp'
+  }))
+)
 </script>
 
 <template>

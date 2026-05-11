@@ -11,7 +11,7 @@ const { data: pageData } = await useFetch<ServiceLandingPage>('/api/site/service
 const page = computed(() => pageData.value as ServiceLandingPage)
 const pageUrl = computed(() => buildAbsoluteUrl(route.path))
 
-usePageSeo(page.value.seo)
+usePageSeo(computed(() => ({ ...page.value.seo, image: page.value.hero.image || '/images/hero.webp' })))
 
 useHead({
   script: [

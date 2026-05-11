@@ -180,7 +180,12 @@ useHead({
   ]
 })
 
-usePageSeo(getMasterClassesIndexSeo())
+usePageSeo(
+  computed(() => ({
+    ...getMasterClassesIndexSeo(),
+    image: heroImage.value || '/images/hero.webp'
+  }))
+)
 </script>
 
 <template>

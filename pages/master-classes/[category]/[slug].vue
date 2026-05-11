@@ -32,7 +32,12 @@ if (!currentCategory.value || !currentWorkshop.value) {
   })
 }
 
-usePageSeo(computed(() => getWorkshopSeo(currentWorkshop.value!, currentCategory.value)))
+usePageSeo(
+  computed(() => ({
+    ...getWorkshopSeo(currentWorkshop.value!, currentCategory.value),
+    image: currentWorkshop.value?.image || '/images/hero.webp'
+  }))
+)
 </script>
 
 <template>

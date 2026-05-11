@@ -139,9 +139,6 @@ const sendToMaxApi = async (phone: string): Promise<boolean> => {
   try {
     await $fetch('/api/max-send', {
       method: 'POST',
-      headers: {
-        Authorization: `Basic ${btoa('admin:magiciris2026')}`
-      },
       body: {
         type: 'cta',
         data: { phone }

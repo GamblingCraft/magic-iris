@@ -1,4 +1,5 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
+import { homeHeroSlides } from '~/data/home-slider'
 import { getHomeSeo } from '~/data/site-seo'
 import type { HomeCatalogPayload } from '~/types/public-catalog'
 
@@ -8,8 +9,14 @@ const { data: homeCatalog } = await useFetch<HomeCatalogPayload>('/api/site/home
 
 const showTiles = computed(() => homeCatalog.value?.showTiles || [])
 const workshopTiles = computed(() => homeCatalog.value?.workshopTiles || [])
+const heroOgImage = computed(() => homeHeroSlides[0]?.image || '/images/hero.webp')
 
-usePageSeo(getHomeSeo())
+usePageSeo(
+  computed(() => ({
+    ...getHomeSeo(),
+    image: heroOgImage.value
+  }))
+)
 
 const quizPopupRef = ref<InstanceType<typeof QuizPopup> | null>(null)
 const isQuizMounted = ref(false)

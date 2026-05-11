@@ -40,6 +40,10 @@ export const siteSeoSettings = siteSeoContent as SiteSeoSettings
 export const normalizeSiteUrl = (value: string) => value.replace(/\/+$/u, '')
 
 export const buildAbsoluteUrl = (path: string) => {
+  if (/^https?:\/\//iu.test(path)) {
+    return path
+  }
+
   const normalizedPath = path.startsWith('/') ? path : `/${path}`
   return `${normalizeSiteUrl(siteSeoSettings.siteUrl)}${normalizedPath}`
 }

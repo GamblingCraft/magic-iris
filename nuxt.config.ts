@@ -9,9 +9,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
-    adminLogin: process.env.ADMIN_LOGIN || 'admin',
-    adminPassword: process.env.ADMIN_PASSWORD || 'magiciris2026',
-    adminSessionSecret: process.env.ADMIN_SESSION_SECRET || 'magic-iris-local-session-secret'
+    adminLogin: process.env.ADMIN_LOGIN || 'adminiris',
+    adminPassword: process.env.ADMIN_PASSWORD || 'magiciris202638',
+    adminSessionSecret: process.env.ADMIN_SESSION_SECRET || 'magic-iris-session-2026-local'
   },
 
   vite: {

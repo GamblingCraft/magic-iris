@@ -24,7 +24,12 @@ if (!currentProgram.value) {
   })
 }
 
-usePageSeo(computed(() => getShowSeo(currentProgram.value!)))
+usePageSeo(
+  computed(() => ({
+    ...getShowSeo(currentProgram.value!),
+    image: currentProgram.value?.heroImage || currentProgram.value?.image || '/images/hero.webp'
+  }))
+)
 </script>
 
 <template>

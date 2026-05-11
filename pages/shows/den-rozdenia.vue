@@ -24,7 +24,7 @@ const scenarioImages = computed(() =>
 
 const pageUrl = computed(() => buildAbsoluteUrl(route.path))
 
-usePageSeo(page.value.seo)
+usePageSeo(computed(() => ({ ...page.value.seo, image: page.value.hero.image || '/images/hero.webp' })))
 
 useGsapReveal(scenarioSectionRef, ['.scenario-showcase__title-wrap > *', '.scenario-showcase__lead', '.scenario-card'], {
   start: 'top 88%',

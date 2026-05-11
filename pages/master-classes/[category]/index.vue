@@ -28,7 +28,12 @@ if (!currentCategory.value) {
   })
 }
 
-usePageSeo(computed(() => getMasterClassCategorySeo(currentCategory.value!)))
+usePageSeo(
+  computed(() => ({
+    ...getMasterClassCategorySeo(currentCategory.value!),
+    image: currentCategory.value?.image || '/images/hero.webp'
+  }))
+)
 </script>
 
 <template>
