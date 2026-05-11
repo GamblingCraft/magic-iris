@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { serviceHighlights } from '~/data/site'
+import type { HomeScenarioContent } from '~/data/home-content'
+import { homeScenarioContent } from '~/data/home-content'
+
+const props = defineProps<{
+  content?: HomeScenarioContent | null
+}>()
 
 const sectionRef = ref<HTMLElement | null>(null)
-
-const scenarioImages = [
-  '/images/placeholder.webp',
-  '/images/placeholder.webp',
-  '/images/placeholder.webp'
-]
+const scenarioContent = computed(() => props.content || homeScenarioContent)
 
 const scenarioCards = computed(() =>
-  serviceHighlights.slice(0, 3).map((item, index) => ({
+  scenarioContent.value.cards.slice(0, 3).map((item, index) => ({
     ...item,
     number: index + 1,
-    image: scenarioImages[index]
+    image: item.image || '/images/placeholder.webp'
   }))
 )
 
@@ -30,16 +30,15 @@ useGsapReveal(sectionRef, ['.scenario-showcase__title-wrap > *', '.scenario-show
     <div class="container">
       <div class="scenario-showcase__head">
         <div class="scenario-showcase__title-wrap">
-          <p class="eyebrow">Сценарий под ваше событие</p>
+          <p class="eyebrow">{{ scenarioContent.eyebrow }}</p>
           <h2 class="scenario-showcase__title">
-            <strong>Визуал и подача</strong>
-            <em>создают сильное впечатление</em>
+            <strong>{{ scenarioContent.titleStrong }}</strong>
+            <em>{{ scenarioContent.titleAccent }}</em>
           </h2>
         </div>
 
         <p class="scenario-showcase__lead">
-          Подбираем формат, длительность, визуальные акценты и организацию так, чтобы шоу точно
-          встроилось в площадку, тайминг и настроение события.
+          {{ scenarioContent.lead }}
         </p>
       </div>
 

@@ -2,7 +2,7 @@
 const props = defineProps<{
   modelValue: string
   label: string
-  folder: 'show' | 'master-classes' | 'gallery' | 'slider' | 'landing-pages'
+  folder: 'show' | 'master-classes' | 'gallery' | 'slider' | 'landing-pages' | 'home-content'
   placeholder?: string
   previewAlt?: string
 }>()

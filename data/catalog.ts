@@ -95,7 +95,7 @@ export const deriveWorkshopAudienceLabel = (
   categorySlugs
     .map((slug) => categories.find((category) => category.slug === slug)?.title || '')
     .filter(Boolean)
-    .join(' В· ')
+    .join(' · ')
 
 const normalizeCatalogText = (value?: string) =>
   (value || '')
@@ -310,7 +310,7 @@ export const homeCatalogTiles: HomeCatalogTile[] = [
       .map((category, index) => ({
         id: `tile-category-${category.id}`,
         title: category.title,
-        subtitle: `${category.count} ????????`,
+        subtitle: `${category.count} мастер-классов`,
         href: createMasterClassCategoryHref(category.slug),
         image: category.image,
         size: sizes[index] || 'small'

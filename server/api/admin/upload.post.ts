@@ -1,7 +1,7 @@
 import { access, mkdir, writeFile } from 'node:fs/promises'
 import { basename, extname, join } from 'node:path'
 
-const allowedFolders = new Set(['show', 'master-classes', 'gallery', 'slider', 'landing-pages'])
+const allowedFolders = new Set(['show', 'master-classes', 'gallery', 'slider', 'landing-pages', 'home-content'])
 const allowedExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif', '.svg'])
 
 const sanitizeFileName = (value: string) => {

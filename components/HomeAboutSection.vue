@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import { aboutPortrait, aboutSeoParagraphs, aboutSeoTags } from '~/data/home-about'
+import type { HomeAboutContent } from '~/data/home-content'
+import { homeAboutContent } from '~/data/home-content'
 
+const props = defineProps<{
+  content?: HomeAboutContent | null
+}>()
+
+const aboutContent = computed(() => props.content || homeAboutContent)
 const sectionRef = ref<HTMLElement | null>(null)
 const introRef = ref<HTMLElement | null>(null)
 const stageRef = ref<HTMLElement | null>(null)
@@ -13,20 +19,15 @@ const keywordsRef = ref<HTMLElement | null>(null)
 const keywordsRowPrimaryRef = ref<HTMLElement | null>(null)
 const keywordsRowSecondaryRef = ref<HTMLElement | null>(null)
 
-// H2 — главный заголовок секции (был h3, теперь h2)
-const headline = 'Творческая студия в Иркутске для событий, которые хочется переживать снова'
-
-// H3 — подзаголовки смысловых блоков
-const subheadingShows = 'Что мы создаём'
-const subheadingMasterclasses = 'Авторские мастер-классы и арт-форматы'
-const subheadingForWhom = 'Для кого и как мы работаем'
-
-// Лид остаётся коротким вводным абзацем
-const lead =
-  'Создаём песочное шоу, световое шоу, шоу-портреты и выездные мастер-классы для свадеб, дней рождения, корпоративов и камерных праздников, где важны атмосфера, подача и сильная эмоция.'
-
-const keywordRowPrimary = [...aboutSeoTags, ...aboutSeoTags, ...aboutSeoTags]
-const keywordRowSecondary = [...[...aboutSeoTags].reverse(), ...[...aboutSeoTags].reverse(), ...[...aboutSeoTags].reverse()]
+const headline = computed(() => aboutContent.value.headline)
+const subheadingShows = computed(() => aboutContent.value.subheadingShows)
+const subheadingMasterclasses = computed(() => aboutContent.value.subheadingMasterclasses)
+const subheadingForWhom = computed(() => aboutContent.value.subheadingForWhom)
+const lead = computed(() => aboutContent.value.lead)
+const aboutParagraphs = computed(() => aboutContent.value.paragraphs || [])
+const aboutPortrait = computed(() => aboutContent.value.portrait)
+const keywordRowPrimary = computed(() => [...aboutContent.value.tags, ...aboutContent.value.tags, ...aboutContent.value.tags])
+const keywordRowSecondary = computed(() => [...[...aboutContent.value.tags].reverse(), ...[...aboutContent.value.tags].reverse(), ...[...aboutContent.value.tags].reverse()])
 
 let animationContext: { revert: () => void } | null = null
 let mediaMatcher: { revert: () => void } | null = null
@@ -377,24 +378,24 @@ onBeforeUnmount(() => {
 
         <div class="about-section__text">
           <!-- ПЕРВЫЙ АБЗАЦ — ВВОДНЫЙ -->
-          <p>{{ aboutSeoParagraphs[0] }}</p>
-          <p>{{ aboutSeoParagraphs[1] }}</p>
+          <p>{{ aboutParagraphs[0] }}</p>
+          <p>{{ aboutParagraphs[1] }}</p>
 
           <!-- ПОДЗАГОЛОВОК H3: ЧТО МЫ СОЗДАЁМ -->
           <h3 class="about-section__subheading">{{ subheadingShows }}</h3>
-          <p>{{ aboutSeoParagraphs[2] }}</p>
+          <p>{{ aboutParagraphs[2] }}</p>
 
           <!-- ПОДЗАГОЛОВОК H3: АВТОРСКИЕ МАСТЕР-КЛАССЫ -->
           <h3 class="about-section__subheading">{{ subheadingMasterclasses }}</h3>
-          <p>{{ aboutSeoParagraphs[3] }}</p>
+          <p>{{ aboutParagraphs[3] }}</p>
 
           <!-- ПОДЗАГОЛОВОК H3: ДЛЯ КОГО И КАК МЫ РАБОТАЕМ -->
           <h3 class="about-section__subheading">{{ subheadingForWhom }}</h3>
-          <p>{{ aboutSeoParagraphs[4] }}</p>
-          <p>{{ aboutSeoParagraphs[5] }}</p>
+          <p>{{ aboutParagraphs[4] }}</p>
+          <p>{{ aboutParagraphs[5] }}</p>
 
           <!-- ЗАКЛЮЧИТЕЛЬНЫЙ АКЦЕНТ (БЕЗ ЗАГОЛОВКА) -->
-          <p class="about-section__conclusion">{{ aboutSeoParagraphs[6] }}</p>
+          <p class="about-section__conclusion">{{ aboutParagraphs[6] }}</p>
         </div>
       </div>
     </div>

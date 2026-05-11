@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { aboutVideoItems } from '~/data/home-about'
+import type { HomeShortsContent } from '~/data/home-content'
+import { homeShortsContent } from '~/data/home-content'
+
+const props = defineProps<{
+  content?: HomeShortsContent | null
+}>()
 
 const sectionRef = ref<HTMLElement | null>(null)
-const activeVideo = ref<(typeof aboutVideoItems)[number] | null>(null)
+const shortsContent = computed(() => props.content || homeShortsContent)
+const activeVideo = ref<(typeof shortsContent.value.items)[number] | null>(null)
 
-const openVideo = (video: (typeof aboutVideoItems)[number]) => {
+const openVideo = (video: (typeof shortsContent.value.items)[number]) => {
   activeVideo.value = video
 }
 
@@ -32,27 +38,25 @@ useGsapReveal(sectionRef, ['.eyebrow', '.shorts-section__head > *', '.about-reel
   y: 36,
   blur: 8
 })
-
 </script>
 
 <template>
   <section ref="sectionRef" class="section shorts-section">
     <div class="container">
-     <p class="eyebrow">Shorts</p>
+      <p class="eyebrow">{{ shortsContent.eyebrow }}</p>
       <div class="about-media__head shorts-section__head">
         <div>
-          <h2>Короткие видео с основными форматами студии</h2>
+          <h2>{{ shortsContent.title }}</h2>
         </div>
 
-        <p >
-          Быстрый способ посмотреть, как выглядит песочное шоу, световое шоу, шоу-портреты и крутящийся портрет
-          вживую до обсуждения сценария.
+        <p>
+          {{ shortsContent.description }}
         </p>
       </div>
 
       <div class="about-reels">
         <button
-          v-for="video in aboutVideoItems"
+          v-for="video in shortsContent.items"
           :key="video.id"
           type="button"
           class="about-reel-card"

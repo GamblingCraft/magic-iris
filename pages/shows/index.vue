@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { getShowsIndexSeo } from '~/data/site-seo'
 import type { ShowsIndexPayload } from '~/types/public-catalog'
+import type { CatalogPagesContent } from '~/data/catalog-pages'
 
 const { data: showsPayload } = await useFetch<ShowsIndexPayload>('/api/site/shows', {
   key: 'site-shows-index'
 })
 
+const { data: catalogPages } = await useFetch<CatalogPagesContent>('/api/site/catalog-pages', {
+  key: 'site-catalog-pages'
+})
+
 const showCards = computed(() => showsPayload.value?.cards || [])
 const heroImage = computed(() => showsPayload.value?.heroImage || '')
 const showsCount = computed(() => showCards.value.length)
-
+const showsPage = computed(() => catalogPages.value?.shows || null)
+const faqItems = computed(() => showsPage.value?.faq.items || [])
 const openIndex = ref(0)
 
 const toggleItem = (index: number) => {
@@ -21,55 +27,14 @@ const breadcrumbs = [
   { label: 'Шоу' }
 ]
 
-//* FAQ */
-const faqItems = [
-  {
-    question: 'Что нужно для заказа шоу?',
-    answer: 'Выбрать шоу, написать дату, время и место, отправить необходимую информацию (историю или фото), утвердить сценарий или макет фото, а затем — насладиться нашим выступлением на мероприятии.'
-  },
-  {
-    question: 'Можно ли провести 2 шоу на мероприятии?',
-    answer: 'Да, конечно! После песочной или световой истории сделать портрет именинника или молодожёнов, который навсегда останется у виновника торжества — прекрасная идея.'
-  },
-  {
-    question: 'Можно ли провести шоу на улице?',
-    answer: 'Да, при хороших погодных условиях. Шоу-портреты можно провести без проблем. Для песочного шоу нужен доступ к розетке и тёмное время суток. Для светового шоу требуется полная темнота и отсутствие вблизи фонарей.'
-  },
-  {
-    question: 'Можно ли заказать портрет без шоу?',
-    answer: 'Да, набор для самостоятельного создания портрета можно отправить в любую точку мира. Всё необходимое для создания входит в набор.'
-  },
-  {
-    question: 'Вы делаете видеоролик песочной анимации без выезда?',
-    answer: 'Если вы находитесь в другом городе или стране, песочная видео-открытка может стать прекрасным подарком! В ролике можно нарисовать портрет человека песком. В записанном ролике можно более тщательно прорисовать детали, а пересматривать его в семейном кругу — одно удовольствие.'
-  },
-  {
-    question: 'За сколько дней до мероприятия нужно сделать заказ?',
-    answer: 'Срочные заказы мы принимаем и в день мероприятия. Однако для проработки деталей сценария и подготовки уникальных макетов рекомендуем обращаться за 1-2 недели.'
-  },
-  {
-    question: 'На какой праздник можно заказать ваши шоу?',
-    answer: 'Широкий выбор шоу-программ подходит для любого мероприятия: детский день рождения, юбилей, свадьба, корпоратив, Новый год, выездные мероприятия, 8 Марта, 23 февраля и т.д.'
-  },
-  {
-    question: 'Что есть для детей?',
-    answer: 'Для детей мы можем провести песочную или световую сказку на любую тему с интерактивом или мастер-классом после выступления.'
-  },
-  {
-    question: 'Выезжаете ли вы за город?',
-    answer: 'Да, мы работаем по Иркутску и его области. Стоимость выезда рассчитывается индивидуально.'
-  }
-]
-
-/* JSON-LD FAQ */
 useHead({
   script: [
     {
       type: 'application/ld+json',
-      children: JSON.stringify({
+      children: computed(() => JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
-        mainEntity: faqItems.map((item) => ({
+        mainEntity: faqItems.value.map((item) => ({
           '@type': 'Question',
           name: item.question,
           acceptedAnswer: {
@@ -77,7 +42,7 @@ useHead({
             text: item.answer
           }
         }))
-      })
+      }))
     }
   ]
 })
@@ -92,7 +57,6 @@ usePageSeo(
 
 <template>
   <div class="catalog-shell catalog-shell--shows">
-    <!-- HERO -->
     <section class="section catalog-shell__section catalog-shell__section--hero">
       <div class="container">
         <CatalogBreadcrumbs :items="breadcrumbs" />
@@ -118,7 +82,6 @@ usePageSeo(
       </div>
     </section>
 
-    <!-- КАТАЛОГ ШОУ -->
     <section class="section catalog-shell__section">
       <div class="container">
         <CatalogCardsSection
@@ -131,42 +94,31 @@ usePageSeo(
       </div>
     </section>
 
-    <!-- SEO БЛОК -->
     <section class="section catalog-shell__section catalog-shell__section--tight">
-      <div class="container">
+      <div class="container" v-if="showsPage">
         <div class="sec-title-double catalog-text-head">
           <div>
-            <h1 class="h2">Шоу на праздник в Иркутске</h1>
+            <p class="eyebrow">{{ showsPage.text.eyebrow }}</p>
+            <h1 class="h2">{{ showsPage.text.title }}</h1>
           </div>
-          <p class="catalog-preview__lead">
-            Песочное шоу, световое шоу, шоу-портреты и крутящийся портрет
-          </p>
+          <p class="catalog-preview__lead">{{ showsPage.text.lead }}</p>
         </div>
 
         <div class="catalog-text-block">
-          <p>Творческая студия "Magic Iris" создаёт шоу, которые дарят эмоции — а значит, остаются в сердце. Песочное шоу, световое шоу и шоу-портреты — это не просто выступления, а волшебные истории, которые оживают прямо на глазах.</p>
-          
-          <p>Мы работаем на мероприятиях разного уровня в Иркутске и области — от камерных свадеб до масштабных корпоративов, подстраиваясь под формат и создавая атмосферу, которую гости запомнят надолго. Рисуем любовь, воспоминания и мечты, превращая их в яркий и трогательный момент.</p>
-          
-          <p>Наши шоу — это незабываемый подарок, который удивит гостей и станет настоящим украшением любого события. Потому что лучший подарок — это эмоции, которые хочется переживать снова и снова.</p>
-          
-          <p>В команде студии — опытные художники и постановщики. Мы предлагаем несколько форматов: песочная анимация под живую музыку или фонограмму, световое шоу в полной темноте, создание портрета на глазах у зрителей, а также эффектный крутящийся портрет на большом холсте. Каждое выступление создаётся с учётом вашего сценария и пожеланий.</p>
+          <p v-for="(paragraph, index) in showsPage.text.paragraphs" :key="`shows-text-${index}`">{{ paragraph }}</p>
         </div>
       </div>
     </section>
 
-    <!-- FAQ БЛОК -->
-    <section class="section faq-section">
+    <section v-if="showsPage" class="section faq-section">
       <div class="container">
-        <p class="eyebrow">FAQ</p>
+        <p class="eyebrow">{{ showsPage.faq.eyebrow }}</p>
 
         <div class="sec-title-double faq-section__head">
           <div>
-            <h2 class="h2">Частые <span style="color: #f7d176;">вопросы</span></h2>
+            <h2 class="h2">{{ showsPage.faq.title }} <strong>{{ showsPage.faq.titleAccent }}</strong></h2>
           </div>
-          <p class="catalog-preview__lead">
-            Ответы по организации шоу на мероприятии
-          </p>
+          <p class="catalog-preview__lead">{{ showsPage.faq.description }}</p>
         </div>
 
         <div class="faq-list">
@@ -176,11 +128,7 @@ usePageSeo(
             class="faq-item"
             :class="{ 'faq-item--open': openIndex === index }"
           >
-            <button
-              type="button"
-              class="faq-item__button"
-              @click="toggleItem(index)"
-            >
+            <button type="button" class="faq-item__button" @click="toggleItem(index)">
               <span>{{ item.question }}</span>
               <span class="faq-item__icon">{{ openIndex === index ? '−' : '+' }}</span>
             </button>

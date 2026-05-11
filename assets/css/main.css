@@ -3954,6 +3954,7 @@ p {
   align-items: stretch;
   gap: 2px;
   margin-top: 18px;
+  text-transform: uppercase;
 }
 
 .hero__button {
@@ -5146,7 +5147,7 @@ p {
 }
 
 .faq-item--open .faq-item__icon {
-  transform: rotate(180deg);
+  transform: rotate(360deg);
   background: var(--salat);
   box-shadow: 0 14px 28px rgba(247, 209, 118, 0.22);
 }
@@ -12422,6 +12423,29 @@ p {
 
 .admin-inline-note--danger {
   color: #b91c1c;
+}
+
+.admin-section-stack {
+  display: grid;
+  gap: 28px;
+}
+
+.admin-divider {
+  height: 1px;
+  background: rgba(18, 18, 18, 0.08);
+}
+
+.admin-inline-group {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid rgba(18, 18, 18, 0.08);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.admin-inline-group--stack {
+  align-items: start;
 }
 
 .admin-subsection {

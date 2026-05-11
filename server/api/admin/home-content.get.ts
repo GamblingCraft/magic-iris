@@ -1,0 +1,3 @@
+import { getHomeContent } from '../../utils/admin-content'
+
+export default defineEventHandler(async () => getHomeContent())

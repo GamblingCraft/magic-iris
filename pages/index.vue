@@ -2,13 +2,22 @@
 import { homeHeroSlides } from '~/data/home-slider'
 import { getHomeSeo } from '~/data/site-seo'
 import type { HomeCatalogPayload } from '~/types/public-catalog'
+import type { HomeContent } from '~/data/home-content'
 
 const { data: homeCatalog } = await useFetch<HomeCatalogPayload>('/api/site/home-catalog', {
   key: 'site-home-catalog'
 })
 
+const { data: homeContent } = await useFetch<HomeContent>('/api/site/home-content', {
+  key: 'site-home-content'
+})
+
 const showTiles = computed(() => homeCatalog.value?.showTiles || [])
 const workshopTiles = computed(() => homeCatalog.value?.workshopTiles || [])
+const scenarioContent = computed(() => homeContent.value?.scenario || null)
+const shortsContent = computed(() => homeContent.value?.shorts || null)
+const faqContent = computed(() => homeContent.value?.faq || null)
+const aboutContent = computed(() => homeContent.value?.about || null)
 const heroOgImage = computed(() => homeHeroSlides[0]?.image || '/images/hero.webp')
 
 usePageSeo(
@@ -50,16 +59,16 @@ onMounted(() => {
 <template>
   <div class="home-page">
     <HomeHeroSection />
-    <LazyHomeServiceHighlightsSection hydrate-on-visible />
+    <LazyHomeServiceHighlightsSection :content="scenarioContent" hydrate-on-visible />
     <LazyHomeShowsSection :tiles="showTiles" hydrate-on-visible />
     <LazyHomeWorkshopsSection :tiles="workshopTiles" hydrate-on-visible />
 
     <LazyHomeStepsSection hydrate-on-visible />
-    <LazyHomeAboutSection hydrate-on-visible />
+    <LazyHomeAboutSection :content="aboutContent" hydrate-on-visible />
 
-    <LazyHomeShortsSection hydrate-on-visible />
+    <LazyHomeShortsSection :content="shortsContent" hydrate-on-visible />
     <LazyHomeGallerySection hydrate-on-visible />
-    <LazyHomeFaqSection hydrate-on-visible />
+    <LazyHomeFaqSection :content="faqContent" hydrate-on-visible />
     <LazyHomeContactSection hydrate-on-visible />
     <ClientOnly>
       <LazyReviews2GIS hydrate-on-visible />

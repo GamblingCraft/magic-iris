@@ -33,6 +33,26 @@ const groupedNavigation: AdminNavGroup[] = [
         icon: 'lucide:image-up'
       },
       {
+        title: '\u0421\u0446\u0435\u043d\u0430\u0440\u0438\u0438',
+        href: '/admin/content/scenarios',
+        icon: 'lucide:blocks'
+      },
+      {
+        title: 'Shorts',
+        href: '/admin/content/shorts',
+        icon: 'lucide:clapperboard'
+      },
+      {
+        title: 'FAQ',
+        href: '/admin/content/faq',
+        icon: 'lucide:messages-square'
+      },
+      {
+        title: '\u041e \u043d\u0430\u0441',
+        href: '/admin/content/about',
+        icon: 'lucide:image-plus'
+      },
+      {
         title: '\u041f\u043e\u0441\u0430\u0434\u043e\u0447\u043d\u044b\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b',
         href: '/admin/landing-pages',
         icon: 'lucide:panels-top-left'
@@ -54,9 +74,19 @@ const groupedNavigation: AdminNavGroup[] = [
         icon: 'lucide:clapperboard'
       },
       {
+        title: '\u0428\u043e\u0443: \u0442\u0435\u043a\u0441\u0442\u044b \u0438 FAQ',
+        href: '/admin/catalog-pages/shows',
+        icon: 'lucide:file-text'
+      },
+      {
         title: '\u041c\u0430\u0441\u0442\u0435\u0440-\u043a\u043b\u0430\u0441\u0441\u044b',
         href: '/admin/master-classes',
         icon: 'lucide:palette'
+      },
+      {
+        title: '\u041c\u0430\u0441\u0442\u0435\u0440-\u043a\u043b\u0430\u0441\u0441\u044b: \u0442\u0435\u043a\u0441\u0442\u044b \u0438 FAQ',
+        href: '/admin/catalog-pages/master-classes',
+        icon: 'lucide:file-stack'
       }
     ]
   },

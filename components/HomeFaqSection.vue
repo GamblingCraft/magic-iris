@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import { homeFaqItems } from '~/data/home-conversion'
+import type { HomeFaqContent } from '~/data/home-content'
+import { homeFaqContent } from '~/data/home-content'
 
+const props = defineProps<{
+  content?: HomeFaqContent | null
+}>()
+
+const faqContent = computed(() => props.content || homeFaqContent)
 const openIndex = ref(0)
 
 const toggleItem = (index: number) => {
@@ -11,20 +17,20 @@ const toggleItem = (index: number) => {
 <template>
   <section class="section faq-section">
     <div class="container">
-                <p class="eyebrow">FAQ</p>
+      <p class="eyebrow">{{ faqContent.eyebrow }}</p>
       <div class="sec-title-double faq-section__head">
         <div>
           <h2 class="h2">
-            Частые <strong>вопросы</strong>
+            {{ faqContent.title }} <strong>{{ faqContent.titleAccent }}</strong>
           </h2>
         </div>
         <p class="catalog-preview__lead">
-          Собрали короткие ответы на вопросы, которые чаще всего появляются перед заказом шоу или мастер-класса.
-      </p>
+          {{ faqContent.description }}
+        </p>
       </div>
       <div class="faq-list">
         <article
-          v-for="(item, index) in homeFaqItems"
+          v-for="(item, index) in faqContent.items"
           :key="item.question"
           class="faq-item"
           :class="{ 'faq-item--open': openIndex === index }"
