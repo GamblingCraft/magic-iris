@@ -343,9 +343,6 @@ const sendToMaxApi = async (data: QuizFormData): Promise<boolean> => {
   try {
     await $fetch('/api/max-send', {
       method: 'POST',
-      headers: {
-        Authorization: `Basic ${btoa('admin:magiciris2026')}`
-      },
       body: {
         type: 'quiz',
         data

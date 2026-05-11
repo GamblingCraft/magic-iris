@@ -1,5 +1,26 @@
 import catalogPagesRaw from './cms/catalog-pages.json'
 
+export type CatalogPageHeroFact = {
+  label: string
+  value: string
+}
+
+export type CatalogPageHeroAction = {
+  label: string
+  href: string
+  kind?: 'primary' | 'ghost'
+}
+
+export type CatalogPageHeroSection = {
+  eyebrow: string
+  title: string
+  description: string
+  image: string
+  facts?: CatalogPageHeroFact[]
+  tags?: string[]
+  actions?: CatalogPageHeroAction[]
+}
+
 export type CatalogPageTextSection = {
   eyebrow: string
   title: string
@@ -21,6 +42,7 @@ export type CatalogPageFaqSection = {
 }
 
 export type CatalogPageSectionContent = {
+  hero: CatalogPageHeroSection
   text: CatalogPageTextSection
   faq: CatalogPageFaqSection
 }

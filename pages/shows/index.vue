@@ -15,6 +15,7 @@ const showCards = computed(() => showsPayload.value?.cards || [])
 const heroImage = computed(() => showsPayload.value?.heroImage || '')
 const showsCount = computed(() => showCards.value.length)
 const showsPage = computed(() => catalogPages.value?.shows || null)
+const heroContent = computed(() => showsPage.value?.hero || null)
 const faqItems = computed(() => showsPage.value?.faq.items || [])
 const openIndex = ref(0)
 
@@ -50,7 +51,7 @@ useHead({
 usePageSeo(
   computed(() => ({
     ...getShowsIndexSeo(),
-    image: heroImage.value || '/images/hero.webp'
+    image: heroContent.value?.image || heroImage.value || '/images/hero.webp'
   }))
 )
 </script>
@@ -62,20 +63,20 @@ usePageSeo(
         <CatalogBreadcrumbs :items="breadcrumbs" />
 
         <CatalogHeroPanel
-          eyebrow="Шоу"
-          title="Сценические форматы, где эмоция, свет и сильный первый кадр решают всё"
+          :eyebrow="heroContent?.eyebrow || 'Шоу'"
+          :title="heroContent?.title || 'Сценические форматы, где эмоция, свет и сильный первый кадр решают всё'"
           title-tag="h2"
           lead=""
-          description="Песочная анимация, световые номера, шоу-портреты и крутящийся портрет — для тех, кто хочет удивить гостей и оставить яркое впечатление."
-          :image="heroImage"
-          :facts="[
+          :description="heroContent?.description || 'Песочная анимация, световые номера, шоу-портреты и крутящийся портрет — для тех, кто хочет удивить гостей и оставить яркое впечатление.'"
+          :image="heroContent?.image || heroImage"
+          :facts="heroContent?.facts?.length ? heroContent.facts : [
             { label: 'Форматов', value: `${showsCount}` },
             { label: 'Сценарий', value: 'под ваше событие' },
             { label: 'Выезд', value: 'по Иркутску и области' }
           ]"
-          :tags="['свадьба', 'день рождения', 'корпоратив', 'городское событие']"
-          :actions="[
-            { label: 'Оставить заявку', href: '/#contacts' },
+          :tags="heroContent?.tags?.length ? heroContent.tags : ['свадьба', 'день рождения', 'корпоратив', 'городское событие']"
+          :actions="heroContent?.actions?.length ? heroContent.actions : [
+            { label: 'Оставить заявку', href: '/#contacts', kind: 'primary' },
             { label: 'Посмотреть мастер-классы', href: '/master-classes', kind: 'ghost' }
           ]"
         />

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
 
-import { createEmptyMasterClassCategory } from '~/utils/admin-editor'
-
 definePageMeta({
   layout: 'admin'
 })
@@ -14,38 +12,14 @@ type CatalogPayload = {
   workshops: WorkshopItem[]
 }
 
-const router = useRouter()
-
 const { data, refresh } = await useFetch<CatalogPayload>('/api/admin/catalog', {
   key: 'admin-master-class-categories-list'
 })
 
 const search = ref('')
-const isCreating = ref(false)
-const isSavingHero = ref(false)
 const deletingId = ref('')
 
 const categories = computed(() => data.value?.masterClassCategories || [])
-
-const saveHeroImage = async () => {
-  if (!data.value) {
-    return
-  }
-
-  isSavingHero.value = true
-
-  try {
-    await $fetch('/api/admin/catalog', {
-      method: 'PUT',
-      body: data.value
-    })
-
-    await refresh()
-  }
-  finally {
-    isSavingHero.value = false
-  }
-}
 
 const categoryRows = computed(() => {
   const query = search.value.trim().toLowerCase()
@@ -69,34 +43,6 @@ const categoryRows = computed(() => {
       return `${category.title} ${category.slug}`.toLowerCase().includes(query)
     })
 })
-
-const createCategory = async () => {
-  if (!data.value) {
-    return
-  }
-
-  isCreating.value = true
-
-  try {
-    const draft = createEmptyMasterClassCategory()
-    draft.title = 'Новая категория'
-    draft.slug = `new-category-${Date.now().toString(36)}`
-
-    await $fetch('/api/admin/catalog', {
-      method: 'PUT',
-      body: {
-        ...data.value,
-        masterClassCategories: [draft, ...data.value.masterClassCategories]
-      }
-    })
-
-    await refresh()
-    await router.push(`/admin/master-classes/category/${draft.id}`)
-  }
-  finally {
-    isCreating.value = false
-  }
-}
 
 const removeCategory = async (id: string) => {
   if (!data.value) {
@@ -150,34 +96,19 @@ const removeCategory = async (id: string) => {
       <div class="admin-card__head">
         <div>
           <h3 class="admin-card__title">Категории мастер-классов</h3>
-          <p class="admin-card__descr">Сначала выбирайте подборку, а уже внутри неё открывайте и редактируйте карточки мастер-классов.</p>
+          <p class="admin-card__descr">
+            Сначала выбирайте подборку, а уже внутри неё открывайте и редактируйте карточки мастер-классов.
+          </p>
         </div>
       </div>
 
-      <div class="admin-subsection">
-        <h4 class="admin-subsection__title">Hero страницы</h4>
-
-        <AdminImageUploadField
-          :model-value="data?.masterClassesHeroImage || ''"
-          label="Фото hero для /master-classes"
-          folder="master-classes"
-          preview-alt="Master classes hero"
-          @update:model-value="(value) => { if (data) { data.masterClassesHeroImage = value } }"
-        />
-      </div>
-
       <div class="admin-toolbar">
-        <input v-model="search" class="admin-input admin-search" type="search" placeholder="Поиск по названию или slug">
-      </div>
-
-      <div class="admin-actions">
-        <button type="button" class="admin-button" :disabled="!data || isSavingHero" @click="saveHeroImage">
-          {{ isSavingHero ? 'Сохранение hero...' : 'Сохранить hero' }}
-        </button>
-
-        <button type="button" class="admin-button admin-button--sand" :disabled="isCreating" @click="createCategory">
-          {{ isCreating ? 'Создание...' : 'Добавить категорию' }}
-        </button>
+        <input
+          v-model="search"
+          class="admin-input admin-search"
+          type="search"
+          placeholder="Поиск по названию или slug"
+        >
       </div>
     </div>
 

@@ -15,6 +15,7 @@ const categoryPreviews = computed(() => masterClassesPayload.value?.categories |
 const workshopPreviews = computed(() => masterClassesPayload.value?.workshops || [])
 const heroImage = computed(() => masterClassesPayload.value?.heroImage || '')
 const masterClassesPage = computed(() => catalogPages.value?.masterClasses || null)
+const heroContent = computed(() => masterClassesPage.value?.hero || null)
 const faqItems = computed(() => masterClassesPage.value?.faq.items || [])
 
 const selectedTag = ref('all')
@@ -97,7 +98,7 @@ useHead({
 usePageSeo(
   computed(() => ({
     ...getMasterClassesIndexSeo(),
-    image: heroImage.value || '/images/hero.webp'
+    image: heroContent.value?.image || heroImage.value || '/images/hero.webp'
   }))
 )
 </script>
@@ -109,13 +110,15 @@ usePageSeo(
         <CatalogBreadcrumbs :items="breadcrumbs" />
 
         <CatalogHeroPanel
-          eyebrow="Мастер-классы"
-          title="Творческие форматы для праздников, школ, корпоративов и городских площадок"
+          :eyebrow="heroContent?.eyebrow || 'Мастер-классы'"
+          :title="heroContent?.title || 'Творческие форматы для праздников, школ, корпоративов и городских площадок'"
           title-tag="h2"
-          description="В каталоге собраны творческие мастер-классы для детей и взрослых."
-          :image="heroImage"
-          :actions="[
-            { label: 'Оставить заявку', href: '/#contacts' },
+          :description="heroContent?.description || 'В каталоге собраны творческие мастер-классы для детей и взрослых.'"
+          :image="heroContent?.image || heroImage"
+          :facts="heroContent?.facts?.length ? heroContent.facts : undefined"
+          :tags="heroContent?.tags?.length ? heroContent.tags : undefined"
+          :actions="heroContent?.actions?.length ? heroContent.actions : [
+            { label: 'Оставить заявку', href: '/#contacts', kind: 'primary' },
             { label: 'Посмотреть шоу', href: '/shows', kind: 'ghost' }
           ]"
         />

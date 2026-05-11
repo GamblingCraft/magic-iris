@@ -82,8 +82,30 @@ export const saveHomeContent = (content: HomeContent) =>
 export const getHomeGalleryContent = () =>
   readJsonFile<HomeGalleryContent>(homeGalleryPath, homeGalleryContentDefault as HomeGalleryContent)
 
-export const getCatalogPagesContent = () =>
-  readJsonFile<CatalogPagesContent>(catalogPagesPath, catalogPagesContentDefault as CatalogPagesContent)
+export const getCatalogPagesContent = async () => {
+  const [catalogPages, catalog] = await Promise.all([
+    readJsonFile<CatalogPagesContent>(catalogPagesPath, catalogPagesContentDefault as CatalogPagesContent),
+    getCatalogContent()
+  ])
+
+  if (!catalogPages.shows.hero.image) {
+    catalogPages.shows.hero.image =
+      catalog.shows[1]?.heroImage ||
+      catalog.shows[0]?.heroImage ||
+      catalog.shows[0]?.image ||
+      ''
+  }
+
+  if (!catalogPages.masterClasses.hero.image) {
+    catalogPages.masterClasses.hero.image =
+      catalog.masterClassesHeroImage ||
+      catalog.masterClassCategories[0]?.image ||
+      catalog.workshops[0]?.image ||
+      ''
+  }
+
+  return catalogPages
+}
 
 export const saveCatalogPagesContent = (content: CatalogPagesContent) =>
   writeJsonFile(catalogPagesPath, content)

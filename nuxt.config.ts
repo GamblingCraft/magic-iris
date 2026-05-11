@@ -9,9 +9,15 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
+    maxBotToken: process.env.MAX_BOT_TOKEN || '',
+    maxAdminChatId: process.env.MAX_ADMIN_CHAT_ID || '',
+    maxApiBase: process.env.MAX_API_BASE || 'https://platform-api.max.ru',
     adminLogin: process.env.ADMIN_LOGIN || 'adminiris',
     adminPassword: process.env.ADMIN_PASSWORD || 'magiciris202638',
-    adminSessionSecret: process.env.ADMIN_SESSION_SECRET || 'magic-iris-session-2026-local'
+    adminSessionSecret: process.env.ADMIN_SESSION_SECRET || 'magic-iris-session-2026-local',
+    public: {
+      siteUrl: process.env.PUBLIC_SITE_URL || 'https://magic-iris.ru'
+    }
   },
 
   vite: {
