@@ -312,13 +312,13 @@ const removeWorkshop = async () => {
 
       <div class="admin-editor__grid">
       <label v-if="legacyLayoutDraft" class="admin-field">
-        <span class="admin-label">???????? (??????? ? ??????)</span>
+        <span class="admin-label">описание</span>
         <textarea v-model="legacyLayoutDraft.whatIntro" class="admin-textarea"></textarea>
       </label>
 
       <div v-if="legacyLayoutDraft" class="admin-editor__grid">
         <label class="admin-fieldset">
-          <span class="admin-fieldset__legend">Что будет на мастер-классе (по строкам)</span>
+          <span class="admin-fieldset__legend">Что будет на мастер-классе</span>
           <textarea v-model="legacyLayoutDraft.whatProcess" class="admin-textarea"></textarea>
         </label>
 
