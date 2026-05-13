@@ -46,7 +46,7 @@ export const createEmptyHomeContent = (): HomeContent => ({
     subheadingShows: '',
     subheadingMasterclasses: '',
     subheadingForWhom: '',
-    paragraphs: ['', '', '', '', '', '', ''],
+    paragraphs: ['', '', '', '', '', '', '', ''],
     portrait: {
       src: '',
       alt: ''

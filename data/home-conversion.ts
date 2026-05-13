@@ -43,6 +43,6 @@ export const homeCta = {
   submitLabel: 'отправить',
   consentLabel:
     'Нажимая кнопку, я даю согласие на обработку персональных данных и принимаю условия оферты.',
-  image: 'images/placeholder.webp',
+  image: 'images/cta.webp',
   imageAlt: 'Праздничная шоу-программа Magic Iris'
 }

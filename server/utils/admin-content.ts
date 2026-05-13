@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 
-import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
+import type { MasterClassCategory, ShowProgram, WorkshopItem, WorkshopLegacyLayout } from '~/data/catalog'
 import type { HomeContent } from '~/data/home-content'
 import type { CatalogPagesContent } from '~/data/catalog-pages'
 import type { HomeGalleryContent } from '~/data/home-gallery'
@@ -10,6 +10,7 @@ import type { HomeHeroSlide } from '~/data/home-slider'
 import type { ShowCollectionPage, ShowCollectionSlug } from '~/data/show-collections'
 import type { SiteSeoSettings } from '~/data/site-seo'
 import catalogContentDefault from '~/data/cms/catalog-content.json'
+import workshopLegacyLayoutsDefault from '~/data/cms/workshop-legacy-layouts.json'
 import homeContentDefault from '~/data/cms/home-content.json'
 import catalogPagesContentDefault from '~/data/cms/catalog-pages.json'
 import homeGalleryContentDefault from '~/data/cms/home-gallery.json'
@@ -25,9 +26,12 @@ type CatalogContentPayload = {
   workshops: WorkshopItem[]
 }
 
+type WorkshopLegacyLayoutsPayload = Record<string, WorkshopLegacyLayout>
+
 const cmsDir = join(process.cwd(), 'data', 'cms')
 const homeSliderPath = join(cmsDir, 'home-slider.json')
 const catalogContentPath = join(cmsDir, 'catalog-content.json')
+const workshopLegacyLayoutsPath = join(cmsDir, 'workshop-legacy-layouts.json')
 const homeContentPath = join(cmsDir, 'home-content.json')
 const homeGalleryPath = join(cmsDir, 'home-gallery.json')
 const catalogPagesPath = join(cmsDir, 'catalog-pages.json')
@@ -67,11 +71,40 @@ export const getHomeSliderContent = () =>
 export const saveHomeSliderContent = (slides: HomeHeroSlide[]) =>
   writeJsonFile(homeSliderPath, slides)
 
-export const getCatalogContent = () =>
-  readJsonFile<CatalogContentPayload>(catalogContentPath, catalogContentDefault as CatalogContentPayload)
+export const getCatalogContent = async () => {
+  const [catalog, legacyLayouts] = await Promise.all([
+    readJsonFile<CatalogContentPayload>(catalogContentPath, catalogContentDefault as CatalogContentPayload),
+    readJsonFile<WorkshopLegacyLayoutsPayload>(
+      workshopLegacyLayoutsPath,
+      workshopLegacyLayoutsDefault as WorkshopLegacyLayoutsPayload
+    )
+  ])
 
-export const saveCatalogContent = (content: CatalogContentPayload) =>
-  writeJsonFile(catalogContentPath, content)
+  return {
+    ...catalog,
+    workshops: catalog.workshops.map((workshop) => ({
+      ...workshop,
+      legacyLayout: legacyLayouts[workshop.id] || workshop.legacyLayout
+    }))
+  }
+}
+
+export const saveCatalogContent = async (content: CatalogContentPayload) => {
+  const legacyLayouts: WorkshopLegacyLayoutsPayload = {}
+
+  for (const workshop of content.workshops) {
+    if (workshop.legacyLayout) {
+      legacyLayouts[workshop.id] = workshop.legacyLayout
+    }
+  }
+
+  const workshopsWithoutLegacy = content.workshops.map(({ legacyLayout: _legacyLayout, ...rest }) => rest)
+
+  await Promise.all([
+    writeJsonFile(catalogContentPath, { ...content, workshops: workshopsWithoutLegacy }),
+    writeJsonFile(workshopLegacyLayoutsPath, legacyLayouts)
+  ])
+}
 
 export const getHomeContent = () =>
   readJsonFile<HomeContent>(homeContentPath, homeContentDefault as HomeContent)
@@ -102,6 +135,10 @@ export const getCatalogPagesContent = async () => {
       catalog.masterClassCategories[0]?.image ||
       catalog.workshops[0]?.image ||
       ''
+  }
+
+  if (!catalogPages.masterClasses.shorts) {
+    catalogPages.masterClasses.shorts = cloneJson((catalogPagesContentDefault as CatalogPagesContent).masterClasses.shorts!)
   }
 
   return catalogPages

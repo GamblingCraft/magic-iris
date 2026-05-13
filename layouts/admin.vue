@@ -43,6 +43,11 @@ const groupedNavigation: AdminNavGroup[] = [
         icon: 'lucide:clapperboard'
       },
       {
+        title: 'Shorts2',
+        href: '/admin/catalog-pages/shorts2',
+        icon: 'lucide:film'
+      },
+      {
         title: 'FAQ',
         href: '/admin/content/faq',
         icon: 'lucide:messages-square'

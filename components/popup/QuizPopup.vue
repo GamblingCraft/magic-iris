@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <Teleport to="body">
     <Transition name="quiz-popup">
       <div
@@ -21,7 +21,7 @@
             Узнайте, свободна ли ваша дата, и получите подарок
           </h2>
           <p class="quiz-popup__lead">
-            Ответьте на несколько коротких вопросов. Мы подберём формат шоу, проверим дату и свяжемся удобным способом.
+            Ответьте на несколько коротких вопросов. Мы подберём формат, проверим дату и свяжемся с вами удобным способом.
           </p>
 
           <div class="quiz-popup__progress">
@@ -35,8 +35,17 @@
           </div>
 
           <form class="quiz-popup__form" @submit.prevent="submitForm">
-            <!-- Шаг 0: Выбор подарка -->
             <div v-if="stepIndex === 0" class="quiz-popup__step">
+              <p class="quiz-popup__step-title">Что вы хотели бы заказать?</p>
+              <div class="quiz-popup__options">
+                <label v-for="orderType in orderTypeList" :key="orderType" class="quiz-popup__option">
+                  <input v-model="formData.orderType" type="radio" name="orderType" :value="orderType">
+                  <span>{{ orderType }}</span>
+                </label>
+              </div>
+            </div>
+
+            <div v-else-if="stepIndex === 1" class="quiz-popup__step">
               <p class="quiz-popup__step-title">Выберите подарок</p>
               <div class="quiz-popup__options">
                 <label v-for="giftItem in giftsList" :key="giftItem" class="quiz-popup__option">
@@ -46,8 +55,7 @@
               </div>
             </div>
 
-            <!-- Шаг 1: Тип мероприятия -->
-            <div v-else-if="stepIndex === 1" class="quiz-popup__step">
+            <div v-else-if="stepIndex === 2" class="quiz-popup__step">
               <p class="quiz-popup__step-title">Какое мероприятие планируете?</p>
               <div class="quiz-popup__options">
                 <label v-for="eventItem in eventsList" :key="eventItem" class="quiz-popup__option">
@@ -68,8 +76,7 @@
               </div>
             </div>
 
-            <!-- Шаг 2: Дата и город -->
-            <div v-else-if="stepIndex === 2" class="quiz-popup__step quiz-popup__step--fields">
+            <div v-else-if="stepIndex === 3" class="quiz-popup__step quiz-popup__step--fields">
               <label class="quiz-popup__field">
                 <span>Дата мероприятия</span>
                 <input v-model="formData.date" type="date" class="quiz-popup__input">
@@ -85,8 +92,7 @@
               </label>
             </div>
 
-            <!-- Шаг 3: Количество гостей -->
-            <div v-else-if="stepIndex === 3" class="quiz-popup__step">
+            <div v-else-if="stepIndex === 4" class="quiz-popup__step">
               <p class="quiz-popup__step-title">Сколько гостей ожидается?</p>
               <div class="quiz-popup__options">
                 <label v-for="count in guestsCountsList" :key="count" class="quiz-popup__option">
@@ -96,8 +102,7 @@
               </div>
             </div>
 
-            <!-- Шаг 4: Контактные данные -->
-            <div v-else-if="stepIndex === 4" class="quiz-popup__step quiz-popup__step--fields">
+            <div v-else-if="stepIndex === 5" class="quiz-popup__step quiz-popup__step--fields">
               <label class="quiz-popup__field">
                 <span>Ваше имя</span>
                 <input
@@ -132,7 +137,6 @@
               </label>
             </div>
 
-            <!-- Success экран -->
             <div v-else class="quiz-popup__success">
               <div class="quiz-popup__success-badge">Готово</div>
               <h3>Спасибо за интерес к Magic Iris</h3>
@@ -144,7 +148,6 @@
               </button>
             </div>
 
-            <!-- Кнопки навигации -->
             <div v-if="stepIndex < totalStepsCount" class="quiz-popup__actions">
               <button
                 v-if="stepIndex > 0"
@@ -185,6 +188,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch, nextTick } 
 import IMask from 'imask'
 
 type QuizFormData = {
+  orderType: string
   gift: string
   event: string
   eventOther: string
@@ -210,10 +214,12 @@ const emit = defineEmits<{
   (event: 'submitted', data: QuizFormData): void
 }>()
 
-const totalStepsCount = 5
+const totalStepsCount = 6
 const storageKey = 'magic-iris-quiz-popup-closed'
 
-const giftsList = ['Скидка 1500 ₽ при заказе двух шоу', 'Бесплатный мастер-класс после шоу', 'Подарок не нужен']
+const orderTypeList = ['Шоу', 'Мастер-класс']
+const showGiftsList = ['Скидка 1500 ₽ при заказе двух шоу', 'Бесплатный мастер-класс после шоу', 'Подарок не нужен']
+const masterClassGiftsList = ['Фотоаппарат моментальной печати на мероприятии', 'Сертификат со скидкой на арт-вечер каждому участнику', 'Подарок не нужен']
 const eventsList = ['Свадьба', 'Корпоратив', 'Юбилей', 'Выпускной']
 const guestsCountsList = ['10-30 гостей', '30-50 гостей', '50-100 гостей', '100+ гостей']
 const contactsList = ['Telegram', 'WhatsApp', 'ВКонтакте', 'MAX', 'Звонок']
@@ -223,12 +229,10 @@ const stepIndex = ref(0)
 const openTimer = ref<ReturnType<typeof setTimeout> | null>(null)
 const isSubmitting = ref(false)
 
-// маска телефона (как в CTA)
 const phoneInput = ref<HTMLInputElement | null>(null)
 const phoneInputValue = ref('')
 let phoneMask: IMask.InputMask | null = null
 
-// вычисления для валидации
 const phoneDigits = computed(() =>
   phoneInputValue.value.replace(/\D/g, '')
 )
@@ -237,7 +241,12 @@ const canSend = computed(() =>
   formData.agree && phoneDigits.value.length === 11
 )
 
+const giftsList = computed(() =>
+  formData.orderType === 'Мастер-класс' ? masterClassGiftsList : showGiftsList
+)
+
 const formData = reactive<QuizFormData>({
+  orderType: '',
   gift: '',
   event: '',
   eventOther: '',
@@ -254,12 +263,11 @@ const progressWidthPercent = computed(() =>
   Math.round((stepIndex.value / totalStepsCount) * 100)
 )
 
-// функция для инициализации маски
 const initPhoneMask = () => {
   if (phoneInput.value && !phoneMask) {
     phoneMask = IMask(phoneInput.value, {
       mask: '+{7} (000) 000-00-00',
-      lazy: false // сразу показывает +7
+      lazy: false
     })
 
     phoneMask.on('accept', () => {
@@ -268,26 +276,28 @@ const initPhoneMask = () => {
   }
 }
 
-// следим за переходом на шаг с телефоном
 watch(stepIndex, async (newStep) => {
-  if (newStep === 4) {
+  if (newStep === 5) {
     await nextTick()
     initPhoneMask()
-    
-    // если уже есть значение, обновляем маску
+
     if (phoneInputValue.value && phoneMask) {
       phoneMask.value = phoneInputValue.value
     }
   }
 })
 
-// синхронизация formData.phone с phoneInputValue
 watch(phoneInputValue, (newValue) => {
   formData.phone = newValue
 })
 
+watch(() => formData.orderType, () => {
+  formData.gift = ''
+})
+
 const resetForm = () => {
   stepIndex.value = 0
+  formData.orderType = ''
   formData.gift = ''
   formData.event = ''
   formData.eventOther = ''
@@ -300,7 +310,6 @@ const resetForm = () => {
   formData.contactMethod = ''
   formData.agree = false
 
-  // пересоздаём маску при следующем показе
   if (phoneMask) {
     phoneMask.destroy()
     phoneMask = null
@@ -380,23 +389,18 @@ watch(isOpen, (val) => {
 
   document.documentElement.style.overflow = val ? 'hidden' : ''
   document.body.style.overflow = val ? 'hidden' : ''
-  
-  // при открытии попапа сбрасываем маску
+
   if (!val) {
     if (phoneMask) {
       phoneMask.destroy()
       phoneMask = null
     }
-  } else {
-    // если открыли попап и сразу на шаге с телефоном (маловероятно, но на всякий случай)
-    if (stepIndex.value === 4) {
-      nextTick(() => initPhoneMask())
-    }
+  } else if (stepIndex.value === 5) {
+    nextTick(() => initPhoneMask())
   }
 })
 
 onMounted(() => {
-  // автооткрытие
   if (props.autoOpen && process.client) {
     const isClosed = window.sessionStorage.getItem(storageKey) === '1'
     if (!isClosed) {

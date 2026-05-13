@@ -1,5 +1,4 @@
-// server/api/max-send.post.ts
-import { defineEventHandler, readBody, createError } from 'h3'
+﻿import { defineEventHandler, readBody, createError } from 'h3'
 
 type FormType = 'cta' | 'quiz'
 
@@ -119,6 +118,7 @@ function formatQuizMessage(data: Record<string, any>): string {
 • **Связь:** ${data.contactMethod || 'не указан'}
 
 📋 **Данные мероприятия:**
+• **Что хотят заказать:** ${data.orderType || 'не выбрано'}
 • **Подарок:** ${data.gift || 'не выбран'}
 • **Тип мероприятия:** ${data.event || 'не указано'}${data.eventOther ? ` (${data.eventOther})` : ''}
 • **Дата мероприятия:** ${data.date || 'не указана'}

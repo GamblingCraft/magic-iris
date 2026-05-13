@@ -67,7 +67,7 @@ usePageSeo(
           :title="heroContent?.title || 'Сценические форматы, где эмоция, свет и сильный первый кадр решают всё'"
           title-tag="h2"
           lead=""
-          :description="heroContent?.description || 'Песочная анимация, световые номера, шоу-портреты и крутящийся портрет — для тех, кто хочет удивить гостей и оставить яркое впечатление.'"
+          :description="heroContent?.description || 'Песочная анимация, световые номера, шоу-портреты и вращающийся портрет — для тех, кто хочет удивить гостей и оставить яркое впечатление.'"
           :image="heroContent?.image || heroImage"
           :facts="heroContent?.facts?.length ? heroContent.facts : [
             { label: 'Форматов', value: `${showsCount}` },

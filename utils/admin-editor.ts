@@ -1,4 +1,4 @@
-import {
+﻿import {
   deriveWorkshopAudienceLabel,
   type CatalogFact,
   type CatalogImage,
@@ -11,6 +11,7 @@ import type { HomeHeroSlide } from '~/data/home-slider'
 import type { ServiceLandingPage, ServiceScenarioItem } from '~/data/service-pages'
 import type { ShowCollectionPage } from '~/data/show-collections'
 import type { CatalogCardItem } from '~/types/public-catalog'
+import { formatDisplayPrice } from '~/utils/format-price'
 
 export type ShowDraft = ShowProgram & {
   galleryText: string
@@ -25,6 +26,7 @@ export type WorkshopDraft = WorkshopItem & {
   pricingText: string
   formatsText: string
   includesText: string
+  legacyImagesText: string
 }
 
 export type ShowCollectionDraft = ShowCollectionPage & {
@@ -140,10 +142,12 @@ export const fromShowDraft = (item: ShowDraft): ShowProgram => {
 
 export const toWorkshopDraft = (item: WorkshopItem): WorkshopDraft => ({
   ...structuredClone(item),
+  priceFrom: formatDisplayPrice(item.priceFrom),
   galleryText: item.gallery.map(formatImageLine).join('\n'),
   pricingText: item.pricing.map(formatPriceLine).join('\n'),
   formatsText: linesToText(item.formats),
-  includesText: linesToText(item.includes)
+  includesText: linesToText(item.includes),
+  legacyImagesText: (item.legacyLayout?.whatImages || []).join('\n')
 })
 
 export const fromWorkshopDraft = (
@@ -160,6 +164,9 @@ export const fromWorkshopDraft = (
       }))
       .filter((image) => image.src) || []
 
+  const legacyImages = textToLines(item.legacyImagesText)
+  const lead = item.legacyLayout?.whatIntro?.trim() || ''
+
   return {
     id: item.id,
     slug: item.slug,
@@ -170,9 +177,9 @@ export const fromWorkshopDraft = (
       Array.from(new Set(item.categorySlugs.filter(Boolean))),
       categories
     ) || item.audienceLabel,
-    summary: item.summary,
-    description: item.description,
-    priceFrom: item.priceFrom,
+    summary: lead || item.summary,
+    description: lead || item.summary || item.description,
+    priceFrom: formatDisplayPrice(item.priceFrom),
     priceNote: item.priceNote,
     image: item.image,
     gallery: gallery.length ? gallery : galleryFromText,
@@ -180,7 +187,13 @@ export const fromWorkshopDraft = (
     participants: item.participants,
     formats: textToLines(item.formatsText),
     includes: textToLines(item.includesText),
-    pricing: textToLines(item.pricingText).map(parsePriceLine).filter(Boolean) as PricePoint[]
+    pricing: textToLines(item.pricingText).map(parsePriceLine).filter(Boolean) as PricePoint[],
+    legacyLayout: item.legacyLayout
+      ? {
+          ...item.legacyLayout,
+          whatImages: legacyImages
+        }
+      : undefined
   }
 }
 
@@ -239,7 +252,8 @@ export const createEmptyWorkshopDraft = (categories: MasterClassCategory[]): Wor
   galleryText: '',
   pricingText: '',
   formatsText: '',
-  includesText: ''
+  includesText: '',
+  legacyImagesText: ''
 })
 
 export const createEmptyMasterClassCategory = (): MasterClassCategory => ({

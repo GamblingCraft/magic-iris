@@ -23,7 +23,7 @@ export const mainNavigation: NavLink[] = [
   { label: 'Песочное шоу', href: '/shows/pesochnoe-shou' },
   { label: 'Световое шоу', href: '/shows/svetovoe-shou' },
   { label: 'Шоу-портреты', href: '/shows/shou-portrety' },
-  { label: 'Крутящийся портрет', href: '/shows/krutyashchiysya-portret' },
+  { label: 'Вращающийся портрет', href: '/shows/krutyashchiysya-portret' },
   { label: 'Мастер-классы', href: '/master-classes' },
   { label: 'О студии', href: '/#about' },
   { label: 'Отзывы', href: '/#reviews' },
@@ -31,10 +31,10 @@ export const mainNavigation: NavLink[] = [
 ]
 
 export const contactInfo = {
-  phoneDisplay: '+7 (950) 122-54-13',
-  phoneRaw: '+79501225413',
+  phoneDisplay: '+7 (950) 052-48-92',
+  phoneRaw: '+79500524892',
   telegram: 'https://t.me/iris_magic',
-  whatsapp: 'https://wa.me/79501225413',
+  whatsapp: 'https://wa.me/79500524892',
   vk: 'https://vk.com/iris_show',
   max: 'https://max.ru/241934919'
 }

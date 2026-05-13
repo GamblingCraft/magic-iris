@@ -3,6 +3,7 @@ import { homeHeroSlides } from '~/data/home-slider'
 import { getHomeSeo } from '~/data/site-seo'
 import type { HomeCatalogPayload } from '~/types/public-catalog'
 import type { HomeContent } from '~/data/home-content'
+import type { CatalogPagesContent } from '~/data/catalog-pages'
 
 const { data: homeCatalog } = await useFetch<HomeCatalogPayload>('/api/site/home-catalog', {
   key: 'site-home-catalog'
@@ -12,10 +13,15 @@ const { data: homeContent } = await useFetch<HomeContent>('/api/site/home-conten
   key: 'site-home-content'
 })
 
+const { data: catalogPages } = await useFetch<CatalogPagesContent>('/api/site/catalog-pages', {
+  key: 'site-catalog-pages-home'
+})
+
 const showTiles = computed(() => homeCatalog.value?.showTiles || [])
 const workshopTiles = computed(() => homeCatalog.value?.workshopTiles || [])
 const scenarioContent = computed(() => homeContent.value?.scenario || null)
 const shortsContent = computed(() => homeContent.value?.shorts || null)
+const masterClassesShortsContent = computed(() => catalogPages.value?.masterClasses?.shorts || null)
 const faqContent = computed(() => homeContent.value?.faq || null)
 const aboutContent = computed(() => homeContent.value?.about || null)
 const heroOgImage = computed(() => homeHeroSlides[0]?.image || '/images/hero.webp')
@@ -67,6 +73,7 @@ onMounted(() => {
     <LazyHomeAboutSection :content="aboutContent" hydrate-on-visible />
 
     <LazyHomeShortsSection :content="shortsContent" hydrate-on-visible />
+    <LazyHomeShortsSection v-if="masterClassesShortsContent" :content="masterClassesShortsContent" hydrate-on-visible />
     <LazyHomeGallerySection hydrate-on-visible />
     <LazyHomeFaqSection :content="faqContent" hydrate-on-visible />
     <LazyHomeContactSection hydrate-on-visible />

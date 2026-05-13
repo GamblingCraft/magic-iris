@@ -1,4 +1,5 @@
 import catalogContent from './cms/catalog-content.json'
+import workshopLegacyLayouts from './cms/workshop-legacy-layouts.json'
 
 export type CatalogImage = {
   id: string
@@ -15,6 +16,23 @@ export type PricePoint = {
   label: string
   value: string
   note?: string
+}
+
+export type WorkshopFormatCard = {
+  title: string
+  details: string
+  price: string
+}
+
+export type WorkshopLegacyLayout = {
+  whatTitle: string
+  whatIntro: string
+  whatProcess: string
+  whatMeta: string
+  whatPrice: string
+  whatImages: string[]
+  formatsTitle: string
+  formatCards: WorkshopFormatCard[]
 }
 
 export type ShowProgram = {
@@ -61,6 +79,7 @@ export type WorkshopItem = {
   formats: string[]
   includes: string[]
   pricing: PricePoint[]
+  legacyLayout?: WorkshopLegacyLayout
 }
 
 export type HomeCatalogTile = {
@@ -79,7 +98,10 @@ type RawCatalogContent = {
   workshops: WorkshopItem[]
 }
 
+type WorkshopLegacyLayoutMap = Record<string, WorkshopLegacyLayout>
+
 const cmsCatalog = catalogContent as RawCatalogContent
+const legacyWorkshopLayouts = workshopLegacyLayouts as WorkshopLegacyLayoutMap
 
 export const masterClassesHeroImage = cmsCatalog.masterClassesHeroImage || ''
 
@@ -227,12 +249,14 @@ const normalizeWorkshopItem = (
   categories: Array<Pick<MasterClassCategory, 'slug' | 'title'>>
 ): WorkshopItem => {
   const { participants, descriptionAppendix } = splitWorkshopParticipants(item.participants)
+  const legacyLayout = legacyWorkshopLayouts[item.id]
 
   return {
     ...item,
     audienceLabel: deriveWorkshopAudienceLabel(item.categorySlugs, categories) || item.audienceLabel,
     participants: capitalizeCatalogText(participants || item.participants),
-    description: appendWorkshopDescription(item.description, descriptionAppendix)
+    description: appendWorkshopDescription(item.description, descriptionAppendix),
+    legacyLayout
   }
 }
 

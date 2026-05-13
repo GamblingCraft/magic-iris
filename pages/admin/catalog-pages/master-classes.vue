@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import type { CatalogPagesContent } from '~/data/catalog-pages'
 import { createEmptyCatalogPagesContent } from '~/utils/admin-catalog-pages'
+import { createEmptyShort } from '~/utils/admin-home-content'
 
 definePageMeta({
   layout: 'admin'
 })
 
 const sectionKey = 'masterClasses' as const
-const pageTitle = 'Мастер-классы: hero, текстовый блок и FAQ'
-const pageDescription = 'Редактируйте hero-секцию, текстовый блок и FAQ на странице /master-classes.'
+const pageTitle = 'Мастер-классы: hero, текстовый блок, Shorts и FAQ'
+const pageDescription = 'Редактируйте hero-секцию, текстовый блок, второй блок Shorts и FAQ на странице /master-classes.'
 
 const { data, refresh } = await useFetch<CatalogPagesContent>('/api/admin/catalog-pages', {
   key: `admin-catalog-pages-${sectionKey}`
@@ -18,6 +19,7 @@ const content = ref<CatalogPagesContent>(createEmptyCatalogPagesContent())
 const isSaving = ref(false)
 const isHeroOpen = ref(true)
 const isTextOpen = ref(false)
+const isShortsOpen = ref(false)
 const isFaqOpen = ref(false)
 
 watch(
@@ -32,6 +34,7 @@ watch(
 
 const section = computed(() => content.value[sectionKey])
 const hero = computed(() => section.value.hero)
+const shorts = computed(() => section.value.shorts)
 
 const ensureHeroActions = () => {
   while ((hero.value.actions?.length || 0) < 2) {
@@ -68,6 +71,16 @@ const addFaqItem = () => {
 
 const removeFaqItem = (index: number) => {
   section.value.faq.items.splice(index, 1)
+}
+
+const addShort = () => {
+  if (!shorts.value) return
+  shorts.value.items.push(createEmptyShort())
+}
+
+const removeShort = (index: number) => {
+  if (!shorts.value) return
+  shorts.value.items.splice(index, 1)
 }
 
 const saveContent = async () => {
@@ -194,6 +207,81 @@ const saveContent = async () => {
             <textarea v-model="paragraphsText" class="admin-textarea" />
             <span class="admin-inline-note">Разделяйте абзацы пустой строкой.</span>
           </label>
+        </div>
+      </div>
+
+      <div class="admin-subsection">
+        <div class="admin-card__head">
+          <div>
+            <h4 class="admin-subsection__title">Shorts</h4>
+          </div>
+          <div class="admin-actions admin-actions--inline">
+            <button type="button" class="admin-button admin-button--sand" @click="addShort">
+              Добавить Shorts
+            </button>
+            <button type="button" class="admin-button admin-button--ghost" @click="isShortsOpen = !isShortsOpen">
+              {{ isShortsOpen ? 'Скрыть редактор' : 'Редактировать' }}
+            </button>
+          </div>
+        </div>
+
+        <div v-if="isShortsOpen && shorts" class="admin-inline-group admin-inline-group--stack">
+          <label class="admin-field">
+            <span class="admin-label">Eyebrow</span>
+            <input v-model="shorts.eyebrow" class="admin-input" type="text">
+          </label>
+
+          <label class="admin-field">
+            <span class="admin-label">Заголовок</span>
+            <textarea v-model="shorts.title" class="admin-textarea" />
+          </label>
+
+          <label class="admin-field">
+            <span class="admin-label">Описание</span>
+            <textarea v-model="shorts.description" class="admin-textarea" />
+          </label>
+
+          <div
+            v-for="(item, index) in shorts.items"
+            :key="item.id"
+            class="admin-inline-group admin-inline-group--stack"
+          >
+            <div class="admin-card__head">
+              <div>
+                <h5 class="admin-card__title">Видео {{ index + 1 }}</h5>
+              </div>
+              <button
+                v-if="shorts.items.length > 1"
+                type="button"
+                class="admin-button admin-button--ghost"
+                @click="removeShort(index)"
+              >
+                Удалить
+              </button>
+            </div>
+
+            <label class="admin-field">
+              <span class="admin-label">ID</span>
+              <input v-model="item.id" class="admin-input" type="text">
+            </label>
+
+            <label class="admin-field">
+              <span class="admin-label">Название</span>
+              <input v-model="item.title" class="admin-input" type="text">
+            </label>
+
+            <label class="admin-field">
+              <span class="admin-label">Kinescope videoId</span>
+              <input v-model="item.videoId" class="admin-input" type="text">
+            </label>
+
+            <AdminImageUploadField
+              v-model="item.poster"
+              label="Постер"
+              folder="master-classes"
+              preview-alt="Master classes short poster"
+            />
+          </div>
         </div>
       </div>
 

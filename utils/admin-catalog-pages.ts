@@ -1,5 +1,12 @@
 import type { CatalogPagesContent } from '~/data/catalog-pages'
 
+const createEmptyShort = () => ({
+  id: `short-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+  title: '',
+  videoId: '',
+  poster: ''
+})
+
 export const createEmptyCatalogPagesContent = (): CatalogPagesContent => ({
   shows: {
     hero: {
@@ -50,6 +57,12 @@ export const createEmptyCatalogPagesContent = (): CatalogPagesContent => ({
       title: '',
       lead: '',
       paragraphs: ['']
+    },
+    shorts: {
+      eyebrow: 'Shorts',
+      title: '',
+      description: '',
+      items: [createEmptyShort(), createEmptyShort(), createEmptyShort(), createEmptyShort(), createEmptyShort()]
     },
     faq: {
       eyebrow: 'FAQ',

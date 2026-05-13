@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   deriveWorkshopAudienceLabel,
+  type CatalogImage,
   type MasterClassCategory,
   type ShowProgram,
   type WorkshopItem
@@ -42,6 +43,15 @@ watch(
 
     catalog.value = structuredClone(value)
     workshopDrafts.value = value.workshops.map((item) => toWorkshopDraft(item))
+
+    for (const draft of workshopDrafts.value) {
+      const lead = draft.legacyLayout?.whatIntro?.trim()
+
+      if (lead) {
+        draft.summary = lead
+        draft.description = lead
+      }
+    }
   },
   { immediate: true }
 )
@@ -51,6 +61,116 @@ const categories = computed(() => catalog.value?.masterClassCategories || [])
 const selectedWorkshop = computed(() =>
   workshopDrafts.value.find((item) => item.id === workshopId.value) || null
 )
+
+const ensureLegacyLayout = () => {
+  if (!selectedWorkshop.value) {
+    return null
+  }
+
+  if (!selectedWorkshop.value.legacyLayout) {
+    selectedWorkshop.value.legacyLayout = {
+      whatTitle: 'ЧТО БУДЕТ НА МАСТЕР-КЛАССЕ?',
+      whatIntro: selectedWorkshop.value.summary || '',
+      whatProcess: '',
+      whatMeta: '',
+      whatPrice: '',
+      whatImages: [],
+      formatsTitle: 'ФОРМАТЫ ПРОВЕДЕНИЯ',
+      formatCards: [
+        { title: '????', details: '', price: '' },
+        { title: '????', details: '', price: '' }
+      ]
+    }
+  }
+
+  if (!selectedWorkshop.value.legacyLayout.formatCards?.length) {
+    selectedWorkshop.value.legacyLayout.formatCards = [
+      { title: '????', details: '', price: '' },
+      { title: '????', details: '', price: '' }
+    ]
+  }
+
+  while (selectedWorkshop.value.legacyLayout.formatCards.length < 2) {
+    selectedWorkshop.value.legacyLayout.formatCards.push({ title: '', details: '', price: '' })
+  }
+
+  if (!selectedWorkshop.value.legacyLayout.whatIntro?.trim()) {
+    selectedWorkshop.value.legacyLayout.whatIntro =
+      selectedWorkshop.value.summary?.trim() ||
+      selectedWorkshop.value.description?.trim() ||
+      ''
+  }
+
+  const lead = selectedWorkshop.value.legacyLayout.whatIntro?.trim() || ''
+
+  if (lead) {
+    selectedWorkshop.value.summary = lead
+    selectedWorkshop.value.description = lead
+  }
+
+  return selectedWorkshop.value.legacyLayout
+}
+
+const legacyLayoutDraft = computed(() => ensureLegacyLayout())
+
+watch(
+  () => legacyLayoutDraft.value?.whatIntro,
+  (value) => {
+    if (!selectedWorkshop.value) {
+      return
+    }
+
+    const lead = (value || '').trim()
+    selectedWorkshop.value.summary = lead
+    selectedWorkshop.value.description = lead
+  },
+  { immediate: true }
+)
+
+const setLegacyImagesFromText = (value: string) => {
+  const layout = ensureLegacyLayout()
+
+  if (!layout || !selectedWorkshop.value) {
+    return
+  }
+
+  selectedWorkshop.value.legacyImagesText = value
+  layout.whatImages = value
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
+const legacyGalleryItems = computed<CatalogImage[]>({
+  get() {
+    const layout = ensureLegacyLayout()
+
+    if (!layout) {
+      return []
+    }
+
+    return (layout.whatImages || []).map((src, index) => ({
+      id: `legacy-${index + 1}`,
+      src,
+      alt: `${selectedWorkshop.value?.title || 'Мастер-класс'} — фото ${index + 1}`
+    }))
+  },
+  set(value) {
+    const layout = ensureLegacyLayout()
+
+    if (!layout || !selectedWorkshop.value) {
+      return
+    }
+
+    const urls = (value || [])
+      .map((item) => item.src?.trim() || '')
+      .filter(Boolean)
+
+    layout.whatImages = urls
+    selectedWorkshop.value.legacyImagesText = urls.join('\n')
+  }
+})
+
 
 const audiencePreview = computed(() => {
   if (!selectedWorkshop.value) {
@@ -191,72 +311,48 @@ const removeWorkshop = async () => {
       </div>
 
       <div class="admin-editor__grid">
-        <label class="admin-field">
-          <span class="admin-label">ID</span>
-          <input v-model="selectedWorkshop.id" class="admin-input" type="text">
-        </label>
-
-        <label class="admin-field">
-          <span class="admin-label">Slug</span>
-          <input v-model="selectedWorkshop.slug" class="admin-input" type="text">
-        </label>
-      </div>
-
-      <div class="admin-editor__grid">
-        <label class="admin-field">
-          <span class="admin-label">Название</span>
-          <input v-model="selectedWorkshop.title" class="admin-input" type="text">
-        </label>
-
-        <label class="admin-field">
-          <span class="admin-label">Аудитория</span>
-          <input :value="audiencePreview" class="admin-input" type="text" readonly>
-        </label>
-      </div>
-
-      <div class="admin-editor__grid">
-        <label class="admin-field">
-          <span class="admin-label">Основная категория</span>
-          <select
-            v-model="selectedWorkshop.primaryCategorySlug"
-            class="admin-select"
-            @change="ensurePrimaryCategoryIncluded"
-          >
-            <option v-for="category in categories" :key="category.slug" :value="category.slug">
-              {{ category.title }}
-            </option>
-          </select>
-        </label>
-
-        <label class="admin-field">
-          <span class="admin-label">Участники</span>
-          <input v-model="selectedWorkshop.participants" class="admin-input" type="text">
-        </label>
-      </div>
-
-      <fieldset class="admin-fieldset">
-        <p class="admin-fieldset__legend">Категории</p>
-        <div class="admin-checkbox-grid">
-          <label v-for="category in categories" :key="category.slug" class="admin-check">
-            <input
-              :checked="selectedWorkshop.categorySlugs.includes(category.slug)"
-              type="checkbox"
-              @change="handleCategoryToggle(category.slug, $event)"
-            >
-            <span>{{ category.title }}</span>
-          </label>
-        </div>
-      </fieldset>
-
-      <label class="admin-field">
-        <span class="admin-label">Краткое описание</span>
-        <textarea v-model="selectedWorkshop.summary" class="admin-textarea" />
+      <label v-if="legacyLayoutDraft" class="admin-field">
+        <span class="admin-label">???????? (??????? ? ??????)</span>
+        <textarea v-model="legacyLayoutDraft.whatIntro" class="admin-textarea"></textarea>
       </label>
 
-      <label class="admin-field">
-        <span class="admin-label">Описание</span>
-        <textarea v-model="selectedWorkshop.description" class="admin-textarea" />
-      </label>
+      <div v-if="legacyLayoutDraft" class="admin-editor__grid">
+        <label class="admin-fieldset">
+          <span class="admin-fieldset__legend">Что будет на мастер-классе (по строкам)</span>
+          <textarea v-model="legacyLayoutDraft.whatProcess" class="admin-textarea"></textarea>
+        </label>
+
+        <AdminGalleryEditorField
+          v-model="legacyGalleryItems"
+          label="Фото секции"
+          folder="master-classes"
+          note="Можно добавлять любое количество фото: они попадут в блок «Как мастер-класс выглядит на площадке»."
+        />
+      </div>
+
+      <div v-if="legacyLayoutDraft" class="admin-editor__grid">
+        <label class="admin-fieldset">
+          <span class="admin-fieldset__legend">ГРУППОВОЙ — описание</span>
+          <textarea v-model="legacyLayoutDraft.formatCards[0].details" class="admin-textarea"></textarea>
+        </label>
+
+        <label class="admin-fieldset">
+          <span class="admin-fieldset__legend">ГРУППОВОЙ — стоимость</span>
+          <textarea v-model="legacyLayoutDraft.formatCards[0].price" class="admin-textarea"></textarea>
+        </label>
+      </div>
+
+      <div v-if="legacyLayoutDraft" class="admin-editor__grid">
+        <label class="admin-fieldset">
+          <span class="admin-fieldset__legend">ПОТОКОВЫЙ — описание</span>
+          <textarea v-model="legacyLayoutDraft.formatCards[1].details" class="admin-textarea"></textarea>
+        </label>
+
+        <label class="admin-fieldset">
+          <span class="admin-fieldset__legend">ПОТОКОВЫЙ — стоимость</span>
+          <textarea v-model="legacyLayoutDraft.formatCards[1].price" class="admin-textarea"></textarea>
+        </label>
+      </div>
 
       <div class="admin-editor__grid">
         <AdminImageUploadField
@@ -265,52 +361,7 @@ const removeWorkshop = async () => {
           folder="master-classes"
           preview-alt="Превью мастер-класса"
         />
-
-        <label class="admin-field">
-          <span class="admin-label">Длительность</span>
-          <input v-model="selectedWorkshop.duration" class="admin-input" type="text">
-        </label>
       </div>
-
-      <div class="admin-editor__grid">
-        <label class="admin-field">
-          <span class="admin-label">Цена от</span>
-          <input v-model="selectedWorkshop.priceFrom" class="admin-input" type="text">
-        </label>
-
-        <label class="admin-field">
-          <span class="admin-label">Примечание к цене</span>
-          <input v-model="selectedWorkshop.priceNote" class="admin-input" type="text">
-        </label>
-      </div>
-
-      <div class="admin-editor__grid">
-        <label class="admin-fieldset">
-          <span class="admin-fieldset__legend">Форматы</span>
-          <textarea v-model="selectedWorkshop.formatsText" class="admin-textarea" />
-          <span class="admin-inline-note">По одной строке</span>
-        </label>
-
-        <label class="admin-fieldset">
-          <span class="admin-fieldset__legend">Что входит</span>
-          <textarea v-model="selectedWorkshop.includesText" class="admin-textarea" />
-          <span class="admin-inline-note">По одной строке</span>
-        </label>
-      </div>
-
-      <div class="admin-editor__grid">
-        <label class="admin-fieldset">
-          <span class="admin-fieldset__legend">Цены</span>
-          <textarea v-model="selectedWorkshop.pricingText" class="admin-textarea" />
-          <span class="admin-inline-note">Одна строка: `Лейбл|Цена|Примечание`</span>
-        </label>
-
-        <AdminGalleryEditorField
-          v-model="selectedWorkshop.gallery"
-          label="Галерея"
-          folder="master-classes"
-          note="Загрузите фото для внутренней галереи карточки мастер-класса, настройте порядок и подписи."
-        />
       </div>
     </div>
   </section>

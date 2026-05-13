@@ -4,6 +4,7 @@ import type {
   MasterClassCategory,
   PricePoint,
   ShowProgram,
+  WorkshopLegacyLayout,
   WorkshopItem
 } from '~/data/catalog'
 
@@ -109,6 +110,7 @@ export type PublicWorkshopDetail = Pick<
   | 'participants'
   | 'formats'
   | 'includes'
+  | 'legacyLayout'
 > & {
   gallery: CatalogImage[]
   pricing: PricePoint[]

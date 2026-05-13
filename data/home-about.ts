@@ -61,7 +61,7 @@ export const aboutVideoItems: AboutVideoItem[] = [
   },
   {
     id: 'spinning-portrait',
-    title: 'Крутящийся портрет',
+    title: 'Вращающийся портрет',
     videoId: 'bvSonFzmpz6TtPgTc4KADd',
     poster: 'images/placeholder.webp'
   }

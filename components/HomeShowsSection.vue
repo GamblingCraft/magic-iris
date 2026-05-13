@@ -26,13 +26,13 @@ useGsapReveal(sectionRef, ['.eyebrow', '.catalog-preview__head > *', '.catalog-w
         <div>
           <p class="eyebrow">Шоу</p>
           <h2 class="catalog-preview__title">
-            <strong>Все шоу-программы</strong>
-            <em>для главного момента события</em>
+            <strong>Шоу-программы</strong>
+            <em>которые становятся главным моментом вечера</em>
           </h2>
         </div>
 
         <p class="catalog-preview__lead">
-          Выберите формат для открытия, кульминации, подарочного сюрприза или финального вау-эффекта.
+          Выберите формат для яркого открытия, трогательного сюрприза или эффектного финала мероприятия.
         </p>
       </div>
 

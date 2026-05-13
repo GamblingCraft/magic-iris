@@ -12,6 +12,7 @@ import {
   workshopItems
 } from '~/data/catalog'
 import { getCatalogContent } from '~/server/utils/admin-content'
+import { formatDisplayPrice } from '~/utils/format-price'
 import type { MasterClassCategory, ShowProgram, WorkshopItem } from '~/data/catalog'
 import type {
   CatalogCardItem,
@@ -75,6 +76,39 @@ const toCategoryCard = (category: MasterClassCategory): CatalogCardItem => ({
   productMicrodata: false
 })
 
+const parseWorkshopPriceAmounts = (value?: string) =>
+  (value || '')
+    .match(/\d[\d\s]{0,14}(?=\s*(?:₽|руб\.?))/giu)
+    ?.map((match) => Number.parseInt(match.replace(/\s+/g, ''), 10))
+    .filter((amount) => Number.isFinite(amount) && amount >= 1000) || []
+
+const formatWorkshopPriceAmount = (amount: number) =>
+  amount.toLocaleString('ru-RU').replace(/ /g, ' ')
+
+const resolveWorkshopPrice = (workshop: WorkshopItem) => {
+  const legacySources = [
+    workshop.legacyLayout?.whatPrice || '',
+    ...(workshop.legacyLayout?.formatCards || []).flatMap((card) => [card.details || '', card.price || ''])
+  ]
+
+  const amounts = [
+    ...parseWorkshopPriceAmounts(workshop.priceFrom),
+    ...legacySources.flatMap((source) => parseWorkshopPriceAmounts(source))
+  ]
+
+  if (amounts.length) {
+    return `от ${formatWorkshopPriceAmount(Math.min(...amounts))} ₽`
+  }
+
+  return formatDisplayPrice(workshop.priceFrom || 'По запросу') || 'По запросу'
+}
+
+const resolveWorkshopLead = (workshop: WorkshopItem) =>
+  workshop.legacyLayout?.whatIntro?.trim()
+  || workshop.summary?.trim()
+  || workshop.description?.trim()
+  || ''
+
 const toWorkshopCard = (workshop: WorkshopItem): CatalogCardItem => ({
   id: workshop.id,
   href: createMasterClassHref(workshop.primaryCategorySlug, workshop.slug),
@@ -82,11 +116,11 @@ const toWorkshopCard = (workshop: WorkshopItem): CatalogCardItem => ({
   imageAlt: workshop.title,
   kicker: workshop.audienceLabel,
   title: workshop.title,
-  description: workshop.summary,
-  metaPrimary: workshop.priceFrom,
+  description: resolveWorkshopLead(workshop),
+  metaPrimary: resolveWorkshopPrice(workshop),
   metaLabel: 'Стоимость',
   buttonLabel: 'Открыть',
-  priceValue: workshop.priceFrom,
+  priceValue: resolveWorkshopPrice(workshop),
   productMicrodata: true
 })
 
@@ -109,8 +143,8 @@ const toWorkshopPreview = (workshop: WorkshopItem): WorkshopPreviewItem => ({
   categorySlugs: workshop.categorySlugs,
   audienceLabel: workshop.audienceLabel,
   title: workshop.title,
-  summary: workshop.summary,
-  priceFrom: workshop.priceFrom,
+  summary: resolveWorkshopLead(workshop),
+  priceFrom: resolveWorkshopPrice(workshop),
   image: workshop.image,
   href: createMasterClassHref(workshop.primaryCategorySlug, workshop.slug),
   card: toWorkshopCard(workshop)
@@ -149,7 +183,8 @@ const toPublicWorkshopDetail = (workshop: WorkshopItem): PublicWorkshopDetail =>
   participants: workshop.participants,
   formats: workshop.formats,
   includes: workshop.includes,
-  pricing: workshop.pricing
+  pricing: workshop.pricing,
+  legacyLayout: workshop.legacyLayout
 })
 
 export const getHomeCatalogPayload = async (): Promise<HomeCatalogPayload> => {

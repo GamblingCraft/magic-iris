@@ -1,3 +1,5 @@
+import type { HomeShortsContent } from './home-content'
+
 import catalogPagesRaw from './cms/catalog-pages.json'
 
 export type CatalogPageHeroFact = {
@@ -44,6 +46,7 @@ export type CatalogPageFaqSection = {
 export type CatalogPageSectionContent = {
   hero: CatalogPageHeroSection
   text: CatalogPageTextSection
+  shorts?: HomeShortsContent
   faq: CatalogPageFaqSection
 }
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import type { HomeAboutContent } from '~/data/home-content'
 import { homeAboutContent } from '~/data/home-content'
 
@@ -19,6 +19,7 @@ const keywordsRef = ref<HTMLElement | null>(null)
 const keywordsRowPrimaryRef = ref<HTMLElement | null>(null)
 const keywordsRowSecondaryRef = ref<HTMLElement | null>(null)
 
+const eyebrow = computed(() => aboutContent.value.eyebrow)
 const headline = computed(() => aboutContent.value.headline)
 const subheadingShows = computed(() => aboutContent.value.subheadingShows)
 const subheadingMasterclasses = computed(() => aboutContent.value.subheadingMasterclasses)
@@ -26,6 +27,14 @@ const subheadingForWhom = computed(() => aboutContent.value.subheadingForWhom)
 const lead = computed(() => aboutContent.value.lead)
 const aboutParagraphs = computed(() => aboutContent.value.paragraphs || [])
 const aboutPortrait = computed(() => aboutContent.value.portrait)
+const sandShowText = computed(() => aboutParagraphs.value[0] || '')
+const lightShowText = computed(() => aboutParagraphs.value[1] || '')
+const portraitShowText = computed(() => aboutParagraphs.value[2] || '')
+const masterclassesText = computed(() => aboutParagraphs.value[3] || '')
+const forWhomTextPrimary = computed(() => aboutParagraphs.value[4] || '')
+const forWhomTextSecondary = computed(() => aboutParagraphs.value[5] || '')
+const equipmentText = computed(() => aboutParagraphs.value[6] || '')
+const finalText = computed(() => aboutParagraphs.value[7] || '')
 const keywordRowPrimary = computed(() => [...aboutContent.value.tags, ...aboutContent.value.tags, ...aboutContent.value.tags])
 const keywordRowSecondary = computed(() => [...[...aboutContent.value.tags].reverse(), ...[...aboutContent.value.tags].reverse(), ...[...aboutContent.value.tags].reverse()])
 
@@ -355,7 +364,7 @@ onBeforeUnmount(() => {
 <template>
   <section id="about" ref="sectionRef" class="section about-section">
     <div ref="introRef" class="container about-section__intro">
-      <p class="eyebrow">О нас</p>
+      <p class="eyebrow">{{ eyebrow }}</p>
     </div>
 
     <div ref="stageRef" class="container about-section__stage">
@@ -365,7 +374,6 @@ onBeforeUnmount(() => {
           <div ref="overlayRef" class="about-section__card-overlay" />
 
           <figcaption ref="stageContentRef" class="about-section__card-content">
-            <!-- ТЕПЕРЬ ЭТО H2, А НЕ H3 -->
             <h2 class="about-section__card-title">{{ headline }}</h2>
           </figcaption>
         </figure>
@@ -377,25 +385,27 @@ onBeforeUnmount(() => {
         <p class="about-section__lead">{{ lead }}</p>
 
         <div class="about-section__text">
-          <!-- ПЕРВЫЙ АБЗАЦ — ВВОДНЫЙ -->
-          <p>{{ aboutParagraphs[0] }}</p>
-          <p>{{ aboutParagraphs[1] }}</p>
+          <h2 class="about-section__section-title">{{ subheadingShows }}</h2>
 
-          <!-- ПОДЗАГОЛОВОК H3: ЧТО МЫ СОЗДАЁМ -->
-          <h3 class="about-section__subheading">{{ subheadingShows }}</h3>
-          <p>{{ aboutParagraphs[2] }}</p>
+          <h4 class="about-section__subheading">Песочное шоу</h4>
+          <p>{{ sandShowText }}</p>
 
-          <!-- ПОДЗАГОЛОВОК H3: АВТОРСКИЕ МАСТЕР-КЛАССЫ -->
-          <h3 class="about-section__subheading">{{ subheadingMasterclasses }}</h3>
-          <p>{{ aboutParagraphs[3] }}</p>
+          <h4 class="about-section__subheading">Световое шоу</h4>
+          <p>{{ lightShowText }}</p>
 
-          <!-- ПОДЗАГОЛОВОК H3: ДЛЯ КОГО И КАК МЫ РАБОТАЕМ -->
-          <h3 class="about-section__subheading">{{ subheadingForWhom }}</h3>
-          <p>{{ aboutParagraphs[4] }}</p>
-          <p>{{ aboutParagraphs[5] }}</p>
+          <h4 class="about-section__subheading">Шоу-портреты</h4>
+          <p>{{ portraitShowText }}</p>
 
-          <!-- ЗАКЛЮЧИТЕЛЬНЫЙ АКЦЕНТ (БЕЗ ЗАГОЛОВКА) -->
-          <p class="about-section__conclusion">{{ aboutParagraphs[6] }}</p>
+          <h2 class="about-section__section-title">{{ subheadingMasterclasses }}</h2>
+          <p>{{ masterclassesText }}</p>
+
+          <h2 class="about-section__section-title">{{ subheadingForWhom }}</h2>
+          <p>{{ forWhomTextPrimary }}</p>
+          <p>{{ forWhomTextSecondary }}</p>
+          <p>{{ equipmentText }}</p>
+
+          <h2 class="about-section__section-title">{{ headline }}</h2>
+          <p class="about-section__conclusion">{{ finalText }}</p>
         </div>
       </div>
     </div>
