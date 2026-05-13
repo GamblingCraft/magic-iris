@@ -99,6 +99,12 @@
       </div>
     </div>
   </section>
+  <SubmitSuccessModal
+    :open="isSuccessModalOpen"
+    title="Успешно!"
+    message="Мы свяжемся с вами в течение 15 минут!"
+    @close="isSuccessModalOpen = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -107,11 +113,13 @@ import IMask from 'imask'
 
 import { homeCta } from '~/data/home-conversion'
 import { contactInfo } from '~/data/site'
+import SubmitSuccessModal from '~/components/popup/SubmitSuccessModal.vue'
 
 // состояние
 const phoneInputValue = ref('')
 const consentAccepted = ref(false)
 const isSubmitting = ref(false)
+const isSuccessModalOpen = ref(false)
 
 // маска
 const phoneInput = ref<HTMLInputElement | null>(null)
@@ -149,8 +157,19 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
-    await sendToMaxApi(phoneInputValue.value)
+    const success = await sendToMaxApi(phoneInputValue.value)
 
+    if (success) {
+      isSuccessModalOpen.value = true
+      phoneInputValue.value = ''
+      consentAccepted.value = false
+
+      if (phoneMask) {
+        phoneMask.value = ''
+      }
+    } else {
+      alert('Ошибка отправки. Попробуйте снова.')
+    }
   } finally {
     isSubmitting.value = false
   }
