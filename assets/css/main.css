@@ -10532,6 +10532,56 @@ p {
   }
 }
 
+@media (max-width: 1250px) {
+  .header-bottom--sticky {
+    background: transparent !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+    padding: 10px 0;
+  }
+
+  .site-header--overlay .header-bottom.header-bottom--sticky {
+    background: transparent !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .header-bottom--sticky .header-bottom__logo {
+    display: none;
+  }
+
+  .header-bottom--sticky .header-bottom__right {
+    margin-left: auto;
+  }
+
+  .header-bottom--sticky .burger-button {
+    display: inline-flex;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--salat) !important;
+    box-shadow: 0 10px 24px rgba(16, 11, 21, 0.2);
+  }
+
+  .header-bottom--sticky .burger-button span {
+    left: 50%;
+    background: var(--black) !important;
+    transform: translateX(-50%);
+  }
+
+  .header-bottom--sticky .burger-button span:nth-child(1) {
+    top: 16px;
+  }
+
+  .header-bottom--sticky .burger-button span:nth-child(2) {
+    top: 24px;
+  }
+
+  .header-bottom--sticky .burger-button span:nth-child(3) {
+    top: 32px;
+  }
+}
+
 /* Contacts Hero */
 .contacts-hero {
   position: relative;

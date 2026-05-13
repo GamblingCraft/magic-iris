@@ -27,13 +27,6 @@ const canSend = computed(() =>
   consentAccepted.value && phoneDigits.value.length === 11
 )
 
-const submitHref = computed(() => {
-  const message = encodeURIComponent(
-    `Здравствуйте! Хочу обсудить организацию события с Magic Iris. Телефон: ${phoneInputValue.value}`
-  )
-  return `${contactInfo.whatsapp}?text=${message}`
-})
-
 const sendToMaxApi = async (phone: string): Promise<boolean> => {
   try {
     await $fetch('/api/max-send', {
@@ -56,7 +49,6 @@ const handleSubmit = async () => {
 
   try {
     await sendToMaxApi(phoneInputValue.value)
-    window.open(submitHref.value, '_blank', 'noopener,noreferrer')
   } finally {
     isSubmitting.value = false
   }
