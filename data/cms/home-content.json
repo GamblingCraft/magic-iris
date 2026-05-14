@@ -31,25 +31,25 @@
         "id": "sand-show",
         "title": "Песочное шоу",
         "videoId": "nqqMVMssZAtV7mP6porCg5",
-        "poster": "/images/placeholder.webp"
+        "poster": "/images/home-content/1778680887716-38mn8p-image.webp"
       },
       {
         "id": "light-show",
-        "title": "Световое шоу",
+        "title": "Рисование светом",
         "videoId": "016uV7wzT71WAUbPV5n7HQ",
-        "poster": "/images/placeholder.webp"
+        "poster": "/images/home-content/1778680893196-qdt3uy-image.webp"
       },
       {
         "id": "portrait-show",
         "title": "Шоу-портреты",
         "videoId": "bvSonFzmpz6TtPgTc4KADd",
-        "poster": "/images/placeholder.webp"
+        "poster": "/images/home-content/1778680903262-vbo9n4-image.webp"
       },
       {
         "id": "spinning-portrait",
         "title": " Вращающийся портрет",
         "videoId": "gJwZ6zjzQ8GMQCS8VbXR2S",
-        "poster": "/images/placeholder.webp"
+        "poster": "/images/home-content/1778680908283-e0rz1v-image.webp"
       }
     ]
   },

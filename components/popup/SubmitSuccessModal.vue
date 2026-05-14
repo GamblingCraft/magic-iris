@@ -42,8 +42,6 @@ const closeModal = () => {
             <span />
             <span />
           </button>
-
-          <div class="submit-success-modal__badge">Успешно</div>
           <h3 class="submit-success-modal__title">{{ props.title }}</h3>
           <p class="submit-success-modal__text">{{ props.message }}</p>
 
