@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 import type { SiteHeadSettings } from '~/data/site-seo'
-import { resolveYandexMetrikaHead } from '~/data/site-seo'
+import { resolveCompanyJsonLd, resolveYandexMetrikaHead } from '~/data/site-seo'
 
 const { data: headSettings } = await useFetch<SiteHeadSettings>('/api/site/head-settings', {
   key: 'site-head-settings'
@@ -9,6 +9,9 @@ const { data: headSettings } = await useFetch<SiteHeadSettings>('/api/site/head-
 const isMetrikaReady = ref(false)
 const metrikaHead = computed(() =>
   resolveYandexMetrikaHead(headSettings.value?.yandexMetrikaCounter || '')
+)
+const companyJsonLd = computed(() =>
+  resolveCompanyJsonLd(headSettings.value?.companyJsonLd || '')
 )
 
 onMounted(() => {
@@ -47,16 +50,24 @@ useHead(() => {
     })
   }
 
+  const script = [
+    {
+      key: 'company-json-ld',
+      type: 'application/ld+json',
+      innerHTML: companyJsonLd.value
+    }
+  ]
+
+  if (isMetrikaReady.value && metrikaHead.value.script) {
+    script.push({
+      key: 'yandex-metrika',
+      innerHTML: metrikaHead.value.script
+    })
+  }
+
   return {
     meta,
-    script: isMetrikaReady.value && metrikaHead.value.script
-      ? [
-          {
-            key: 'yandex-metrika',
-            innerHTML: metrikaHead.value.script
-          }
-        ]
-      : [],
+    script,
     noscript: isMetrikaReady.value && metrikaHead.value.noscript
       ? [
           {

@@ -25,12 +25,13 @@ export type SiteSeoSettings = {
   yandexVerification: string
   googleVerification: string
   yandexMetrikaCounter: string
+  companyJsonLd: string
   robotsContent: string
 }
 
 export type SiteHeadSettings = Pick<
   SiteSeoSettings,
-  'yandexVerification' | 'googleVerification' | 'yandexMetrikaCounter'
+  'yandexVerification' | 'googleVerification' | 'yandexMetrikaCounter' | 'companyJsonLd'
 >
 
 type SeoVars = Record<string, string | number | undefined | null>
@@ -142,6 +143,48 @@ export const getResolvedRobotsTxt = () =>
 const extractTagInnerHtml = (snippet: string, tagName: 'script' | 'noscript') => {
   const match = snippet.match(new RegExp(`<${tagName}[^>]*>([\\s\\S]*?)<\\/${tagName}>`, 'iu'))
   return match?.[1]?.trim() || ''
+}
+
+const buildDefaultCompanyJsonLd = () => ({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteSeoSettings.siteName,
+  url: normalizeSiteUrl(siteSeoSettings.siteUrl)
+})
+
+const normalizeJsonLdSnippet = (snippet: string) => {
+  const normalizedSnippet = snippet.trim()
+
+  if (!normalizedSnippet) {
+    return ''
+  }
+
+  if (/<script\b/iu.test(normalizedSnippet)) {
+    return extractTagInnerHtml(normalizedSnippet, 'script')
+  }
+
+  return normalizedSnippet
+}
+
+export const resolveCompanyJsonLd = (snippet: string) => {
+  const normalizedSnippet = normalizeJsonLdSnippet(snippet)
+
+  if (!normalizedSnippet) {
+    return JSON.stringify(buildDefaultCompanyJsonLd())
+  }
+
+  try {
+    const parsed = JSON.parse(normalizedSnippet) as unknown
+
+    if (typeof parsed === 'object' && parsed !== null) {
+      return JSON.stringify(parsed)
+    }
+  }
+  catch {
+    // fallback to default Organization JSON-LD when editor content is invalid
+  }
+
+  return JSON.stringify(buildDefaultCompanyJsonLd())
 }
 
 export const resolveYandexMetrikaHead = (snippet: string) => {

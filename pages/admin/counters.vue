@@ -19,7 +19,9 @@ watch(
       return
     }
 
-    seoSettings.value = structuredClone(value)
+    const nextSettings = structuredClone(value)
+    nextSettings.companyJsonLd = nextSettings.companyJsonLd || ''
+    seoSettings.value = nextSettings
   },
   { immediate: true }
 )
@@ -99,6 +101,19 @@ const saveCounters = async () => {
         <span class="admin-inline-note">
           Можно вставить полный код Метрики со script и noscript. Система сама выделит нужный
           script для head.
+        </span>
+      </label>
+
+      <label class="admin-field">
+        <span class="admin-label">LD+JSON компании</span>
+        <textarea
+          v-model="seoSettings.companyJsonLd"
+          class="admin-textarea admin-textarea--code"
+          placeholder='{"@context":"https://schema.org","@type":"Organization","name":"Magic Iris","url":"https://magiciris.ru"}'
+        />
+        <span class="admin-inline-note">
+          Вставьте JSON-LD без тега script. Если поле пустое или JSON невалиден, будет использован
+          базовый Organization (название и URL сайта).
         </span>
       </label>
     </div>

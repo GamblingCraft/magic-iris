@@ -6,6 +6,7 @@ export default defineEventHandler(async () => {
   return {
     yandexVerification: seoSettings.yandexVerification || '',
     googleVerification: seoSettings.googleVerification || '',
-    yandexMetrikaCounter: seoSettings.yandexMetrikaCounter || ''
+    yandexMetrikaCounter: seoSettings.yandexMetrikaCounter || '',
+    companyJsonLd: seoSettings.companyJsonLd || ''
   }
 })

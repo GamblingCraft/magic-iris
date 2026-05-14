@@ -53,7 +53,7 @@ const featuredProgram = computed(() => showPrograms[0])
           <div class="footer__col__phone-actions">
             <a class="footer__phone" :href="`tel:${contactInfo.phoneRaw}`">{{ contactInfo.phoneDisplay }}</a>
             <br>
-            <span class="footer_address">Иркутск, ул.Дзержинского 8Б</span>
+            <span class="footer__address">Иркутск, ул.Дзержинского 8Б</span>
             <a
               class="button button--accent btn footer__callback"
               :href="contactInfo.max || contactInfo.whatsapp"
@@ -193,6 +193,21 @@ const featuredProgram = computed(() => showPrograms[0])
   text-decoration: none;
 }
 
+.footer__col__phone-actions {
+  width: 100%;
+}
+
+.footer__address,
+.footer_address {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .button--accent {
   background: var(--salat, #b7d968);
   color: #1a1a1a;
@@ -298,6 +313,23 @@ const featuredProgram = computed(() => showPrograms[0])
   .footer {
     grid-template-columns: 1fr;
     gap: 32px;
+  }
+
+  .footer__col--last {
+    align-items: center;
+  }
+
+  .footer__col__phone-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer__phone,
+  .footer__address,
+  .footer_address {
+    text-align: center;
   }
   
   .footer-bottom {
