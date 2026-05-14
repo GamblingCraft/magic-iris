@@ -157,7 +157,7 @@ const saveSeo = async () => {
             <span class="admin-label">Description template</span>
             <textarea v-model="seoSettings.workshop.descriptionTemplate" class="admin-textarea" />
           </label>
-          <span class="admin-inline-note">Доступно: {title}, {category}, {summary}, {description}, {audience}, {priceFrom}, {city}, {brand}</span>
+          <span class="admin-inline-note">Доступно: {title}, {category}, {summary}, {description}, {audience}, {priceFrom}, {price}, {city}, {brand}</span>
         </label>
       </div>
     </div>

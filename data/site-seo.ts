@@ -1,5 +1,6 @@
 import siteSeoContent from './cms/site-seo.json'
 import type { MasterClassCategory, ShowProgram, WorkshopItem } from './catalog'
+import { extractPriceAmount, formatDisplayPrice } from '~/utils/format-price'
 
 type SeoBlock = {
   title: string
@@ -72,8 +73,54 @@ type MasterClassCategorySeoSource = Pick<
 >
 type WorkshopSeoSource = Pick<
   WorkshopItem,
-  'title' | 'audienceLabel' | 'summary' | 'description' | 'priceFrom'
+  'title' | 'audienceLabel' | 'summary' | 'description' | 'priceFrom' | 'pricing' | 'legacyLayout'
 >
+
+const parseSeoPriceAmounts = (value?: string) =>
+  (value || '')
+    .match(/\d[\d\s]{0,14}(?=\s*(?:₽|руб\.?))/giu)
+    ?.map((match) => Number.parseInt(match.replace(/\s+/g, ''), 10))
+    .filter((amount) => Number.isFinite(amount) && amount >= 1000) || []
+
+const formatSeoPriceAmount = (amount: number) =>
+  amount.toLocaleString('ru-RU').replace(/\u00A0/g, ' ')
+
+const resolveWorkshopSeoPrice = (workshop: WorkshopSeoSource) => {
+  const pricingSources = (workshop.pricing || []).flatMap((point) => [
+    point.value || '',
+    point.note || ''
+  ])
+
+  const legacySources = [
+    workshop.legacyLayout?.whatPrice || '',
+    ...(workshop.legacyLayout?.formatCards || []).flatMap((card) => [
+      card.details || '',
+      card.price || ''
+    ])
+  ]
+
+  const amounts = [
+    ...parseSeoPriceAmounts(workshop.priceFrom),
+    ...pricingSources.flatMap((source) => parseSeoPriceAmounts(source)),
+    ...legacySources.flatMap((source) => parseSeoPriceAmounts(source))
+  ]
+
+  if (amounts.length) {
+    const minAmount = Math.min(...amounts)
+
+    return {
+      priceFrom: `от ${formatSeoPriceAmount(minAmount)} ₽`,
+      price: String(minAmount)
+    }
+  }
+
+  const fallbackPriceFrom = formatDisplayPrice(workshop.priceFrom || '') || workshop.priceFrom || ''
+
+  return {
+    priceFrom: fallbackPriceFrom,
+    price: extractPriceAmount(fallbackPriceFrom)
+  }
+}
 
 export const getShowSeo = (show: ShowSeoSource) => {
   const vars = {
@@ -117,13 +164,17 @@ export const getWorkshopSeo = (
   workshop: WorkshopSeoSource,
   category?: MasterClassCategorySeoSource | null
 ) => {
+  const workshopPrice = resolveWorkshopSeoPrice(workshop)
+
   const vars = {
     title: workshop.title,
     category: category?.title || workshop.audienceLabel,
     summary: workshop.summary,
     description: workshop.description,
     audience: workshop.audienceLabel,
-    priceFrom: workshop.priceFrom,
+    priceFrom: workshopPrice.priceFrom,
+    price: workshopPrice.price,
+    pricefrom: workshopPrice.priceFrom,
     city: siteSeoSettings.city,
     brand: siteSeoSettings.siteName
   }
