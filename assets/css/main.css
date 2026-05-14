@@ -13471,3 +13471,14 @@ h3,
     -webkit-line-clamp: 10;
   }
 }
+.footer-address {
+  display: block;
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}

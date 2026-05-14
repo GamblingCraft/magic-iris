@@ -52,6 +52,8 @@ const featuredProgram = computed(() => showPrograms[0])
         <div class="footer__col footer__col--last">
           <div class="footer__col__phone-actions">
             <a class="footer__phone" :href="`tel:${contactInfo.phoneRaw}`">{{ contactInfo.phoneDisplay }}</a>
+            <br>
+            <span class="footer_address">Иркутск, ул.Дзержинского 8Б</span>
             <a
               class="button button--accent btn footer__callback"
               :href="contactInfo.max || contactInfo.whatsapp"
@@ -84,7 +86,7 @@ const featuredProgram = computed(() => showPrograms[0])
                 <span>Telegram</span>
               </a>
 
-              <!-- MAX (вместо WhatsApp) -->
+              <!-- MAX  -->
               <a class="footer__messenger" :href="contactInfo.max || contactInfo.whatsapp" target="_blank" rel="noreferrer">
                 <svg width="18" height="18" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M41.6748 20.8374C41.6748 9.32922 32.3456 0 20.8374 0C9.32922 0 0 9.32922 0 20.8374C0 32.3456 9.32922 41.6748 20.8374 41.6748C32.3456 41.6748 41.6748 32.3456 41.6748 20.8374Z" fill="url(#paint_max_footer)"/>

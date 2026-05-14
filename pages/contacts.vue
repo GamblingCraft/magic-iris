@@ -146,6 +146,9 @@
         </div>
       </div>
     </section>
+
+        <!-- СTA -->
+  <LazyHomeContactSection hydrate-on-visible />
   </main>
 </template>
 
