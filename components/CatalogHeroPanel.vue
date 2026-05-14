@@ -167,11 +167,6 @@ const displayTags = computed(() => {
       </component>
       <p v-if="displayLead" class="catalog-hero-panel__lead">{{ displayLead }}</p>
       <p v-if="displayDescription" class="catalog-hero-panel__copy">{{ displayDescription }}</p>
-
-      <div v-if="displayTags.length" class="catalog-hero-panel__tags">
-        <span v-for="tag in displayTags" :key="tag">{{ tag }}</span>
-      </div>
-
       <div v-if="facts.length" class="catalog-hero-panel__facts">
         <div v-for="fact in facts" :key="fact.label" class="catalog-hero-panel__fact">
           <span>{{ fact.label }}</span>

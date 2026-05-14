@@ -243,6 +243,14 @@ const handleCategoryToggle = (slug: string, event: Event) => {
   toggleCategory(slug, Boolean(target?.checked))
 }
 
+watch(
+  () => selectedWorkshop.value?.primaryCategorySlug,
+  () => {
+    ensurePrimaryCategoryIncluded()
+  },
+  { immediate: true }
+)
+
 const saveWorkshop = async () => {
   if (!catalog.value) {
     return
@@ -311,8 +319,57 @@ const removeWorkshop = async () => {
       </div>
 
       <div class="admin-editor__grid">
+        <label class="admin-field">
+          <span class="admin-label">Название</span>
+          <input v-model="selectedWorkshop.title" class="admin-input" type="text">
+        </label>
+
+        <label class="admin-field">
+          <span class="admin-label">Slug</span>
+          <input v-model="selectedWorkshop.slug" class="admin-input" type="text">
+        </label>
+      </div>
+
+      <div class="admin-editor__grid">
+        <label class="admin-field">
+          <span class="admin-label">Главная категория</span>
+          <select
+            v-model="selectedWorkshop.primaryCategorySlug"
+            class="admin-select"
+            @change="ensurePrimaryCategoryIncluded"
+          >
+            <option
+              v-for="category in categories"
+              :key="category.id"
+              :value="category.slug"
+            >
+              {{ category.title }}
+            </option>
+          </select>
+        </label>
+
+        <label class="admin-field">
+          <span class="admin-label">Подпись категорий</span>
+          <input :value="audiencePreview" class="admin-input" type="text" readonly>
+        </label>
+      </div>
+
+      <label class="admin-fieldset">
+        <span class="admin-fieldset__legend">Категории</span>
+        <div class="admin-checkbox-grid">
+          <label v-for="category in categories" :key="category.id" class="admin-check">
+            <input
+              type="checkbox"
+              :checked="selectedWorkshop.categorySlugs.includes(category.slug)"
+              @change="handleCategoryToggle(category.slug, $event)"
+            >
+            <span>{{ category.title }}</span>
+          </label>
+        </div>
+      </label>
+
       <label v-if="legacyLayoutDraft" class="admin-field">
-        <span class="admin-label">описание</span>
+        <span class="admin-label">Описание</span>
         <textarea v-model="legacyLayoutDraft.whatIntro" class="admin-textarea"></textarea>
       </label>
 
@@ -361,7 +418,6 @@ const removeWorkshop = async () => {
           folder="master-classes"
           preview-alt="Превью мастер-класса"
         />
-      </div>
       </div>
     </div>
   </section>

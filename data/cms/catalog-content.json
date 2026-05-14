@@ -485,13 +485,12 @@
       "id": "workshop-004",
       "slug": "belosnezhnyy-dekorativnyy-venok",
       "title": "Белоснежный декоративный венок",
-      "primaryCategorySlug": "v-shkolu",
+      "primaryCategorySlug": "dlya-zhenshchin",
       "categorySlugs": [
         "dlya-zhenshchin",
-        "dlya-muzhchin",
-        "v-shkolu"
+        "novogodnie"
       ],
-      "audienceLabel": "Для женщин · Для мужчин · В школу",
+      "audienceLabel": "Для женщин · Новогодние",
       "summary": "Интерьерный мастер-класс, где участники создают стильный новогодний венок в светлой, элегантной палитре.",
       "description": "Интерьерный мастер-класс, где участники создают стильный новогодний венок в светлой, элегантной палитре.",
       "priceFrom": "от 36 000 ₽",
