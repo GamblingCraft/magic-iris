@@ -133,33 +133,33 @@
       "items": [
         {
           "id": "master-short-1",
-          "title": "Мастер-класс 01",
-          "videoId": "",
-          "poster": "/images/placeholder.webp"
+          "title": "Арт-йога",
+          "videoId": "7rcXUp38i1sYV4A6bJCqVt",
+          "poster": "/images/master-classes/1778729152628-dk4xum-_.png"
         },
         {
           "id": "master-short-2",
-          "title": "Мастер-класс 02",
-          "videoId": "",
-          "poster": "/images/placeholder.webp"
+          "title": "Браслеты из бусин",
+          "videoId": "5UGX1196Jd3VjY3XhEz5FZ",
+          "poster": "/images/master-classes/1778729190675-cmdfq5-image.png"
         },
         {
           "id": "master-short-3",
-          "title": "Мастер-класс 03",
-          "videoId": "",
-          "poster": "/images/placeholder.webp"
+          "title": "Интерьерная картина",
+          "videoId": "hJLX18F3UJTiM7uKD3um2r",
+          "poster": "/images/master-classes/1778729205462-jqe1qm-image.png"
         },
         {
           "id": "master-short-4",
-          "title": "Мастер-класс 04",
-          "videoId": "",
-          "poster": "/images/placeholder.webp"
+          "title": "Роспись шопера",
+          "videoId": "https://kinescope.io/3hfDUQbnfDqaYbp2G6wPrL",
+          "poster": "/images/master-classes/1778729226737-wfjk2k-image.png"
         },
         {
           "id": "master-short-5",
-          "title": "Мастер-класс 05",
-          "videoId": "",
-          "poster": "/images/placeholder.webp"
+          "title": "Свечи из вощины",
+          "videoId": "rvmpwKMVd1Nz8a2Rc8VJbb",
+          "poster": "/images/master-classes/1778729272848-11inbr-image.png"
         }
       ]
     },
