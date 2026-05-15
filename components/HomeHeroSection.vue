@@ -21,6 +21,8 @@ const slides = homeHeroSlides.length ? homeHeroSlides : [
 const activeIndex = ref(0)
 
 const activeSlide = computed(() => slides[activeIndex.value] || slides[0])
+const ctaHref = computed(() => activeSlide.value?.buttonHref || '/#contacts')
+const ctaIsExternal = computed(() => /^(https?:)?\/\//.test(ctaHref.value) || ctaHref.value.startsWith('mailto:') || ctaHref.value.startsWith('tel:'))
 
 const goToSlide = (index: number) => {
   if (!slides.length) {
@@ -87,9 +89,9 @@ onBeforeUnmount(stopAutoplay)
         <div class="hero__cta">
           <a
             class="button button--accent btn hero__button"
-            :href="activeSlide.buttonHref || contactInfo.whatsapp"
-            target="_blank"
-            rel="noreferrer"
+            :href="ctaHref"
+            :target="ctaIsExternal ? '_blank' : undefined"
+            :rel="ctaIsExternal ? 'noreferrer' : undefined"
           >
             <span>{{ activeSlide.buttonLabel }}</span>
           </a>

@@ -23,8 +23,29 @@ const scenarioContent = computed(() => homeContent.value?.scenario || null)
 const shortsContent = computed(() => homeContent.value?.shorts || null)
 const masterClassesShortsContent = computed(() => catalogPages.value?.masterClasses?.shorts || null)
 const faqContent = computed(() => homeContent.value?.faq || null)
+const faqItems = computed(() => faqContent.value?.items || [])
 const aboutContent = computed(() => homeContent.value?.about || null)
 const heroOgImage = computed(() => homeHeroSlides[0]?.image || '/images/hero.webp')
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      children: computed(() => JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqItems.value.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer
+          }
+        }))
+      }))
+    }
+  ]
+})
 
 usePageSeo(
   computed(() => ({
