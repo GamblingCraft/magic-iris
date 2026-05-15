@@ -36,7 +36,23 @@ export const contactInfo = {
   telegram: 'https://t.me/iris_magic',
   whatsapp: 'https://wa.me/79500524892',
   vk: 'https://vk.com/iris_show',
-  max: 'https://max.ru/241934919'
+  max: 'https://max.ru/join/hmVJuIDZUM752av3jRPyb3moQXSFu4H3T1PTLHjNn-Y'
+}
+
+export const mobileMenuContacts = {
+  telegram: 'http://t.me/irina_iris_show',
+  max: 'https://max.ru/u/f9LHodD0cOLqIy6aflG2Tgww5d-29dAxdwKp3zFDV3fRDoKWGMUVhadYq8Y'
+}
+
+export const footerContacts = {
+  telegram: 'https://t.me/iris_magic',
+  vk: 'https://vk.com/iris_show',
+  max: 'https://max.ru/join/hmVJuIDZUM752av3jRPyb3moQXSFu4H3T1PTLHjNn-Y'
+}
+
+export const contactsPageContacts = {
+  telegram: 'http://t.me/irina_iris_show',
+  max: 'https://max.ru/u/f9LHodD0cOLqIy6aflG2Tgww5d-29dAxdwKp3zFDV3fRDoKWGMUVhadYq8Y'
 }
 
 export const heroHighlights = [

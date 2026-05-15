@@ -72,7 +72,7 @@
               <div class="messengers-list">
                 <!-- Telegram -->
                 <a
-                  :href="contactInfo.telegram"
+                  :href="contactsPageContacts.telegram"
                   class="messenger-btn messenger-btn--tg"
                   target="_blank"
                   rel="noreferrer"
@@ -97,7 +97,7 @@
 
                 <!-- MAX -->
                 <a
-                  :href="contactInfo.max || contactInfo.whatsapp"
+                  :href="contactsPageContacts.max"
                   class="messenger-btn messenger-btn--max"
                   target="_blank"
                   rel="noreferrer"
@@ -153,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import { contactInfo } from '~/data/site'
+import { contactInfo, contactsPageContacts } from '~/data/site'
 
 const breadcrumbs = [
   { label: 'Главная', href: '/' },

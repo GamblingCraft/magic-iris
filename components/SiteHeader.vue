@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import { contactInfo, mainNavigation, showPrograms } from '~/data/site'
+import { contactInfo, mainNavigation, mobileMenuContacts, showPrograms } from '~/data/site'
 
 const menuOpen = ref(false)
 const promoVisible = ref(true)
@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
 
                 <div class="mobile-menu__socials">
                   <a
-                    :href="contactInfo.max || contactInfo.whatsapp"
+                    :href="mobileMenuContacts.max"
                     class="mobile-menu__social"
                     target="_blank"
                     rel="noreferrer"
@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
                   </a>
 
                   <a
-                    :href="contactInfo.telegram"
+                    :href="mobileMenuContacts.telegram"
                     class="mobile-menu__social"
                     target="_blank"
                     rel="noreferrer"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { contactInfo, footerColumns, showPrograms } from '~/data/site'
+import { contactInfo, contactsPageContacts, footerColumns, footerContacts, showPrograms } from '~/data/site'
 
 const featuredProgram = computed(() => showPrograms[0])
 </script>
@@ -56,7 +56,7 @@ const featuredProgram = computed(() => showPrograms[0])
             <span class="footer__address">Иркутск, ул.Дзержинского 8Б</span>
             <a
               class="button button--accent btn footer__callback"
-              :href="contactInfo.max || contactInfo.whatsapp"
+              :href="footerContacts.max"
               target="_blank"
               rel="noreferrer"
             >
@@ -67,7 +67,7 @@ const featuredProgram = computed(() => showPrograms[0])
           <div class="footer__col__bottom">
             <div class="footer__messengers">
               <!-- Telegram -->
-              <a class="footer__messenger" :href="contactInfo.telegram" target="_blank" rel="noreferrer">
+              <a class="footer__messenger" :href="footerContacts.telegram" target="_blank" rel="noreferrer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 33 32" fill="none">
                   <g clip-path="url(#clip_tg_footer)">
                     <path d="M16.5 0C12.2575 0 8.185 1.68675 5.1875 4.68625C2.18693 7.68696 0.500859 11.7565 0.5 16C0.5 20.2417 2.1875 24.3142 5.1875 27.3137C8.185 30.3132 12.2575 32 16.5 32C20.7425 32 24.815 30.3132 27.8125 27.3137C30.8125 24.3142 32.5 20.2417 32.5 16C32.5 11.7583 30.8125 7.68575 27.8125 4.68625C24.815 1.68675 20.7425 0 16.5 0Z" fill="url(#paint_tg_footer)"/>
@@ -87,7 +87,7 @@ const featuredProgram = computed(() => showPrograms[0])
               </a>
 
               <!-- MAX  -->
-              <a class="footer__messenger" :href="contactInfo.max || contactInfo.whatsapp" target="_blank" rel="noreferrer">
+              <a class="footer__messenger" :href="footerContacts.max" target="_blank" rel="noreferrer">
                 <svg width="18" height="18" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M41.6748 20.8374C41.6748 9.32922 32.3456 0 20.8374 0C9.32922 0 0 9.32922 0 20.8374C0 32.3456 9.32922 41.6748 20.8374 41.6748C32.3456 41.6748 41.6748 32.3456 41.6748 20.8374Z" fill="url(#paint_max_footer)"/>
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M21.0498 30.6693C19.1091 30.6693 18.2071 30.3847 16.6393 29.2465C15.6477 30.527 12.5074 31.5278 12.3704 29.8156C12.3704 28.5303 12.0871 27.4443 11.766 26.2586C11.3835 24.7978 10.949 23.1711 10.949 20.814C10.949 15.1843 15.5485 10.949 20.998 10.949C26.452 10.949 30.7257 15.393 30.7257 20.866C30.744 26.2546 26.415 30.6406 21.0498 30.6693ZM21.1302 15.8151C18.4763 15.6775 16.4079 17.5224 15.9499 20.4156C15.572 22.8106 16.2426 25.7274 16.8141 25.8791C17.088 25.9456 17.7774 25.3859 18.2071 24.9543C18.9176 25.4473 19.7451 25.7434 20.606 25.8127C23.3559 25.9456 25.7055 23.8431 25.8901 21.0843C25.9976 18.3196 23.8804 15.978 21.1302 15.8199V15.8151Z" fill="white"/>
@@ -102,7 +102,7 @@ const featuredProgram = computed(() => showPrograms[0])
               </a>
 
               <!-- VK -->
-              <a class="footer__messenger" :href="contactInfo.vk" target="_blank" rel="noreferrer">
+              <a class="footer__messenger" :href="footerContacts.vk" target="_blank" rel="noreferrer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <path d="M22.162 5.656c.132-.412 0-.656-.54-.656H19.27c-.453 0-.663.236-.78.495 0 0-1.498 3.594-2.132 4.396-.41.428-.598.564-.822.564-.112 0-.274-.136-.274-.548V5.656c0-.44-.12-.656-.518-.656h-3.16c-.288 0-.462.21-.462.41 0 .43.654.53.72 1.74v2.63c0 .576-.104.68-.332.68-.598 0-2.05-2.18-2.91-4.672-.17-.488-.34-.668-.79-.668H5.63c-.508 0-.61.236-.61.495 0 .464.614 2.766 2.86 5.81 1.494 2.115 3.6 3.26 5.52 3.26 1.15 0 1.29-.258 1.29-.704v-1.624c0-.484.102-.582.444-.582.252 0 .684.126 1.694 1.094 1.152 1.152 1.342 1.668 1.99 1.668h2.474c.508 0 .762-.258.616-.766-.16-.502-.74-1.23-1.506-2.094-.426-.498-1.064-1.034-1.26-1.302-.27-.352-.192-.508 0-.822.004 0 2.2-3.096 2.43-4.146z" fill="#0077FF"/>
                 </svg>
@@ -122,8 +122,8 @@ const featuredProgram = computed(() => showPrograms[0])
           {{ contactInfo.siteName || 'Magic Iris' }} · шоу и мастер-классы для свадеб, корпоративов, городских событий и камерных праздников.
         </p>
         <p>{{ contactInfo.city || 'Иркутск' }} · выездной формат · сервис и техника под ключ.</p>
-        <a :href="contactInfo.max || contactInfo.whatsapp" target="_blank" rel="noreferrer">Написать в MAX</a>
-        <a :href="contactInfo.telegram" target="_blank" rel="noreferrer">Написать в Telegram</a>
+        <a :href="contactsPageContacts.max" target="_blank" rel="noreferrer">Написать в MAX</a>
+        <a :href="contactsPageContacts.telegram" target="_blank" rel="noreferrer">Написать в Telegram</a>
       </div>
     </div>
   </footer>
