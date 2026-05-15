@@ -1,5 +1,6 @@
 import siteSeoContent from './cms/site-seo.json'
 import type { MasterClassCategory, ShowProgram, WorkshopItem } from './catalog'
+import { resolveShowPriceFromPricing } from './catalog'
 import { extractPriceAmount, formatDisplayPrice } from '~/utils/format-price'
 
 type SeoBlock = {
@@ -66,7 +67,7 @@ export const getHomeSeo = () =>
 export const getShowsIndexSeo = () =>
   resolveSeoBlock(siteSeoSettings.showsIndex.title, siteSeoSettings.showsIndex.description)
 
-type ShowSeoSource = Pick<ShowProgram, 'title' | 'kicker' | 'lead' | 'description'>
+type ShowSeoSource = Pick<ShowProgram, 'title' | 'kicker' | 'lead' | 'description' | 'pricing'>
 type MasterClassCategorySeoSource = Pick<
   MasterClassCategory,
   'title' | 'count' | 'description' | 'lead'
@@ -123,11 +124,16 @@ const resolveWorkshopSeoPrice = (workshop: WorkshopSeoSource) => {
 }
 
 export const getShowSeo = (show: ShowSeoSource) => {
+  const showPriceFrom = resolveShowPriceFromPricing(show.pricing || [])
+
   const vars = {
     title: show.title,
     kicker: show.kicker,
     lead: show.lead,
     description: show.description,
+    priceFrom: showPriceFrom,
+    price: extractPriceAmount(showPriceFrom),
+    pricefrom: showPriceFrom,
     city: siteSeoSettings.city,
     brand: siteSeoSettings.siteName
   }

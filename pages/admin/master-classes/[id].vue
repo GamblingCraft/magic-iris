@@ -11,6 +11,10 @@ import {
   toWorkshopDraft,
   type WorkshopDraft
 } from '~/utils/admin-editor'
+import {
+  normalizeWorkshopLegacyMultilineText,
+  normalizeWorkshopProcessText
+} from '~/utils/workshop-legacy'
 
 definePageMeta({
   layout: 'admin'
@@ -50,6 +54,34 @@ watch(
       if (lead) {
         draft.summary = lead
         draft.description = lead
+      }
+
+      if (draft.legacyLayout?.whatProcess) {
+        draft.legacyLayout.whatProcess = normalizeWorkshopProcessText(
+          draft.legacyLayout.whatProcess
+        )
+      }
+
+      if (draft.legacyLayout?.whatMeta) {
+        draft.legacyLayout.whatMeta = normalizeWorkshopLegacyMultilineText(
+          draft.legacyLayout.whatMeta
+        )
+      }
+
+      if (draft.legacyLayout?.whatPrice) {
+        draft.legacyLayout.whatPrice = normalizeWorkshopLegacyMultilineText(
+          draft.legacyLayout.whatPrice
+        )
+      }
+
+      for (const card of draft.legacyLayout?.formatCards || []) {
+        if (card.details) {
+          card.details = normalizeWorkshopLegacyMultilineText(card.details)
+        }
+
+        if (card.price) {
+          card.price = normalizeWorkshopLegacyMultilineText(card.price)
+        }
       }
     }
   },

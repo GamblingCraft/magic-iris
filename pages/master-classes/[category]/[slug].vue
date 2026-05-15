@@ -4,6 +4,7 @@ import { getWorkshopSeo } from '~/data/site-seo'
 import type { CatalogImage } from '~/data/catalog'
 import type { WorkshopDetailPayload } from '~/types/public-catalog'
 import { formatDisplayPrice } from '~/utils/format-price'
+import { splitWorkshopProcessItems } from '~/utils/workshop-legacy'
 
 const route = useRoute()
 const categorySlug = String(route.params.category)
@@ -54,41 +55,7 @@ const toLegacyListItems = (value?: string) =>
     .map((item) => item.trim())
     .filter(Boolean)
 
-const toProcessListItems = (value?: string) => {
-  const source = (value || '').trim()
-
-  if (!source) {
-    return []
-  }
-
-  const normalized = formatLegacyMultiline(source)
-
-  // For old Tilda blocks where list items were flattened into one line,
-  // split by typical process-step starters.
-  const withStepBreaks = normalized.replace(
-    /\s+(?=(Обзор|Сборка|Работа|Подбор|Оформление|Знакомство|Готовые|Тематика|Пошаговое|Создание|Выбор|Декор|Результат|В результате|Финальный этап|Крепление|Упаковка|Роспись|Лепка|Плетение|Изготовление)\b)/g,
-    '\n'
-  )
-
-  const primaryItems = withStepBreaks
-    .split('\n')
-    .map((item) => item.trim())
-    .filter(Boolean)
-
-  if (primaryItems.length >= 3) {
-    return primaryItems
-  }
-
-  // Fallback: some legacy lines were flattened without delimiters.
-  // Split by capitalized phrase starters for process lists only.
-  const capsSplit = withStepBreaks
-    .replace(/\s+(?=[А-ЯЁ][а-яё]{2,}(?:\s+[а-яё]{2,}){0,6})/g, '\n')
-    .split('\n')
-    .map((item) => item.trim())
-    .filter(Boolean)
-
-  return capsSplit.length > primaryItems.length ? capsSplit : primaryItems
-}
+const toProcessListItems = (value?: string) => splitWorkshopProcessItems(value)
 
 const parseCurrencyAmounts = (value?: string) =>
   (formatDisplayPrice(value) || '')

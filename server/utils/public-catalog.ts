@@ -8,6 +8,7 @@ import {
   getWorkshopsByCategorySlug,
   masterClassCategories,
   masterClassesHeroImage,
+  resolveShowPriceFromPricing,
   shows,
   workshopItems
 } from '~/data/catalog'
@@ -47,20 +48,24 @@ const getHomeWorkshopTileSizes = (count: number) => {
   return ['wide', 'tall', 'small', 'small'] as const
 }
 
-const toShowCard = (program: ShowProgram): CatalogCardItem => ({
-  id: program.id,
-  href: createShowHref(program.slug),
-  image: program.image,
-  imageAlt: program.title,
-  kicker: program.kicker,
-  title: program.title,
-  description: program.description,
-  metaPrimary: program.pricing[0]?.value ?? 'По запросу',
-  metaLabel: 'Стоимость',
-  buttonLabel: 'Открыть',
-  priceValue: program.pricing[0]?.value,
-  productMicrodata: true
-})
+const toShowCard = (program: ShowProgram): CatalogCardItem => {
+  const showPrice = resolveShowPriceFromPricing(program.pricing || [])
+
+  return {
+    id: program.id,
+    href: createShowHref(program.slug),
+    image: program.image,
+    imageAlt: program.title,
+    kicker: program.kicker,
+    title: program.title,
+    description: program.description,
+    metaPrimary: showPrice || 'По запросу',
+    metaLabel: 'Стоимость',
+    buttonLabel: 'Открыть',
+    priceValue: showPrice || undefined,
+    productMicrodata: true
+  }
+}
 
 const toCategoryCard = (category: MasterClassCategory): CatalogCardItem => ({
   id: category.id,

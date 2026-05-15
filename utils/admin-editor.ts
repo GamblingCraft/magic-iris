@@ -12,6 +12,7 @@ import type { ServiceLandingPage, ServiceScenarioItem } from '~/data/service-pag
 import type { ShowCollectionPage } from '~/data/show-collections'
 import type { CatalogCardItem } from '~/types/public-catalog'
 import { formatDisplayPrice } from '~/utils/format-price'
+import { normalizeWorkshopProcessText } from '~/utils/workshop-legacy'
 
 export type ShowDraft = ShowProgram & {
   galleryText: string
@@ -147,7 +148,13 @@ export const toWorkshopDraft = (item: WorkshopItem): WorkshopDraft => ({
   pricingText: item.pricing.map(formatPriceLine).join('\n'),
   formatsText: linesToText(item.formats),
   includesText: linesToText(item.includes),
-  legacyImagesText: (item.legacyLayout?.whatImages || []).join('\n')
+  legacyImagesText: (item.legacyLayout?.whatImages || []).join('\n'),
+  legacyLayout: item.legacyLayout
+    ? {
+        ...structuredClone(item.legacyLayout),
+        whatProcess: normalizeWorkshopProcessText(item.legacyLayout.whatProcess || '')
+      }
+    : undefined
 })
 
 export const fromWorkshopDraft = (

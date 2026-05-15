@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getShowSeo } from '~/data/site-seo'
+import { resolveShowPriceFromPricing } from '~/data/catalog'
 import type { ShowDetailPayload } from '~/types/public-catalog'
 
 const route = useRoute()
@@ -10,6 +11,9 @@ const { data: showPayload } = await useFetch<ShowDetailPayload>(`/api/site/shows
 })
 
 const currentProgram = computed(() => showPayload.value?.program || null)
+const heroPrice = computed(() =>
+  resolveShowPriceFromPricing(currentProgram.value?.pricing || [])
+)
 
 const breadcrumbs = computed(() => [
   { label: 'Главная', href: '/' },
@@ -48,7 +52,7 @@ usePageSeo(
             sku: currentProgram.id,
             category: currentProgram.kicker,
             description: currentProgram.description,
-            price: currentProgram.pricing[0]?.value,
+            price: heroPrice,
             url: route.fullPath
           } : undefined"
           :tags="currentProgram?.suitableFor || []"

@@ -1,5 +1,6 @@
 import catalogContent from './cms/catalog-content.json'
 import workshopLegacyLayouts from './cms/workshop-legacy-layouts.json'
+import { formatDisplayPrice } from '~/utils/format-price'
 
 export type CatalogImage = {
   id: string
@@ -128,6 +129,63 @@ const normalizeCatalogText = (value?: string) =>
 const capitalizeCatalogText = (value: string) =>
   value ? `${value.charAt(0).toUpperCase()}${value.slice(1)}` : value
 
+const SHOW_PRICE_LABEL = '\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c'
+const SHOW_PRICE_LABEL_NORMALIZED = '\u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c'
+const SHOW_FITS_LABEL_NORMALIZED = '\u043f\u043e\u0434\u0445\u043e\u0434\u0438\u0442'
+
+const parseShowPriceAmounts = (value?: string) =>
+  (value || '')
+    .match(/\d[\d\s]{0,14}(?=\s*(?:\u20BD|\u0440\u0443\u0431\.?))/giu)
+    ?.map((match) => Number.parseInt(match.replace(/\s+/g, ''), 10))
+    .filter((amount) => Number.isFinite(amount) && amount >= 1000) || []
+
+const formatShowPriceAmount = (amount: number) =>
+  amount.toLocaleString('ru-RU').replace(/\u00A0/g, ' ')
+
+export const resolveShowPriceFromPricing = (pricing: PricePoint[] = []) => {
+  const amounts = pricing.flatMap((point) => [
+    ...parseShowPriceAmounts(point.value),
+    ...parseShowPriceAmounts(point.note)
+  ])
+
+  if (amounts.length) {
+    return `\u043e\u0442 ${formatShowPriceAmount(Math.min(...amounts))} \u20BD`
+  }
+
+  const fallback = formatDisplayPrice(pricing[0]?.value || '')
+  return fallback || '\u041f\u043e \u0437\u0430\u043f\u0440\u043e\u0441\u0443'
+}
+
+const normalizeShowFacts = (facts: CatalogFact[] = [], pricing: PricePoint[] = []) => {
+  const priceValue = resolveShowPriceFromPricing(pricing)
+  const targetIndex = facts.findIndex((fact) => {
+    const normalizedLabel = normalizeCatalogText(fact.label).toLowerCase()
+    return (
+      normalizedLabel === SHOW_FITS_LABEL_NORMALIZED ||
+      normalizedLabel === SHOW_PRICE_LABEL_NORMALIZED
+    )
+  })
+
+  if (targetIndex === -1) {
+    return [...facts, { label: SHOW_PRICE_LABEL, value: priceValue }]
+  }
+
+  return facts.map((fact, index) =>
+    index === targetIndex
+      ? {
+          ...fact,
+          label: SHOW_PRICE_LABEL,
+          value: priceValue
+        }
+      : fact
+  )
+}
+
+const normalizeShowItem = (item: ShowProgram): ShowProgram => ({
+  ...item,
+  facts: normalizeShowFacts(item.facts || [], item.pricing || [])
+})
+
 const stripParticipantsPrefix = (value: string) =>
   value
     .replace(/^РћР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ СѓС‡Р°СЃС‚РЅРёРєРѕРІ\s*[вЂ”-]\s*/iu, '')
@@ -244,6 +302,53 @@ const appendWorkshopDescription = (baseDescription: string, appendix: string) =>
   return `${normalizedBase}${separator}${normalizedAppendix}`
 }
 
+const workshopDurationPattern =
+  /\d+\s*(?:[–—-]\s*\d+)?\s*(?:мин(?:\.|ут(?:а|ы)?)?|час(?:а|ов)?)(?:\s*\([^)]+\))?/iu
+
+const normalizeWorkshopDurationValue = (value: string) =>
+  normalizeCatalogText(value)
+    .replace(/\s*([–—-])\s*/g, ' $1 ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+const extractWorkshopDurationValue = (value?: string) => {
+  const source = normalizeCatalogText(value)
+
+  if (!source) {
+    return ''
+  }
+
+  const match = source.match(workshopDurationPattern)?.[0]
+  return match ? normalizeWorkshopDurationValue(match) : ''
+}
+
+const resolveWorkshopDuration = (item: WorkshopItem, legacyLayout?: WorkshopLegacyLayout) => {
+  const directDuration = extractWorkshopDurationValue(item.duration)
+
+  if (directDuration) {
+    return directDuration
+  }
+
+  const candidates = [
+    legacyLayout?.formatCards?.[0]?.details,
+    legacyLayout?.whatMeta,
+    legacyLayout?.formatCards?.[1]?.details,
+    legacyLayout?.whatPrice,
+    item.priceFrom,
+    item.participants
+  ]
+
+  for (const candidate of candidates) {
+    const parsed = extractWorkshopDurationValue(candidate)
+
+    if (parsed) {
+      return parsed
+    }
+  }
+
+  return normalizeCatalogText(item.duration)
+}
+
 const normalizeWorkshopItem = (
   item: WorkshopItem,
   categories: Array<Pick<MasterClassCategory, 'slug' | 'title'>>
@@ -255,6 +360,7 @@ const normalizeWorkshopItem = (
     ...item,
     audienceLabel: deriveWorkshopAudienceLabel(item.categorySlugs, categories) || item.audienceLabel,
     participants: capitalizeCatalogText(participants || item.participants),
+    duration: resolveWorkshopDuration(item, legacyLayout) || item.duration,
     description: appendWorkshopDescription(item.description, descriptionAppendix),
     legacyLayout
   }
@@ -268,7 +374,9 @@ const normalizeCategory = (
   count: workshops.filter((item) => item.categorySlugs.includes(category.slug)).length
 })
 
-export const shows: ShowProgram[] = cmsCatalog.shows
+export const shows: ShowProgram[] = cmsCatalog.shows.map((item) =>
+  normalizeShowItem(item as ShowProgram)
+)
 
 export const showPrograms = shows
 
